@@ -9,6 +9,10 @@ SRC_MAIN 	= 	src/mainc.c 		\
 
 SRC			= 	src/main.c 			\
 				src/wolf.c 			\
+				src/close.c 		\
+				src/draw.c 			\
+				src/event.c 		\
+
 
 
 SRC_TESTS 	= 	$(filter-out $(SRC_MAIN), $(SRC))
