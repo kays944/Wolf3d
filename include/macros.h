@@ -19,4 +19,11 @@
     #define TILE_SIZE 64
     #define MAP_WIDTH 8
     #define MAP_HEIGHT 8
+
+    #define BASIC_MAP_PATH "./assets/basic_map.txt"
+
+
+
+extern int map[MAP_HEIGHT][MAP_WIDTH];
+
 #endif

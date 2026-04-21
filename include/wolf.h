@@ -16,5 +16,12 @@ int wolf(void);
 void draw(sfRenderWindow *window);
 int event(sfRenderWindow *window);
 void close_all(sfRenderWindow *window);
+char **parsing_map(char *path);
+
+typedef struct {
+    float x;
+    float y;
+    float angle;
+} player_t;
 
 #endif

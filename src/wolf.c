@@ -7,21 +7,46 @@
 
 #include "macros.h"
 #include "wolf.h"
+#include <stdio.h>
 
 static sfRenderWindow *creation_window(void)
 {
     sfVideoMode mode = {WIN_WIDTH, WIN_HEIGHT, FREQUENCY};
-    sfRenderWindow *window;
+    sfRenderWindow *window = {0};
 
     window = sfRenderWindow_create(mode, "fen1", sfResize | sfClose, NULL);
     return window;
 }
 
-static int game_loop(void)
+static int init_player(char **map, player_t *player)
+{
+    int x = 0;
+    int y = 0;
+    int find = 0;
+
+    for (; x != MAP_HEIGHT; ++y) {
+        if (map[x][y] == 'o') {
+            find = 1;
+            break;
+        }
+        if (y == MAP_WIDTH) {
+            x += 1;
+            y = -1;
+        }
+    }
+    if (find == 0)
+        return EXIT_FAIL;
+    player->x = x;
+    player->y = y;
+    return EXIT_SUCCESS;
+}
+
+static int game_loop(char **map)
 {
     sfRenderWindow *window = creation_window();
+    player_t player = {0};
 
-    if (!window)
+    if (!window || init_player(map, &player) == EXIT_FAIL)
         return EXIT_FAIL;
     while (sfRenderWindow_isOpen(window)) {
         if (event(window) == EVENT_CLOSE)
@@ -34,5 +59,9 @@ static int game_loop(void)
 
 int wolf(void)
 {
-    return game_loop();
+    char **map = parsing_map(BASIC_MAP_PATH);
+
+    if (!map)
+        return EXIT_FAIL;
+    return game_loop(map);
 }

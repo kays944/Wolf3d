@@ -7,13 +7,15 @@
 
 SRC_MAIN 	= 	src/mainc.c 		\
 
-SRC			= 	src/main.c 			\
-				src/wolf.c 			\
-				src/close.c 		\
-				src/draw.c 			\
-				src/event.c 		\
-
-
+SRC			= 	src/main.c 					\
+				src/wolf.c 					\
+				src/close.c 				\
+				src/draw.c 					\
+				src/event.c 				\
+				src/parsing_map.c 			\
+				src/utils/free_array.c 		\
+				src/utils/read_file.c 		\
+				src/utils/str_split.c 		\
 
 SRC_TESTS 	= 	$(filter-out $(SRC_MAIN), $(SRC))
 
@@ -36,6 +38,7 @@ all: $(NAME)
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR)/utils
 
 $(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
 	$(CC) -c $< -o $@ $(CPPFLAGS)
@@ -44,10 +47,10 @@ $(NAME):	$(OBJ)
 	$(CC) -o $(NAME) $(OBJ) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 clean:
-	$(RM) -f $(OBJ)
+	$(RM) -r $(OBJ_DIR)
 
 fclean:		clean
-	$(RM) -f $(NAME)
+	$(RM) $(NAME)
 
 re:	fclean all
 
