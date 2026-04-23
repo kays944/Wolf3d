@@ -8,6 +8,7 @@
 #include "macros.h"
 #include "wolf.h"
 #include <stdio.h>
+#include <math.h>
 
 static sfRenderWindow *creation_window(void)
 {
@@ -20,24 +21,25 @@ static sfRenderWindow *creation_window(void)
 
 static int init_player(char **map, player_t *player)
 {
-    int x = 0;
-    int y = 0;
+    int col = 0;
+    int row = 0;
     int find = 0;
 
-    for (; x != MAP_HEIGHT; ++y) {
-        if (map[x][y] == 'o') {
+    for (; col != MAP_HEIGHT; ++row) {
+        if (map[col][row] == 'o') {
             find = 1;
             break;
         }
-        if (y == MAP_WIDTH) {
-            x += 1;
-            y = -1;
+        if (row == MAP_WIDTH) {
+            col += 1;
+            row = -1;
         }
     }
     if (find == 0)
         return EXIT_FAIL;
-    player->x = x;
-    player->y = y;
+    player->x = row * TILE_SIZE + TILE_SIZE / 2;
+    player->y = col * TILE_SIZE + TILE_SIZE / 2;
+    player->angle = fmod(0, 2 * M_PI);
     return EXIT_SUCCESS;
 }
 
@@ -51,7 +53,7 @@ static int game_loop(char **map)
     while (sfRenderWindow_isOpen(window)) {
         if (event(window) == EVENT_CLOSE)
             break;
-        draw(window);
+        draw(window, &player, map);
     }
     close_all(window);
     return EXIT_SUCCESS;

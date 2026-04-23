@@ -15,6 +15,7 @@
     #define FREQUENCY 32
 
     #define EVENT_CLOSE 1
+    #define IS_WALL 1
 
     #define TILE_SIZE 64
     #define MAP_WIDTH 8
@@ -22,7 +23,12 @@
 
     #define BASIC_MAP_PATH "./assets/basic_map.txt"
 
+    #define M_PI 3.14159265358979323846
 
+    #define FOV (M_PI / 3)
+    #define NUM_RAYS 800
+    #define STEP 1.0
+    #define DISTANCE_LIMIT 0.00001f
 
 extern int map[MAP_HEIGHT][MAP_WIDTH];
 

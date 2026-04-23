@@ -12,16 +12,17 @@
     #include <SFML/System.h>
     #include <SFML/System/Vector2.h>
 
-int wolf(void);
-void draw(sfRenderWindow *window);
-int event(sfRenderWindow *window);
-void close_all(sfRenderWindow *window);
-char **parsing_map(char *path);
-
-typedef struct {
+typedef struct player_s {
     float x;
     float y;
     float angle;
 } player_t;
+
+
+int wolf(void);
+void draw(sfRenderWindow *window, player_t *player, char **map);
+int event(sfRenderWindow *window);
+void close_all(sfRenderWindow *window);
+char **parsing_map(char *path);
 
 #endif

@@ -2,7 +2,7 @@ xxxxxxxx
 x x   xx
 x   x  x
 x xxxxxx
+x xxxxxx
 x xx   x
-x xx x x
-x    xox
+x    o x
 xxxxxxxx
