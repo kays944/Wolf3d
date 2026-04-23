@@ -51,7 +51,7 @@ static int game_loop(char **map)
     if (!window || init_player(map, &player) == EXIT_FAIL)
         return EXIT_FAIL;
     while (sfRenderWindow_isOpen(window)) {
-        if (event(window) == EVENT_CLOSE)
+        if (event(window, &player, map) == EVENT_CLOSE)
             break;
         draw(window, &player, map);
     }

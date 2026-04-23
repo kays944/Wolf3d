@@ -10,30 +10,11 @@
 #include <math.h>
 #include <stdio.h>
 
-
 /*
-**  Fonction pour dessiner le plafond et le sol en divisant l'ecran
-**  par deux et en dessinant un rectangle en bas et un autre en haut
-*/
-void draw_floor_and_ceiling(sfRenderWindow *window)
-{
-    sfRectangleShape *rect = sfRectangleShape_create();
-
-    sfRectangleShape_setSize(rect, (sfVector2f){WIN_WIDTH, WIN_HEIGHT / 2});
-    sfRectangleShape_setPosition(rect, (sfVector2f){0, 0});
-    sfRectangleShape_setFillColor(rect, sfColor_fromRGB(50, 50, 50));
-    sfRenderWindow_drawRectangleShape(window, rect, NULL);
-    sfRectangleShape_setPosition(rect, (sfVector2f){0, WIN_HEIGHT / 2});
-    sfRectangleShape_setFillColor(rect, sfColor_fromRGB(100, 100, 100));
-    sfRenderWindow_drawRectangleShape(window, rect, NULL);
-    sfRectangleShape_destroy(rect);
-}
-
-/*
-**  Fonction de detection si les coordonnees en parametre 
+**  Fonction de detection si les coordonnees en parametre
 **  correspondent a un mur sur la map
 */
-static int is_wall(int x, int y, char **map)
+int is_wall(int x, int y, char **map)
 {
     int tile_x = x / TILE_SIZE;
     int tile_y = y / TILE_SIZE;
@@ -48,9 +29,27 @@ static int is_wall(int x, int y, char **map)
 }
 
 /*
+**  Fonction pour dessiner le plafond et le sol en divisant l'ecran
+**  par deux et en dessinant un rectangle en bas et un autre en haut
+*/
+static void draw_floor_and_ceiling(sfRenderWindow *window)
+{
+    sfRectangleShape *rect = sfRectangleShape_create();
+
+    sfRectangleShape_setSize(rect, (sfVector2f){WIN_WIDTH, WIN_HEIGHT / 2});
+    sfRectangleShape_setPosition(rect, (sfVector2f){0, 0});
+    sfRectangleShape_setFillColor(rect, sfColor_fromRGB(50, 50, 50));
+    sfRenderWindow_drawRectangleShape(window, rect, NULL);
+    sfRectangleShape_setPosition(rect, (sfVector2f){0, WIN_HEIGHT / 2});
+    sfRectangleShape_setFillColor(rect, sfColor_fromRGB(100, 100, 100));
+    sfRenderWindow_drawRectangleShape(window, rect, NULL);
+    sfRectangleShape_destroy(rect);
+}
+
+/*
 **  Calcul de la hauteur de la colonne
 */
-void render_wall_column(sfRenderWindow *window, sfRectangleShape *rect,
+static void render_wall_column(sfRenderWindow *window, sfRectangleShape *rect,
     int rays, float wall_height)
 {
     float col_width = (float)WIN_WIDTH / NUM_RAYS;
@@ -67,7 +66,7 @@ void render_wall_column(sfRenderWindow *window, sfRectangleShape *rect,
 /*
 **  Calcule la distance du mur devant soi avec un pas de 0.1
 */
-float cast_single_ray(player_t *player, float ray_angle, char **map)
+static float cast_single_ray(player_t *player, float ray_angle, char **map)
 {
     float distance = 0;
     float x = player->x;
@@ -83,10 +82,10 @@ float cast_single_ray(player_t *player, float ray_angle, char **map)
 }
 
 /*
-**  Boucle sur les 800 rayons, calcul l'angle, la distance (cast_single_ray), 
+**  Boucle sur les 800 rayons, calcul l'angle, la distance (cast_single_ray),
 **  verfie et calcule la hauteur et affiche (render_wall_column)
 */
-void cast_all_rays(sfRenderWindow *window, player_t *player, char **map)
+static void cast_all_rays(sfRenderWindow *window, player_t *player, char **map)
 {
     sfRectangleShape *rect = sfRectangleShape_create();
     float ray_angle = 0;

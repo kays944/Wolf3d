@@ -30,6 +30,9 @@
     #define STEP 1.0
     #define DISTANCE_LIMIT 0.00001f
 
+    #define PLAYER_SPEED 2.0
+    #define ROTATION_SPEED 0.05
+
 extern int map[MAP_HEIGHT][MAP_WIDTH];
 
 #endif

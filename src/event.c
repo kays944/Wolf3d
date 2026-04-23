@@ -8,7 +8,7 @@
 #include "macros.h"
 #include "wolf.h"
 
-int event(sfRenderWindow *window)
+int event(sfRenderWindow *window, player_t *player, char **map)
 {
     sfEvent event = {0};
     sfVector2i mouse = {0};
@@ -17,6 +17,7 @@ int event(sfRenderWindow *window)
         mouse = sfMouse_getPositionRenderWindow(window);
         if (event.type == sfEvtClosed)
             return EVENT_CLOSE;
+        update_player(window, player, map);
     }
     return EXIT_SUCCESS;
 }

@@ -13,6 +13,7 @@ SRC			= 	src/main.c 					\
 				src/draw.c 					\
 				src/event.c 				\
 				src/parsing_map.c 			\
+				src/update_player.c 		\
 				src/utils/free_array.c 		\
 				src/utils/read_file.c 		\
 				src/utils/str_split.c 		\
