@@ -47,7 +47,6 @@
     #define MAP_NAME_LEN 64
     #define MAP_DIR "assets/maps"
     #define MAP_EXT ".wolf"
-    #define CFG_PATH "settings.cfg"
 
     #define NUM_RES 4
     #define VOL_DEFAULT 80.0f
