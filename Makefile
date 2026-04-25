@@ -5,17 +5,15 @@
 ## Makefile
 ##
 
-SRC_MAIN 	= 	src/mainc.c 		\
+SRC_MAIN 	= 	src/main.c 			\
 
-SRC			= 	src/main.c 			\
-				src/wolf.c 			\
-
+SRC			=	$(shell find src/ -name "*.c")
 
 SRC_TESTS 	= 	$(filter-out $(SRC_MAIN), $(SRC))
 
 OBJ_DIR		=	obj
 
-OBJ			=	$(SRC:src/%.c=$(OBJ_DIR)/%.o)
+OBJ			=	$(patsubst src/%.c, $(OBJ_DIR)/%.o, $(SRC))
 
 CC 			:= 	epiclang
 
