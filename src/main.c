@@ -5,8 +5,7 @@
 ** main.c
 */
 
-#include "macros.h"
-#include "wolf.h"
+#include "game_proto.h"
 
 int main(void)
 {
