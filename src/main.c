@@ -5,7 +5,7 @@
 ** main.c
 */
 
-#include "game_proto.h"
+#include "proto.h"
 
 int main(void)
 {
