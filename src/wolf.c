@@ -5,6 +5,7 @@
 ** wolf.c
 */
 
+#include "menu_proto.h"
 #include "macros.h"
 #include "wolf.h"
 #include <stdio.h>
@@ -43,7 +44,7 @@ static int init_player(char **map, player_t *player)
     return EXIT_SUCCESS;
 }
 
-static int game_loop(char **map)
+static int game_loop(char **map, game_t *g)
 {
     sfRenderWindow *window = creation_window();
     player_t player = {0};
@@ -59,11 +60,38 @@ static int game_loop(char **map)
     return EXIT_SUCCESS;
 }
 
+static void handle_menu_state(game_t *g)
+{
+    menu_t menu = {0};
+
+    if (init_menu(&menu, g) == -1) {
+        g->running = sfFalse;
+        return;
+    }
+    run_menu(&menu);
+    g->selected_map = menu.chosen_map;
+    if (menu.action == MENU_QUIT)
+        g->running = sfFalse;
+    if (menu.action == MENU_PLAY)
+        g->state = STATE_GAME;
+    cleanup_menu(&menu);
+}
+
 int wolf(void)
 {
     char **map = parsing_map(BASIC_MAP_PATH);
+    game_t g = {0};
 
     if (!map)
         return EXIT_FAIL;
-    return game_loop(map);
+    if (game_init(&g) == -1)
+        return EXIT_FAIL;
+    while (g.running && sfRenderWindow_isOpen(g.window)) {
+        if (g.state == STATE_MENU)
+            handle_menu_state(&g);
+        if (g.state == STATE_GAME)
+            return game_loop(map, &g);
+    }
+    game_cleanup(&g);
+    return EXIT_SUCCESS;
 }
