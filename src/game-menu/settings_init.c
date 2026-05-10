@@ -9,9 +9,9 @@
 
 static void create_settings_buttons(menu_t *m)
 {
-    float x;
-    float y;
-    sfVector2f p;
+    float x = 0;
+    float y = 0;
+    sfVector2f p = {0};
 
     x = (m->ww - BTN_W) / 2.0f;
     y = m->wh - 120.0f;
@@ -20,17 +20,14 @@ static void create_settings_buttons(menu_t *m)
     m->set_btns[BTN_SET_BACK].id = BTN_SET_BACK;
 }
 
-int init_settings_menu(menu_t *m)
+void init_settings_menu(menu_t *m)
 {
     m->settings_sel = 0;
     create_settings_buttons(m);
-    return 0;
 }
 
 void cleanup_settings_menu(menu_t *m)
 {
-    int i;
-
-    for (i = 0; i < SET_BTN_COUNT; i++)
+    for (int i = 0; i < SET_BTN_COUNT; i++)
         destroy_button(&m->set_btns[i]);
 }

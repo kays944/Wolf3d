@@ -15,8 +15,8 @@ void render_background(menu_t *m)
 
 static void render_title_shadow(menu_t *m)
 {
-    sfColor shadow;
-    sfVector2f pos;
+    sfColor shadow = {0};
+    sfVector2f pos = {0};
 
     shadow = sfColor_fromRGBA(0, 0, 0, 180);
     pos = sfText_getPosition(m->title);
@@ -29,7 +29,7 @@ static void render_title_shadow(menu_t *m)
 
 void render_title(menu_t *m)
 {
-    draw_cfg_t cfg;
+    draw_cfg_t cfg = {0};
 
     if (!m->title)
         return;

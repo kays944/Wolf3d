@@ -48,9 +48,7 @@ void confirm_menu_selection(menu_t *m)
 
 void handle_mouse_click(menu_t *m, const sfVector2f *mouse)
 {
-    int i;
-
-    for (i = 0; i < MAIN_BTN_COUNT; i++) {
+    for (int i = 0; i < MAIN_BTN_COUNT; i++) {
         if (button_is_clicked(&m->main_btns[i], mouse)) {
             m->selected = i;
             confirm_menu_selection(m);

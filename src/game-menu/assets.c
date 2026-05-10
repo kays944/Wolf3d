@@ -42,7 +42,7 @@ static void set_vert(sfVertex *v, float x, float y, const sfColor *col)
 sfVertexArray *create_gradient_bg(const sfColor *top, const sfColor *bot,
     float w, float h)
 {
-    sfVertexArray *va;
+    sfVertexArray *va = {0};
 
     va = sfVertexArray_create();
     if (!va)

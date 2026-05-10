@@ -9,7 +9,7 @@
 
 static void render_map_header(menu_t *m)
 {
-    draw_cfg_t cfg;
+    draw_cfg_t cfg = {0};
 
     render_background(m);
     cfg = (draw_cfg_t){0, 60.0f, 50, sfColor_fromRGB(220, 50, 30)};
@@ -22,11 +22,11 @@ static void render_map_header(menu_t *m)
 
 static void render_map_item(menu_t *m, int i, float y)
 {
-    sfColor bg_col;
-    sfColor txt_col;
-    sfFloatRect bg;
-    draw_cfg_t cfg;
-    float lx;
+    sfColor bg_col = {0};
+    sfColor txt_col = {0};
+    sfFloatRect bg = {0};
+    draw_cfg_t cfg = {0};
+    float lx = 0;
 
     lx = (m->ww - 600.0f) / 2.0f;
     bg_col = (i == m->map_selected)
@@ -42,9 +42,8 @@ static void render_map_item(menu_t *m, int i, float y)
 
 void render_map_list(menu_t *m)
 {
-    draw_cfg_t cfg;
-    float start_y;
-    int i;
+    draw_cfg_t cfg = {0};
+    float start_y = 0;
 
     start_y = 200.0f;
     if (m->map_count == 0) {
@@ -53,7 +52,7 @@ void render_map_list(menu_t *m)
         draw_text_centered(m, "Aucune map disponible", &cfg);
         return;
     }
-    for (i = 0; i < m->map_count; i++)
+    for (int i = 0; i < m->map_count; i++)
         render_map_item(m, i, start_y + i * 50.0f);
 }
 

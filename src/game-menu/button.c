@@ -9,9 +9,9 @@
 
 static void center_button_text(button_t *btn)
 {
-    sfFloatRect tb;
-    float tx;
-    float ty;
+    sfFloatRect tb = {0};
+    float tx = 0;
+    float ty = 0;
 
     tb = sfText_getGlobalBounds(btn->label);
     tx = btn->pos.x + (btn->size.x - tb.width) / 2.0f;
@@ -29,7 +29,7 @@ int init_button(button_t *btn, const sfVector2f *pos,
     btn->bg = sfRectangleShape_create();
     btn->label = sfText_create();
     if (!btn->bg || !btn->label)
-        return -1;
+        return EXIT_FAIL;
     sfRectangleShape_setSize(btn->bg, btn->size);
     sfRectangleShape_setPosition(btn->bg, btn->pos);
     sfRectangleShape_setOutlineThickness(btn->bg, 2.0f);
@@ -38,7 +38,7 @@ int init_button(button_t *btn, const sfVector2f *pos,
     sfText_setCharacterSize(btn->label, FONT_BTN_SZ);
     sfText_setFillColor(btn->label, sfWhite);
     center_button_text(btn);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void destroy_button(button_t *btn)
@@ -53,7 +53,7 @@ void destroy_button(button_t *btn)
 
 void update_button(button_t *btn, const sfVector2f *mouse)
 {
-    sfFloatRect bounds;
+    sfFloatRect bounds = {0};
 
     bounds = (sfFloatRect){btn->pos.x, btn->pos.y,
         btn->size.x, btn->size.y};
@@ -62,7 +62,7 @@ void update_button(button_t *btn, const sfVector2f *mouse)
 
 sfBool button_is_clicked(button_t *btn, const sfVector2f *mouse)
 {
-    sfFloatRect bounds;
+    sfFloatRect bounds = {0};
 
     bounds = (sfFloatRect){btn->pos.x, btn->pos.y,
         btn->size.x, btn->size.y};

@@ -9,9 +9,7 @@
 
 static void cleanup_main_buttons(menu_t *m)
 {
-    int i;
-
-    for (i = 0; i < MAIN_BTN_COUNT; i++)
+    for (int i = 0; i < MAIN_BTN_COUNT; i++)
         destroy_button(&m->main_btns[i]);
 }
 

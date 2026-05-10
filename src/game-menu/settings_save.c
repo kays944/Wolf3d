@@ -29,7 +29,7 @@ void default_settings(settings_t *s)
 
 void save_settings(settings_t *s)
 {
-    FILE *f;
+    FILE *f = {0};
 
     f = fopen(CFG_PATH, "w");
     if (!f)
@@ -43,11 +43,11 @@ void save_settings(settings_t *s)
 
 int load_settings(settings_t *s)
 {
-    FILE *f;
+    FILE *f = {0};
 
     f = fopen(CFG_PATH, "r");
     if (!f)
-        return -1;
+        return EXIT_FAIL;
     fscanf(f, "music_vol %f\n", &s->music_vol);
     fscanf(f, "sfx_vol %f\n", &s->sfx_vol);
     fscanf(f, "res_index %d\n", &s->res_index);
@@ -56,5 +56,5 @@ int load_settings(settings_t *s)
     if (s->res_index < 0 || s->res_index >= NUM_RES)
         s->res_index = RES_DEFAULT;
     get_resolution(s->res_index, &s->win_w, &s->win_h);
-    return 0;
+    return EXIT_SUCCESS;
 }

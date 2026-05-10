@@ -9,7 +9,7 @@
 
 static void update_delta(menu_t *m)
 {
-    sfTime elapsed;
+    sfTime elapsed = {0};
 
     elapsed = sfClock_restart(m->clock);
     m->dt = (double)sfTime_asSeconds(elapsed);

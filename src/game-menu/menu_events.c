@@ -9,9 +9,7 @@
 
 static void update_hover(menu_t *m)
 {
-    int i;
-
-    for (i = 0; i < MAIN_BTN_COUNT; i++)
+    for (int i = 0; i < MAIN_BTN_COUNT; i++)
         update_button(&m->main_btns[i], &m->mouse_pos);
 }
 
@@ -31,7 +29,7 @@ static void on_key(menu_t *m, sfEvent *e)
 
 void process_main_event(menu_t *m, sfEvent *e)
 {
-    sfVector2f click;
+    sfVector2f click = {0};
 
     if (e->type == sfEvtClosed) {
         m->action = MENU_QUIT;
@@ -64,7 +62,7 @@ static void dispatch_event(menu_t *m, sfEvent *e)
 
 void handle_menu_events(menu_t *m)
 {
-    sfEvent e;
+    sfEvent e = {0};
 
     while (sfRenderWindow_pollEvent(m->window, &e))
         dispatch_event(m, &e);

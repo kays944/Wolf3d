@@ -27,7 +27,7 @@ void navigate_menu(menu_t *m, int dir);
 void confirm_menu_selection(menu_t *m);
 void handle_mouse_click(menu_t *m, const sfVector2f *mouse);
 
-int init_map_select(menu_t *m);
+void init_map_select(menu_t *m);
 void cleanup_map_select(menu_t *m);
 void render_map_select(menu_t *m);
 void render_map_list(menu_t *m);
@@ -35,7 +35,7 @@ void handle_map_events(menu_t *m, sfEvent *e);
 void navigate_map_list(menu_t *m, int dir);
 void confirm_map_selection(menu_t *m);
 
-int init_settings_menu(menu_t *m);
+void init_settings_menu(menu_t *m);
 void cleanup_settings_menu(menu_t *m);
 void render_settings(menu_t *m);
 void render_volume_bar(menu_t *m, const char *lbl, float val, float y);

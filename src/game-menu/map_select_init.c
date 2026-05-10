@@ -9,8 +9,8 @@
 
 static int has_wolf_ext(const char *name)
 {
-    size_t nlen;
-    size_t elen;
+    size_t nlen = 0;
+    size_t elen = 0;
 
     nlen = strlen(name);
     elen = strlen(MAP_EXT);
@@ -21,8 +21,8 @@ static int has_wolf_ext(const char *name)
 
 static int scan_map_files(menu_t *m)
 {
-    DIR *dir;
-    struct dirent *entry;
+    DIR *dir = {0};
+    struct dirent *entry = {0};
 
     m->map_count = 0;
     dir = opendir(MAP_DIR);
@@ -43,9 +43,9 @@ static int scan_map_files(menu_t *m)
 
 static void create_map_buttons(menu_t *m)
 {
-    float cx;
-    float by;
-    sfVector2f p;
+    float cx = 0;
+    float by = 0;
+    sfVector2f p = {0};
 
     cx = (m->ww / 2.0f) - BTN_W - BTN_GAP / 2.0f;
     by = m->wh - 120.0f;
@@ -57,18 +57,15 @@ static void create_map_buttons(menu_t *m)
     m->map_btns[BTN_MAP_BACK].id = BTN_MAP_BACK;
 }
 
-int init_map_select(menu_t *m)
+void init_map_select(menu_t *m)
 {
     m->map_selected = 0;
     scan_map_files(m);
     create_map_buttons(m);
-    return 0;
 }
 
 void cleanup_map_select(menu_t *m)
 {
-    int i;
-
-    for (i = 0; i < MAP_BTN_COUNT; i++)
+    for (int i = 0; i < MAP_BTN_COUNT; i++)
         destroy_button(&m->map_btns[i]);
 }

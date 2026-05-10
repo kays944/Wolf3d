@@ -16,13 +16,13 @@ static sfColor item_color(menu_t *m, int idx)
 
 void render_volume_bar(menu_t *m, const char *lbl, float val, float y)
 {
-    float bx;
-    float bw;
-    sfFloatRect bg;
-    sfFloatRect fill;
-    sfColor bg_col;
-    sfColor fill_col;
-    draw_cfg_t cfg;
+    float bx = 0;
+    float bw = 0;
+    sfFloatRect bg = {0};
+    sfFloatRect fill = {0};
+    sfColor bg_col = {0};
+    sfColor fill_col = {0};
+    draw_cfg_t cfg = {0};
 
     bx = m->ww / 2.0f - 100.0f;
     bw = 300.0f;
@@ -39,10 +39,10 @@ void render_volume_bar(menu_t *m, const char *lbl, float val, float y)
 
 void render_res_selector(menu_t *m, float y)
 {
-    int w;
-    int h;
+    int w = 0;
+    int h = 0;
     char buf[32];
-    draw_cfg_t cfg;
+    draw_cfg_t cfg = {0};
 
     get_resolution(m->settings->res_index, &w, &h);
     snprintf(buf, sizeof(buf), "< %d x %d >", w, h);
@@ -56,7 +56,7 @@ void render_res_selector(menu_t *m, float y)
 
 void render_fullscreen_toggle(menu_t *m, float y)
 {
-    draw_cfg_t cfg;
+    draw_cfg_t cfg = {0};
 
     cfg = (draw_cfg_t){m->ww / 2.0f - 250.0f, y, FONT_LABEL_SZ,
         sfColor_fromRGB(200, 200, 200)};
@@ -68,7 +68,7 @@ void render_fullscreen_toggle(menu_t *m, float y)
 
 void render_settings(menu_t *m)
 {
-    draw_cfg_t cfg;
+    draw_cfg_t cfg = {0};
 
     render_background(m);
     cfg = (draw_cfg_t){0, 60.0f, 50, sfColor_fromRGB(220, 50, 30)};

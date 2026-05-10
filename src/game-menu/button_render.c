@@ -31,7 +31,7 @@ static sfColor get_text_color(sfBool active)
 
 void render_button(sfRenderWindow *win, button_t *btn, sfBool sel)
 {
-    sfBool active;
+    sfBool active = {0};
 
     if (!btn->bg || !btn->label)
         return;
@@ -46,8 +46,6 @@ void render_button(sfRenderWindow *win, button_t *btn, sfBool sel)
 void render_buttons(sfRenderWindow *win, button_t *btns,
     int count, int selected)
 {
-    int i;
-
-    for (i = 0; i < count; i++)
+    for (int i = 0; i < count; i++)
         render_button(win, &btns[i], (i == selected));
 }

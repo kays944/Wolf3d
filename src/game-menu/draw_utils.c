@@ -9,7 +9,7 @@
 
 void draw_text_at(menu_t *m, const char *str, const draw_cfg_t *cfg)
 {
-    sfText *txt;
+    sfText *txt = {0};
 
     txt = sfText_create();
     if (!txt)
@@ -25,9 +25,9 @@ void draw_text_at(menu_t *m, const char *str, const draw_cfg_t *cfg)
 
 void draw_text_centered(menu_t *m, const char *str, const draw_cfg_t *cfg)
 {
-    sfText *txt;
-    sfFloatRect bounds;
-    draw_cfg_t c;
+    sfText *txt = {0};
+    sfFloatRect bounds = {0};
+    draw_cfg_t c = {0};
 
     txt = sfText_create();
     if (!txt)
@@ -47,7 +47,7 @@ void draw_text_centered(menu_t *m, const char *str, const draw_cfg_t *cfg)
 void draw_filled_rect(sfRenderWindow *win,
     const sfFloatRect *r, const sfColor *col)
 {
-    sfRectangleShape *rect;
+    sfRectangleShape *rect = {0};
 
     rect = sfRectangleShape_create();
     if (!rect)

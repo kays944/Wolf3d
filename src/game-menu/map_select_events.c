@@ -35,17 +35,15 @@ static void back_to_menu(menu_t *m)
 
 static void on_map_hover(menu_t *m, sfEvent *e)
 {
-    int i;
-
     m->mouse_pos.x = (float)e->mouseMove.x;
     m->mouse_pos.y = (float)e->mouseMove.y;
-    for (i = 0; i < MAP_BTN_COUNT; i++)
+    for (int i = 0; i < MAP_BTN_COUNT; i++)
         update_button(&m->map_btns[i], &m->mouse_pos);
 }
 
 static void on_map_click(menu_t *m, sfEvent *e)
 {
-    sfVector2f pos;
+    sfVector2f pos = {0};
 
     pos.x = (float)e->mouseButton.x;
     pos.y = (float)e->mouseButton.y;

@@ -9,7 +9,7 @@
 
 void render_main_screen(menu_t *m)
 {
-    draw_cfg_t cfg;
+    draw_cfg_t cfg = {0};
 
     render_background(m);
     render_title(m);

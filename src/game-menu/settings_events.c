@@ -9,7 +9,7 @@
 
 void adjust_volume(menu_t *m, int which, float delta)
 {
-    float *vol;
+    float *vol = 0;
 
     vol = (which == SET_MUSIC) ? &m->settings->music_vol
         : &m->settings->sfx_vol;
@@ -54,17 +54,15 @@ static void back_to_menu(menu_t *m)
 
 static void on_set_hover(menu_t *m, sfEvent *e)
 {
-    int i;
-
     m->mouse_pos.x = (float)e->mouseMove.x;
     m->mouse_pos.y = (float)e->mouseMove.y;
-    for (i = 0; i < SET_BTN_COUNT; i++)
+    for (int i = 0; i < SET_BTN_COUNT; i++)
         update_button(&m->set_btns[i], &m->mouse_pos);
 }
 
 static void on_set_click(menu_t *m, sfEvent *e)
 {
-    sfVector2f pos;
+    sfVector2f pos = {0};
 
     pos.x = (float)e->mouseButton.x;
     pos.y = (float)e->mouseButton.y;

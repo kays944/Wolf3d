@@ -93,5 +93,6 @@ extern int map[MAP_HEIGHT][MAP_WIDTH];
     #define MENU_PLAY 0
 
     #define SCR_COUNT 3
+    #define BITS_PER_PIXEL 32
 
 #endif
