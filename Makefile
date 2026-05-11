@@ -17,26 +17,14 @@ SRC			= 	src/main.c 							\
 				src/utils/free_array.c 				\
 				src/utils/read_file.c 				\
 				src/utils/str_split.c 				\
-				src/game-menu/assets.c 				\
-				src/game-menu/button_render.c 		\
 				src/game-menu/button.c 				\
-				src/game-menu/draw_utils.c 			\
-				src/game-menu/game_cleanup.c 		\
-				src/game-menu/game_init.c 			\
-				src/game-menu/map_select_events.c 	\
-				src/game-menu/map_select_init.c 	\
-				src/game-menu/map_select_render.c 	\
-				src/game-menu/menu_bg.c 			\
-				src/game-menu/menu_cleanup.c 		\
+				src/game-menu/map_select.c 			\
 				src/game-menu/menu_events.c 		\
-				src/game-menu/menu_init.c 			\
-				src/game-menu/menu_main.c 			\
-				src/game-menu/menu_nav.c 			\
 				src/game-menu/menu_render.c 		\
-				src/game-menu/settings_events.c 	\
-				src/game-menu/settings_init.c 		\
+				src/game-menu/menu.c 				\
 				src/game-menu/settings_render.c 	\
-				src/game-menu/settings_save.c 		\
+				src/game-menu/settings.c 			\
+				src/game-menu/init.c 				\
 
 
 SRC_TESTS 	= 	$(filter-out $(SRC_MAIN), $(SRC))

@@ -5,11 +5,14 @@
 ** wolf.c
 */
 
-#include "menu_proto.h"
-#include "macros.h"
-#include "wolf.h"
 #include <stdio.h>
 #include <math.h>
+#include "macros.h"
+#include "wolf.h"
+#include "proto.h"
+
+const int RES_W[NUM_RES] = {800, 1024, 1280, 1920};
+const int RES_H[NUM_RES] = {600, 768, 720, 1080};
 
 static sfRenderWindow *creation_window(void)
 {
@@ -60,38 +63,99 @@ static int game_loop(char **map, game_t *g)
     return EXIT_SUCCESS;
 }
 
-static void handle_menu_state(game_t *g)
+static void set_vert(sfVertex *v, float x, float y, const sfColor *col)
 {
-    menu_t menu = {0};
+    v->position.x = x;
+    v->position.y = y;
+    v->color = *col;
+    v->texCoords.x = 0;
+    v->texCoords.y = 0;
+}
 
-    if (init_menu(&menu, g) == -1) {
-        g->running = sfFalse;
-        return;
-    }
-    run_menu(&menu);
-    g->selected_map = menu.chosen_map;
-    if (menu.action == MENU_QUIT)
-        g->running = sfFalse;
-    if (menu.action == MENU_PLAY)
-        g->state = STATE_GAME;
-    cleanup_menu(&menu);
+void get_resolution(int idx, int *w, int *h)
+{
+    if (idx < 0 || idx >= NUM_RES)
+        idx = RES_DEFAULT;
+    *w = RES_W[idx];
+    *h = RES_H[idx];
+}
+
+sfVertexArray *create_gradient_bg(const sfColor *top, const sfColor *bot,
+    float w, float h)
+{
+    sfVertexArray *va;
+
+    va = sfVertexArray_create();
+    if (!va)
+        return NULL;
+    sfVertexArray_setPrimitiveType(va, sfQuads);
+    sfVertexArray_resize(va, 4);
+    set_vert(sfVertexArray_getVertex(va, 0), 0, 0, top);
+    set_vert(sfVertexArray_getVertex(va, 1), w, 0, top);
+    set_vert(sfVertexArray_getVertex(va, 2), w, h, bot);
+    set_vert(sfVertexArray_getVertex(va, 3), 0, h, bot);
+    return va;
+}
+
+sfFont *load_font_safe(void)
+{
+    sfFont *f;
+
+    f = sfFont_createFromFile("assets/fonts/wolf3d.ttf");
+    if (f)
+        return f;
+    f = sfFont_createFromFile(
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf");
+    if (f)
+        return f;
+    f = sfFont_createFromFile(
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf");
+    if (f)
+        return f;
+    f = sfFont_createFromFile("/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf");
+    if (f)
+        return f;
+    fprintf(stderr, "Error: no font found\n");
+    return NULL;
+}
+
+sfRenderWindow *open_fullscreen(void)
+{
+    sfVideoMode mode;
+    sfRenderWindow *win;
+    sfVector2i corner;
+
+    mode = sfVideoMode_getDesktopMode();
+    win = sfRenderWindow_create(mode, TITLE, sfNone, NULL);
+    if (!win)
+        return NULL;
+    corner.x = 0;
+    corner.y = 0;
+    sfRenderWindow_setPosition(win, corner);
+    sfRenderWindow_requestFocus(win);
+    return win;
 }
 
 int wolf(void)
 {
     char **map = parsing_map(BASIC_MAP_PATH);
     game_t g = {0};
+    menu_t m = {0};
 
-    if (!map)
-        return EXIT_FAIL;
-    if (game_init(&g) == -1)
+    if (!map || game_init(&g) == -1)
         return EXIT_FAIL;
     while (g.running && sfRenderWindow_isOpen(g.window)) {
-        if (g.state == STATE_MENU)
-            handle_menu_state(&g);
-        if (g.state == STATE_GAME)
-            return game_loop(map, &g);
+        if (init_menu(&m, &g) == -1)
+            break;
+        run_menu(&m);
+        g.selected_map = m.chosen_map;
+        g.running = (m.action != MENU_QUIT);
+        cleanup_menu(&m);
     }
-    game_cleanup(&g);
+    game_loop(map, &g);
+    if (g.font_big)
+        sfFont_destroy(g.font_big);
+    if (g.window)
+        sfRenderWindow_destroy(g.window);
     return EXIT_SUCCESS;
 }

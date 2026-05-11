@@ -36,8 +36,6 @@
 
 extern int map[MAP_HEIGHT][MAP_WIDTH];
 
-    #define CFG_PATH "assets/settings.cfg"
-
     #define WIN_W 1280
     #define WIN_H 720
     #define TITLE "Wolf3D"
@@ -46,34 +44,26 @@ extern int map[MAP_HEIGHT][MAP_WIDTH];
     #define BTN_W 320
     #define BTN_H 58
     #define BTN_GAP 18
-    #define BTN_START_Y 300
 
-    #define FONT_TITLE_SZ 90
+    #define TITLE_SZ 50
     #define FONT_BTN_SZ 24
     #define FONT_SMALL_SZ 18
     #define FONT_LABEL_SZ 20
 
-    #define COL_BG_TOP_R 10
-    #define COL_BG_TOP_G 8
-    #define COL_BG_TOP_B 8
-    #define COL_BG_BOT_R 70
-    #define COL_BG_BOT_G 15
-    #define COL_BG_BOT_B 10
-
-    #define COL_BTN_R 35
-    #define COL_BTN_G 35
-    #define COL_BTN_B 35
-    #define COL_BTN_A 220
-
-    #define COL_BTN_HOV_R 110
-    #define COL_BTN_HOV_G 25
-    #define COL_BTN_HOV_B 15
-    #define COL_BTN_HOV_A 240
+    #define COL_TITLE sfColor_fromRGB(220, 50, 30)
+    #define COL_HINT sfColor_fromRGB(150, 150, 150)
+    #define COL_LABEL sfColor_fromRGB(200, 200, 200)
+    #define COL_SEL sfColor_fromRGB(255, 200, 40)
+    #define COL_BG_TOP sfColor_fromRGB(10, 8, 8)
+    #define COL_BG_BOT sfColor_fromRGB(70, 15, 10)
+    #define COL_BTN sfColor_fromRGBA(35, 35, 35, 220)
+    #define COL_BTN_HOV sfColor_fromRGBA(110, 25, 15, 240)
 
     #define MAX_MAPS 16
     #define MAP_NAME_LEN 64
     #define MAP_DIR "assets/maps"
     #define MAP_EXT ".wolf"
+    #define CFG_PATH "settings.cfg"
 
     #define NUM_RES 4
     #define VOL_DEFAULT 80.0f
@@ -94,5 +84,6 @@ extern int map[MAP_HEIGHT][MAP_WIDTH];
 
     #define SCR_COUNT 3
     #define BITS_PER_PIXEL 32
+
 
 #endif

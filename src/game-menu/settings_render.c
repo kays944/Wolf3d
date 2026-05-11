@@ -5,82 +5,122 @@
 ** settings_render.c
 */
 
-#include "menu_proto.h"
+#include "proto.h"
 
-static sfColor item_color(menu_t *m, int idx)
+static void draw_bar(menu_t *m, float val, float y)
 {
+    sfFloatRect bg;
+    sfFloatRect fill;
+    sfColor col;
+    float fill_w = 0;
+
+    bg.left = m->ww / 2.0f - 100.0f;
+    bg.top = y + 4.0f;
+    bg.width = 300.0f;
+    bg.height = 22.0f;
+    fill_w = val / VOL_MAX * 300.0f;
+    fill.left = m->ww / 2.0f - 100.0f;
+    fill.top = y + 4.0f;
+    fill.width = fill_w;
+    fill.height = 22.0f;
+    col = sfColor_fromRGB(50, 50, 50);
+    draw_filled_rect(m->window, &bg, &col);
+    col = sfColor_fromRGB(180, 40, 20);
+    draw_filled_rect(m->window, &fill, &col);
+}
+
+static void render_volume_bar(menu_t *m, const char *lbl, float val, float y)
+{
+    sfText *txt = sfText_create();
+    sfVector2f pos;
+
+    if (!txt)
+        return;
+    draw_bar(m, val, y);
+    sfText_setFont(txt, m->font_med);
+    sfText_setString(txt, lbl);
+    sfText_setCharacterSize(txt, FONT_LABEL_SZ);
+    sfText_setFillColor(txt, COL_LABEL);
+    pos.x = m->ww / 2.0f - 250.0f;
+    pos.y = y;
+    sfText_setPosition(txt, pos);
+    sfRenderWindow_drawText(m->window, txt, NULL);
+    sfText_destroy(txt);
+}
+
+static sfText *draw_option_begin(menu_t *m, const char *lbl, float y)
+{
+    sfText *txt = sfText_create();
+    sfVector2f pos;
+
+    if (!txt)
+        return NULL;
+    sfText_setFont(txt, m->font_med);
+    sfText_setCharacterSize(txt, FONT_LABEL_SZ);
+    sfText_setFillColor(txt, COL_LABEL);
+    sfText_setString(txt, lbl);
+    pos.x = m->ww / 2.0f - 250.0f;
+    pos.y = y;
+    sfText_setPosition(txt, pos);
+    sfRenderWindow_drawText(m->window, txt, NULL);
+    return txt;
+}
+
+static void draw_option_end(menu_t *m, sfText *txt,
+    const char *val, int idx)
+{
+    float y = 200.0f + idx * 70.0f;
+    sfVector2f pos;
+
     if (m->settings_sel == idx)
-        return sfColor_fromRGB(255, 220, 0);
-    return sfColor_fromRGB(200, 200, 200);
+        sfText_setFillColor(txt, COL_SEL);
+    else
+        sfText_setFillColor(txt, COL_LABEL);
+    sfText_setString(txt, val);
+    pos.x = m->ww / 2.0f - 100.0f;
+    pos.y = y;
+    sfText_setPosition(txt, pos);
+    sfRenderWindow_drawText(m->window, txt, NULL);
 }
 
-void render_volume_bar(menu_t *m, const char *lbl, float val, float y)
+static void draw_option(menu_t *m, const char *lbl, const char *val, int idx)
 {
-    float bx = 0;
-    float bw = 0;
-    sfFloatRect bg = {0};
-    sfFloatRect fill = {0};
-    sfColor bg_col = {0};
-    sfColor fill_col = {0};
-    draw_cfg_t cfg = {0};
+    float y = 200.0f + idx * 70.0f;
+    sfText *txt = draw_option_begin(m, lbl, y);
 
-    bx = m->ww / 2.0f - 100.0f;
-    bw = 300.0f;
-    cfg = (draw_cfg_t){m->ww / 2.0f - 250.0f, y, FONT_LABEL_SZ,
-        sfColor_fromRGB(200, 200, 200)};
-    draw_text_at(m, lbl, &cfg);
-    bg = (sfFloatRect){bx, y + 4, bw, 22};
-    fill = (sfFloatRect){bx, y + 4, val / VOL_MAX * bw, 22};
-    bg_col = sfColor_fromRGB(50, 50, 50);
-    fill_col = sfColor_fromRGB(180, 40, 20);
-    draw_filled_rect(m->window, &bg, &bg_col);
-    draw_filled_rect(m->window, &fill, &fill_col);
+    if (!txt)
+        return;
+    draw_option_end(m, txt, val, idx);
+    sfText_destroy(txt);
 }
 
-void render_res_selector(menu_t *m, float y)
+static void render_settings_inner(menu_t *m)
 {
+    char buf[32];
     int w = 0;
     int h = 0;
-    char buf[32];
-    draw_cfg_t cfg = {0};
+    const char *fs = "OFF";
 
+    render_volume_bar(m, "Musique :", m->settings->music_vol, 200.0f);
+    render_volume_bar(m, "Sons :", m->settings->sfx_vol, 270.0f);
     get_resolution(m->settings->res_index, &w, &h);
     snprintf(buf, sizeof(buf), "< %d x %d >", w, h);
-    cfg = (draw_cfg_t){m->ww / 2.0f - 250.0f, y, FONT_LABEL_SZ,
-        sfColor_fromRGB(200, 200, 200)};
-    draw_text_at(m, "Resolution :", &cfg);
-    cfg = (draw_cfg_t){m->ww / 2.0f - 100.0f, y, FONT_LABEL_SZ,
-        item_color(m, SET_RES)};
-    draw_text_at(m, buf, &cfg);
-}
-
-void render_fullscreen_toggle(menu_t *m, float y)
-{
-    draw_cfg_t cfg = {0};
-
-    cfg = (draw_cfg_t){m->ww / 2.0f - 250.0f, y, FONT_LABEL_SZ,
-        sfColor_fromRGB(200, 200, 200)};
-    draw_text_at(m, "Plein ecran :", &cfg);
-    cfg = (draw_cfg_t){m->ww / 2.0f - 100.0f, y, FONT_LABEL_SZ,
-        item_color(m, SET_FULLSCR)};
-    draw_text_at(m, m->settings->fullscreen ? "ON" : "OFF", &cfg);
+    draw_option(m, "Resolution :", buf, SET_RES);
+    if (m->settings->fullscreen == sfTrue)
+        fs = "ON";
+    draw_option(m, "Plein ecran :", fs, SET_FULLSCR);
 }
 
 void render_settings(menu_t *m)
 {
-    draw_cfg_t cfg = {0};
+    int back_sel = -1;
 
-    render_background(m);
-    cfg = (draw_cfg_t){0, 60.0f, 50, sfColor_fromRGB(220, 50, 30)};
-    draw_text_centered(m, "PARAMETRES", &cfg);
-    cfg = (draw_cfg_t){0, 130.0f, FONT_SMALL_SZ,
-        sfColor_fromRGB(150, 150, 150)};
-    draw_text_centered(m,
-        "Fleches haut/bas pour naviguer, gauche/droite pour modifier", &cfg);
-    render_volume_bar(m, "Musique :", m->settings->music_vol, 200.0f);
-    render_volume_bar(m, "Sons :", m->settings->sfx_vol, 270.0f);
-    render_res_selector(m, 340.0f);
-    render_fullscreen_toggle(m, 410.0f);
-    render_buttons(m->window, m->set_btns, SET_BTN_COUNT,
-        m->settings_sel == SET_BACK ? 0 : -1);
+    if (m->bg)
+        sfRenderWindow_drawVertexArray(m->window, m->bg, NULL);
+    draw_title(m, "PARAMETRES", 60.0f);
+    draw_hint(m, "Fleches haut/bas, gauche/droite", 130.0f);
+    render_settings_inner(m);
+    if (m->settings_sel == SET_BACK)
+        back_sel = 0;
+    render_buttons(m->window, m->set_btns, SET_BTN_COUNT, back_sel);
 }

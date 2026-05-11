@@ -5,20 +5,61 @@
 ** menu_events.c
 */
 
-#include "menu_proto.h"
+#include "proto.h"
 
-static void update_hover(menu_t *m)
+static void confirm_leave(menu_t *m)
 {
-    for (int i = 0; i < MAIN_BTN_COUNT; i++)
-        update_button(&m->main_btns[i], &m->mouse_pos);
+    if (m->selected == BTN_PLAY)
+        m->action = MENU_PLAY;
+    else
+        m->action = MENU_QUIT;
+    m->running = sfFalse;
+}
+
+static void confirm_menu_selection(menu_t *m)
+{
+    if (m->selected == BTN_PLAY || m->selected == BTN_QUIT) {
+        confirm_leave(m);
+        return;
+    }
+    if (m->selected == BTN_MAP) {
+        cleanup_map_select(m);
+        init_map_select(m);
+        m->screen = SCR_MAP_SELECT;
+        return;
+    }
+    if (m->selected == BTN_SETTINGS) {
+        cleanup_settings_menu(m);
+        init_settings_menu(m);
+        m->screen = SCR_SETTINGS;
+    }
+}
+
+static void handle_mouse_click(menu_t *m, const sfVector2f *pos)
+{
+    int i = 0;
+
+    for (i = 0; i < MAIN_BTN_COUNT; i++) {
+        if (button_is_clicked(&m->main_btns[i], pos)) {
+            m->selected = i;
+            confirm_menu_selection(m);
+            return;
+        }
+    }
 }
 
 static void on_key(menu_t *m, sfEvent *e)
 {
-    if (e->key.code == sfKeyUp)
-        navigate_menu(m, -1);
-    if (e->key.code == sfKeyDown)
-        navigate_menu(m, 1);
+    if (e->key.code == sfKeyUp) {
+        m->selected = m->selected - 1;
+        if (m->selected < 0)
+            m->selected = MAIN_BTN_COUNT - 1;
+    }
+    if (e->key.code == sfKeyDown) {
+        m->selected = m->selected + 1;
+        if (m->selected >= MAIN_BTN_COUNT)
+            m->selected = 0;
+    }
     if (e->key.code == sfKeyReturn)
         confirm_menu_selection(m);
     if (e->key.code == sfKeyEscape) {
@@ -27,18 +68,16 @@ static void on_key(menu_t *m, sfEvent *e)
     }
 }
 
-void process_main_event(menu_t *m, sfEvent *e)
+static void process_main_event(menu_t *m, sfEvent *e)
 {
-    sfVector2f click = {0};
+    sfVector2f click;
+    int i = 0;
 
-    if (e->type == sfEvtClosed) {
-        m->action = MENU_QUIT;
-        m->running = sfFalse;
-    }
     if (e->type == sfEvtMouseMoved) {
         m->mouse_pos.x = (float)e->mouseMove.x;
         m->mouse_pos.y = (float)e->mouseMove.y;
-        update_hover(m);
+        for (i = 0; i < MAIN_BTN_COUNT; i++)
+            update_button(&m->main_btns[i], &m->mouse_pos);
     }
     if (e->type == sfEvtKeyPressed)
         on_key(m, e);
@@ -50,8 +89,12 @@ void process_main_event(menu_t *m, sfEvent *e)
     }
 }
 
-static void dispatch_event(menu_t *m, sfEvent *e)
+static void handle_menu_event(menu_t *m, sfEvent *e)
 {
+    if (e->type == sfEvtClosed) {
+        m->action = MENU_QUIT;
+        m->running = sfFalse;
+    }
     if (m->screen == SCR_MAIN)
         process_main_event(m, e);
     if (m->screen == SCR_MAP_SELECT)
@@ -60,10 +103,17 @@ static void dispatch_event(menu_t *m, sfEvent *e)
         handle_settings_events(m, e);
 }
 
-void handle_menu_events(menu_t *m)
+int run_menu(menu_t *m)
 {
-    sfEvent e = {0};
+    sfTime elapsed;
+    sfEvent e;
 
-    while (sfRenderWindow_pollEvent(m->window, &e))
-        dispatch_event(m, &e);
+    while (sfRenderWindow_isOpen(m->window) && m->running) {
+        elapsed = sfClock_restart(m->clock);
+        m->dt = (double)sfTime_asSeconds(elapsed);
+        while (sfRenderWindow_pollEvent(m->window, &e))
+            handle_menu_event(m, &e);
+        render_menu(m);
+    }
+    return m->action;
 }
