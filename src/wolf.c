@@ -103,13 +103,16 @@ static sfRenderWindow *open_fullscreen(void)
 {
     sfVideoMode mode;
     sfRenderWindow *win;
+    sfVector2i corner;
 
     mode = sfVideoMode_getDesktopMode();
     win = sfRenderWindow_create(mode, TITLE, sfNone, NULL);
-    if (win) {
-        sfRenderWindow_setPosition(win, (sfVector2i){0, 0});
-        sfRenderWindow_requestFocus(win);
-    }
+    if (!win)
+        return NULL;
+    corner.x = 0;
+    corner.y = 0;
+    sfRenderWindow_setPosition(win, corner);
+    sfRenderWindow_requestFocus(win);
     return win;
 }
 
@@ -137,8 +140,12 @@ static int init_window(game_t *g)
 static int game_init(game_t *g)
 {
     memset(g, 0, sizeof(game_t));
-    g->settings = (settings_t){VOL_DEFAULT, VOL_DEFAULT,
-        RES_DEFAULT, sfFalse, RES_W[RES_DEFAULT], RES_H[RES_DEFAULT]};
+    g->settings.music_vol = VOL_DEFAULT;
+    g->settings.sfx_vol = VOL_DEFAULT;
+    g->settings.res_index = RES_DEFAULT;
+    g->settings.fullscreen = sfFalse;
+    g->settings.win_w = RES_W[RES_DEFAULT];
+    g->settings.win_h = RES_H[RES_DEFAULT];
     load_settings(&g->settings);
     g->running = sfTrue;
     g->state = STATE_MENU;

@@ -9,18 +9,37 @@
 
 static void create_buttons(menu_t *m)
 {
-    const char *lbl[MAIN_BTN_COUNT] = {"JOUER", "CHOISIR MAP",
-        "PARAMETRES", "QUITTER"};
+    const char *jouer = "JOUER";
+    const char *map = "CHOISIR MAP";
+    const char *param = "PARAMETRES";
+    const char *quit = "QUITTER";
+    const char *labels[MAIN_BTN_COUNT];
     sfVector2f p;
     float x = 0;
     int i = 0;
 
+    labels[0] = jouer;
+    labels[1] = map;
+    labels[2] = param;
+    labels[3] = quit;
     x = (m->ww - BTN_W) / 2.0f;
     for (i = 0; i < MAIN_BTN_COUNT; i++) {
-        p = (sfVector2f){x, m->wh * 0.42f + i * (BTN_H + BTN_GAP)};
-        init_button(&m->main_btns[i], &p, lbl[i], m->font_med);
+        p.x = x;
+        p.y = m->wh * 0.42f + i * (BTN_H + BTN_GAP);
+        init_button(&m->main_btns[i], &p, labels[i], m->font_med);
         m->main_btns[i].id = i;
     }
+}
+
+static void setup_title_position(menu_t *m)
+{
+    sfFloatRect lb;
+    sfVector2f p;
+
+    lb = sfText_getLocalBounds(m->title);
+    p.x = (m->ww - lb.width) / 2.0f - lb.left;
+    p.y = m->wh * 0.1f;
+    sfText_setPosition(m->title, p);
 }
 
 static int setup_menu_visuals(menu_t *m)
@@ -32,16 +51,30 @@ static int setup_menu_visuals(menu_t *m)
     if (!m->bg)
         return -1;
     m->title = sfText_create();
-    if (!m->title)
+    if (!m->title) {
+        sfVertexArray_destroy(m->bg);
+        m->bg = NULL;
         return -1;
+    }
     sfText_setFont(m->title, m->font_big);
     sfText_setString(m->title, "WOLF 3D");
     sfText_setCharacterSize(m->title, TITLE_SZ);
     sfText_setFillColor(m->title, COL_TITLE);
     sfText_setStyle(m->title, sfTextBold);
-    sfText_setPosition(m->title, (sfVector2f){
-            (m->ww - sfText_getLocalBounds(m->title).width) / 2.0f
-            - sfText_getLocalBounds(m->title).left, m->wh * 0.1f});
+    setup_title_position(m);
+    return 0;
+}
+
+static int menu_clock_and_visuals(menu_t *m)
+{
+    m->clock = sfClock_create();
+    if (!m->clock)
+        return -1;
+    if (setup_menu_visuals(m) == -1) {
+        sfClock_destroy(m->clock);
+        m->clock = NULL;
+        return -1;
+    }
     return 0;
 }
 
@@ -60,8 +93,7 @@ int init_menu(menu_t *m, game_t *g)
     m->screen = SCR_MAIN;
     m->running = sfTrue;
     m->action = MENU_QUIT;
-    m->clock = sfClock_create();
-    if (!m->clock || setup_menu_visuals(m) == -1)
+    if (menu_clock_and_visuals(m) == -1)
         return -1;
     create_buttons(m);
     return 0;
@@ -82,100 +114,4 @@ void cleanup_menu(menu_t *m)
         sfVertexArray_destroy(m->bg);
     if (m->clock)
         sfClock_destroy(m->clock);
-}
-
-static void confirm_menu_selection(menu_t *m)
-{
-    if (m->selected == BTN_PLAY || m->selected == BTN_QUIT) {
-        m->action = (m->selected == BTN_PLAY) ? MENU_PLAY : MENU_QUIT;
-        m->running = sfFalse;
-        return;
-    }
-    if (m->selected == BTN_MAP) {
-        cleanup_map_select(m);
-        init_map_select(m);
-        m->screen = SCR_MAP_SELECT;
-    }
-    if (m->selected == BTN_SETTINGS) {
-        cleanup_settings_menu(m);
-        init_settings_menu(m);
-        m->screen = SCR_SETTINGS;
-    }
-}
-
-static void handle_mouse_click(menu_t *m, const sfVector2f *pos)
-{
-    int i = 0;
-
-    for (i = 0; i < MAIN_BTN_COUNT; i++) {
-        if (button_is_clicked(&m->main_btns[i], pos)) {
-            m->selected = i;
-            confirm_menu_selection(m);
-            return;
-        }
-    }
-}
-
-static void on_key(menu_t *m, sfEvent *e)
-{
-    if (e->key.code == sfKeyUp)
-        m->selected = (m->selected - 1 + MAIN_BTN_COUNT) % MAIN_BTN_COUNT;
-    if (e->key.code == sfKeyDown)
-        m->selected = (m->selected + 1) % MAIN_BTN_COUNT;
-    if (e->key.code == sfKeyReturn)
-        confirm_menu_selection(m);
-    if (e->key.code == sfKeyEscape) {
-        m->action = MENU_QUIT;
-        m->running = sfFalse;
-    }
-}
-
-static void process_main_event(menu_t *m, sfEvent *e)
-{
-    sfVector2f click;
-    int i = 0;
-
-    if (e->type == sfEvtMouseMoved) {
-        m->mouse_pos.x = (float)e->mouseMove.x;
-        m->mouse_pos.y = (float)e->mouseMove.y;
-        for (i = 0; i < MAIN_BTN_COUNT; i++)
-            update_button(&m->main_btns[i], &m->mouse_pos);
-    }
-    if (e->type == sfEvtKeyPressed)
-        on_key(m, e);
-    if (e->type == sfEvtMouseButtonPressed
-        && e->mouseButton.button == sfMouseLeft) {
-        click.x = (float)e->mouseButton.x;
-        click.y = (float)e->mouseButton.y;
-        handle_mouse_click(m, &click);
-    }
-}
-
-static void dispatch_event(menu_t *m, sfEvent *e)
-{
-    if (e->type == sfEvtClosed) {
-        m->action = MENU_QUIT;
-        m->running = sfFalse;
-    }
-    if (m->screen == SCR_MAIN)
-        process_main_event(m, e);
-    if (m->screen == SCR_MAP_SELECT)
-        handle_map_events(m, e);
-    if (m->screen == SCR_SETTINGS)
-        handle_settings_events(m, e);
-}
-
-int run_menu(menu_t *m)
-{
-    sfTime elapsed;
-    sfEvent e;
-
-    while (sfRenderWindow_isOpen(m->window) && m->running) {
-        elapsed = sfClock_restart(m->clock);
-        m->dt = (double)sfTime_asSeconds(elapsed);
-        while (sfRenderWindow_pollEvent(m->window, &e))
-            dispatch_event(m, &e);
-        render_menu(m);
-    }
-    return m->action;
 }
