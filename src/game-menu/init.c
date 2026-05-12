@@ -11,7 +11,7 @@
 
 int init_window(game_t *g)
 {
-    sfVideoMode mode;
+    sfVideoMode mode = {0};
 
     if (g->settings.fullscreen)
         g->window = open_fullscreen();
@@ -24,10 +24,10 @@ int init_window(game_t *g)
     }
     if (!g->window) {
         fprintf(stderr, "Error: cannot create window\n");
-        return -1;
+        return EXIT_FAIL;
     }
     sfRenderWindow_setFramerateLimit(g->window, FPS_LIMIT);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 int game_init(game_t *g)
@@ -42,13 +42,13 @@ int game_init(game_t *g)
     load_settings(&g->settings);
     g->running = sfTrue;
     g->state = STATE_MENU;
-    if (init_window(g) == -1)
-        return -1;
+    if (init_window(g) == EXIT_FAIL)
+        return EXIT_FAIL;
     g->font_big = load_font_safe();
     if (!g->font_big) {
         sfRenderWindow_destroy(g->window);
-        return -1;
+        return EXIT_FAIL;
     }
     g->font_med = g->font_big;
-    return 0;
+    return EXIT_SUCCESS;
 }

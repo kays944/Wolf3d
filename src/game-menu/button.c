@@ -9,8 +9,8 @@
 
 static void center_text(button_t *btn)
 {
-    sfFloatRect tb;
-    sfVector2f tpos;
+    sfFloatRect tb = {0};
+    sfVector2f tpos = {0};
     float tx = 0;
     float ty = 0;
 
@@ -24,7 +24,7 @@ static void center_text(button_t *btn)
 
 static int btn_prepare(button_t *btn, const sfVector2f *pos)
 {
-    sfVector2f sz;
+    sfVector2f sz = {0};
 
     btn->pos = *pos;
     sz.x = BTN_W;
@@ -41,9 +41,9 @@ static int btn_prepare(button_t *btn, const sfVector2f *pos)
             sfText_destroy(btn->label);
         btn->bg = NULL;
         btn->label = NULL;
-        return -1;
+        return EXIT_FAIL;
     }
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 static void btn_apply_style(button_t *btn, sfFont *font, const char *txt)
@@ -60,11 +60,11 @@ static void btn_apply_style(button_t *btn, sfFont *font, const char *txt)
 int init_button(button_t *btn, const sfVector2f *pos,
     const char *txt, sfFont *font)
 {
-    if (btn_prepare(btn, pos) == -1)
-        return -1;
+    if (btn_prepare(btn, pos) == EXIT_FAIL)
+        return EXIT_FAIL;
     btn_apply_style(btn, font, txt);
     center_text(btn);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void destroy_button(button_t *btn)
@@ -79,7 +79,7 @@ void destroy_button(button_t *btn)
 
 void update_button(button_t *btn, const sfVector2f *mouse)
 {
-    sfFloatRect b;
+    sfFloatRect b = {0};
 
     b.left = btn->pos.x;
     b.top = btn->pos.y;
@@ -90,7 +90,7 @@ void update_button(button_t *btn, const sfVector2f *mouse)
 
 sfBool button_is_clicked(button_t *btn, const sfVector2f *mouse)
 {
-    sfFloatRect b;
+    sfFloatRect b = {0};
 
     b.left = btn->pos.x;
     b.top = btn->pos.y;
@@ -102,7 +102,7 @@ sfBool button_is_clicked(button_t *btn, const sfVector2f *mouse)
 static void render_button(sfRenderWindow *win, button_t *btn, sfBool sel)
 {
     sfBool active = sfFalse;
-    sfColor line;
+    sfColor line = {0};
 
     if (!btn->bg || !btn->label)
         return;
@@ -125,8 +125,6 @@ static void render_button(sfRenderWindow *win, button_t *btn, sfBool sel)
 void render_buttons(sfRenderWindow *win, button_t *btns,
     int count, int selected)
 {
-    int i = 0;
-
-    for (i = 0; i < count; i++)
+    for (int i = 0; i < count; i++)
         render_button(win, &btns[i], (i == selected));
 }

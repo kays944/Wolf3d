@@ -9,8 +9,8 @@
 
 static void scan_maps(menu_t *m)
 {
-    DIR *dir;
-    struct dirent *entry;
+    DIR *dir = {0};
+    struct dirent *entry = {0};
     size_t nlen = 0;
     size_t elen = strlen(MAP_EXT);
 
@@ -33,7 +33,7 @@ static void scan_maps(menu_t *m)
 
 int init_map_select(menu_t *m)
 {
-    sfVector2f p;
+    sfVector2f p = {0};
     float cx = 0;
 
     m->map_selected = 0;
@@ -45,14 +45,12 @@ int init_map_select(menu_t *m)
     p.x = cx + BTN_W + BTN_GAP;
     p.y = m->wh - 120.0f;
     init_button(&m->map_btns[BTN_MAP_BACK], &p, "RETOUR", m->font_med);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void cleanup_map_select(menu_t *m)
 {
-    int i = 0;
-
-    for (i = 0; i < MAP_BTN_COUNT; i++)
+    for (int i = 0; i < MAP_BTN_COUNT; i++)
         destroy_button(&m->map_btns[i]);
 }
 
@@ -87,7 +85,7 @@ static void on_map_key(menu_t *m, sfEvent *e)
 
 static void on_map_click(menu_t *m, sfEvent *e)
 {
-    sfVector2f pos;
+    sfVector2f pos = {0};
 
     pos.x = (float)e->mouseButton.x;
     pos.y = (float)e->mouseButton.y;
@@ -101,12 +99,10 @@ static void on_map_click(menu_t *m, sfEvent *e)
 
 void handle_map_events(menu_t *m, sfEvent *e)
 {
-    int i = 0;
-
     if (e->type == sfEvtMouseMoved) {
         m->mouse_pos.x = (float)e->mouseMove.x;
         m->mouse_pos.y = (float)e->mouseMove.y;
-        for (i = 0; i < MAP_BTN_COUNT; i++)
+        for (int i = 0; i < MAP_BTN_COUNT; i++)
             update_button(&m->map_btns[i], &m->mouse_pos);
     }
     if (e->type == sfEvtKeyPressed)
@@ -118,9 +114,9 @@ void handle_map_events(menu_t *m, sfEvent *e)
 
 static void draw_map_bg(menu_t *m, int i, float y)
 {
-    sfColor sel_bg;
-    sfColor nor_bg;
-    sfFloatRect bg;
+    sfColor sel_bg = {0};
+    sfColor nor_bg = {0};
+    sfFloatRect bg = {0};
 
     sel_bg = sfColor_fromRGBA(110, 25, 15, 220);
     nor_bg = sfColor_fromRGBA(30, 30, 30, 180);
@@ -136,8 +132,8 @@ static void draw_map_bg(menu_t *m, int i, float y)
 
 static void draw_map_label(menu_t *m, int i, float y)
 {
-    sfText *txt;
-    sfVector2f tpos;
+    sfText *txt = {0};
+    sfVector2f tpos = {0};
 
     txt = sfText_create();
     if (!txt)

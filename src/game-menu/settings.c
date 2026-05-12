@@ -9,21 +9,19 @@
 
 int init_settings_menu(menu_t *m)
 {
-    sfVector2f p;
+    sfVector2f p = {0};
 
     m->settings_sel = 0;
     p.x = (m->ww - BTN_W) / 2.0f;
     p.y = m->wh - 120.0f;
     init_button(&m->set_btns[BTN_SET_BACK], &p, "RETOUR", m->font_med);
     m->set_btns[BTN_SET_BACK].id = BTN_SET_BACK;
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void cleanup_settings_menu(menu_t *m)
 {
-    int i = 0;
-
-    for (i = 0; i < SET_BTN_COUNT; i++)
+    for (int i = 0; i < SET_BTN_COUNT; i++)
         destroy_button(&m->set_btns[i]);
 }
 
@@ -101,7 +99,7 @@ static void on_set_adjust(menu_t *m, sfEvent *e)
 
 void handle_settings_events(menu_t *m, sfEvent *e)
 {
-    sfVector2f pos;
+    sfVector2f pos = {0};
 
     if (e->type == sfEvtMouseMoved) {
         m->mouse_pos.x = (float)e->mouseMove.x;
@@ -125,7 +123,7 @@ void handle_settings_events(menu_t *m, sfEvent *e)
 
 void save_settings(settings_t *s)
 {
-    FILE *f;
+    FILE *f = {0};
 
     f = fopen(CFG_PATH, "w");
     if (!f)
@@ -139,11 +137,11 @@ void save_settings(settings_t *s)
 
 int load_settings(settings_t *s)
 {
-    FILE *f;
+    FILE *f = {0};
 
     f = fopen(CFG_PATH, "r");
     if (!f)
-        return -1;
+        return EXIT_FAIL;
     fscanf(f, "music_vol %f\n", &s->music_vol);
     fscanf(f, "sfx_vol %f\n", &s->sfx_vol);
     fscanf(f, "res_index %d\n", &s->res_index);
@@ -153,5 +151,5 @@ int load_settings(settings_t *s)
         s->res_index = RES_DEFAULT;
     s->win_w = RES_W[s->res_index];
     s->win_h = RES_H[s->res_index];
-    return 0;
+    return EXIT_SUCCESS;
 }

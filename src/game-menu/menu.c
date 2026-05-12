@@ -9,21 +9,16 @@
 
 static void create_buttons(menu_t *m)
 {
-    const char *jouer = "JOUER";
-    const char *map = "CHOISIR MAP";
-    const char *param = "PARAMETRES";
-    const char *quit = "QUITTER";
     const char *labels[MAIN_BTN_COUNT];
-    sfVector2f p;
+    sfVector2f p = {0};
     float x = 0;
-    int i = 0;
 
-    labels[0] = jouer;
-    labels[1] = map;
-    labels[2] = param;
-    labels[3] = quit;
+    labels[0] = "JOUER";
+    labels[1] = "CHOISIR MAP";
+    labels[2] = "PARAMETRES";
+    labels[3] = "QUITTER";
     x = (m->ww - BTN_W) / 2.0f;
-    for (i = 0; i < MAIN_BTN_COUNT; i++) {
+    for (int i = 0; i < MAIN_BTN_COUNT; i++) {
         p.x = x;
         p.y = m->wh * 0.42f + i * (BTN_H + BTN_GAP);
         init_button(&m->main_btns[i], &p, labels[i], m->font_med);
@@ -33,8 +28,8 @@ static void create_buttons(menu_t *m)
 
 static void setup_title_position(menu_t *m)
 {
-    sfFloatRect lb;
-    sfVector2f p;
+    sfFloatRect lb = {0};
+    sfVector2f p = {0};
 
     lb = sfText_getLocalBounds(m->title);
     p.x = (m->ww - lb.width) / 2.0f - lb.left;
@@ -54,7 +49,7 @@ static int setup_menu_visuals(menu_t *m)
     if (!m->title) {
         sfVertexArray_destroy(m->bg);
         m->bg = NULL;
-        return -1;
+        return EXIT_FAIL;
     }
     sfText_setFont(m->title, m->font_big);
     sfText_setString(m->title, "WOLF 3D");
@@ -62,25 +57,25 @@ static int setup_menu_visuals(menu_t *m)
     sfText_setFillColor(m->title, COL_TITLE);
     sfText_setStyle(m->title, sfTextBold);
     setup_title_position(m);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 static int menu_clock_and_visuals(menu_t *m)
 {
     m->clock = sfClock_create();
     if (!m->clock)
-        return -1;
-    if (setup_menu_visuals(m) == -1) {
+        return EXIT_FAIL;
+    if (setup_menu_visuals(m) == EXIT_FAIL) {
         sfClock_destroy(m->clock);
         m->clock = NULL;
-        return -1;
+        return EXIT_FAIL;
     }
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 int init_menu(menu_t *m, game_t *g)
 {
-    sfVector2u sz;
+    sfVector2u sz = {0};
 
     memset(m, 0, sizeof(menu_t));
     m->window = g->window;
@@ -93,18 +88,16 @@ int init_menu(menu_t *m, game_t *g)
     m->screen = SCR_MAIN;
     m->running = sfTrue;
     m->action = MENU_QUIT;
-    if (menu_clock_and_visuals(m) == -1)
-        return -1;
+    if (menu_clock_and_visuals(m) == EXIT_FAIL)
+        return EXIT_FAIL;
     create_buttons(m);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void cleanup_menu(menu_t *m)
 {
-    int i = 0;
-
     save_settings(m->settings);
-    for (i = 0; i < MAIN_BTN_COUNT; i++)
+    for (int i = 0; i < MAIN_BTN_COUNT; i++)
         destroy_button(&m->main_btns[i]);
     cleanup_map_select(m);
     cleanup_settings_menu(m);

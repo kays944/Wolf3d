@@ -37,9 +37,7 @@ static void confirm_menu_selection(menu_t *m)
 
 static void handle_mouse_click(menu_t *m, const sfVector2f *pos)
 {
-    int i = 0;
-
-    for (i = 0; i < MAIN_BTN_COUNT; i++) {
+    for (int i = 0; i < MAIN_BTN_COUNT; i++) {
         if (button_is_clicked(&m->main_btns[i], pos)) {
             m->selected = i;
             confirm_menu_selection(m);
@@ -70,7 +68,7 @@ static void on_key(menu_t *m, sfEvent *e)
 
 static void process_main_event(menu_t *m, sfEvent *e)
 {
-    sfVector2f click;
+    sfVector2f click = {0};
     int i = 0;
 
     if (e->type == sfEvtMouseMoved) {
@@ -105,8 +103,8 @@ static void handle_menu_event(menu_t *m, sfEvent *e)
 
 int run_menu(menu_t *m)
 {
-    sfTime elapsed;
-    sfEvent e;
+    sfTime elapsed = {0};
+    sfEvent e = {0};
 
     while (sfRenderWindow_isOpen(m->window) && m->running) {
         elapsed = sfClock_restart(m->clock);

@@ -9,9 +9,9 @@
 
 static void draw_bar(menu_t *m, float val, float y)
 {
-    sfFloatRect bg;
-    sfFloatRect fill;
-    sfColor col;
+    sfFloatRect bg = {0};
+    sfFloatRect fill = {0};
+    sfColor col = {0};
     float fill_w = 0;
 
     bg.left = m->ww / 2.0f - 100.0f;
@@ -32,7 +32,7 @@ static void draw_bar(menu_t *m, float val, float y)
 static void render_volume_bar(menu_t *m, const char *lbl, float val, float y)
 {
     sfText *txt = sfText_create();
-    sfVector2f pos;
+    sfVector2f pos = {0};
 
     if (!txt)
         return;
@@ -51,7 +51,7 @@ static void render_volume_bar(menu_t *m, const char *lbl, float val, float y)
 static sfText *draw_option_begin(menu_t *m, const char *lbl, float y)
 {
     sfText *txt = sfText_create();
-    sfVector2f pos;
+    sfVector2f pos = {0};
 
     if (!txt)
         return NULL;
@@ -70,7 +70,7 @@ static void draw_option_end(menu_t *m, sfText *txt,
     const char *val, int idx)
 {
     float y = 200.0f + idx * 70.0f;
-    sfVector2f pos;
+    sfVector2f pos = {0};
 
     if (m->settings_sel == idx)
         sfText_setFillColor(txt, COL_SEL);

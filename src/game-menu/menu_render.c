@@ -10,9 +10,9 @@
 void draw_filled_rect(sfRenderWindow *win,
     const sfFloatRect *r, const sfColor *col)
 {
-    sfRectangleShape *rect;
-    sfVector2f size;
-    sfVector2f position;
+    sfRectangleShape *rect = {0};
+    sfVector2f size = {0};
+    sfVector2f position = {0};
 
     rect = sfRectangleShape_create();
     if (!rect)
@@ -30,9 +30,9 @@ void draw_filled_rect(sfRenderWindow *win,
 
 void draw_title(menu_t *m, const char *str, float y)
 {
-    sfText *txt;
-    sfFloatRect lb;
-    sfVector2f pos;
+    sfText *txt = {0};
+    sfFloatRect lb = {0};
+    sfVector2f pos = {0};
     float x = 0;
 
     txt = sfText_create();
@@ -53,9 +53,9 @@ void draw_title(menu_t *m, const char *str, float y)
 
 void draw_hint(menu_t *m, const char *str, float y)
 {
-    sfText *txt;
-    sfFloatRect lb;
-    sfVector2f pos;
+    sfText *txt = {0};
+    sfFloatRect lb = {0};
+    sfVector2f pos = {0};
     float x = 0;
 
     txt = sfText_create();
@@ -82,8 +82,8 @@ static void render_background(menu_t *m)
 
 static void draw_title_shadow(menu_t *m)
 {
-    sfVector2f pos;
-    sfVector2f shadow;
+    sfVector2f pos = {0};
+    sfVector2f shadow = {0};
 
     pos = sfText_getPosition(m->title);
     sfText_setFillColor(m->title, sfColor_fromRGBA(0, 0, 0, 180));
