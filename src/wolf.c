@@ -144,15 +144,15 @@ int wolf(void)
 
     if (!map || game_init(&g) == -1)
         return EXIT_FAIL;
-    while (g.running && sfRenderWindow_isOpen(g.window)) {
-        if (init_menu(&m, &g) == -1)
-            break;
-        run_menu(&m);
-        g.selected_map = m.chosen_map;
-        g.running = (m.action != MENU_QUIT);
-        cleanup_menu(&m);
+    if (init_menu(&m, &g) == -1) {
+        sfRenderWindow_destroy(g.window);
+        return EXIT_FAIL;
     }
-    game_loop(map, &g);
+    run_menu(&m);
+    g.selected_map = m.chosen_map;
+    cleanup_menu(&m);
+    if (m.action == MENU_PLAY)
+        game_loop(map, &g);
     if (g.font_big)
         sfFont_destroy(g.font_big);
     if (g.window)

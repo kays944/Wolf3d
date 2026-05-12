@@ -89,15 +89,17 @@ static void process_main_event(menu_t *m, sfEvent *e)
 
 static void handle_menu_event(menu_t *m, sfEvent *e)
 {
+    int screen = m->screen;
+
     if (e->type == sfEvtClosed) {
         m->action = MENU_QUIT;
         m->running = sfFalse;
     }
-    if (m->screen == SCR_MAIN)
+    if (screen == SCR_MAIN)
         process_main_event(m, e);
-    if (m->screen == SCR_MAP_SELECT)
+    if (screen == SCR_MAP_SELECT)
         handle_map_events(m, e);
-    if (m->screen == SCR_SETTINGS)
+    if (screen == SCR_SETTINGS)
         handle_settings_events(m, e);
 }
 
