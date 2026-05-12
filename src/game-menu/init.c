@@ -9,6 +9,25 @@
 #include "wolf.h"
 #include "proto.h"
 
+int load_settings(settings_t *s)
+{
+    FILE *f = {0};
+
+    f = fopen(CFG_PATH, "r");
+    if (!f)
+        return EXIT_FAIL;
+    fscanf(f, "music_vol %f\n", &s->music_vol);
+    fscanf(f, "sfx_vol %f\n", &s->sfx_vol);
+    fscanf(f, "res_index %d\n", &s->res_index);
+    fscanf(f, "fullscreen %d\n", (int *)&s->fullscreen);
+    fclose(f);
+    if (s->res_index < 0 || s->res_index >= NUM_RES)
+        s->res_index = RES_DEFAULT;
+    s->win_w = RES_W[s->res_index];
+    s->win_h = RES_H[s->res_index];
+    return EXIT_SUCCESS;
+}
+
 int init_window(game_t *g)
 {
     sfVideoMode mode = {0};
@@ -28,6 +47,28 @@ int init_window(game_t *g)
     }
     sfRenderWindow_setFramerateLimit(g->window, FPS_LIMIT);
     return EXIT_SUCCESS;
+}
+
+static sfFont *load_font_safe(void)
+{
+    sfFont *f = {0};
+
+    f = sfFont_createFromFile("assets/fonts/wolf3d.ttf");
+    if (f)
+        return f;
+    f = sfFont_createFromFile(
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf");
+    if (f)
+        return f;
+    f = sfFont_createFromFile(
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf");
+    if (f)
+        return f;
+    f = sfFont_createFromFile("/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf");
+    if (f)
+        return f;
+    fprintf(stderr, "Error: no font found\n");
+    return NULL;
 }
 
 int game_init(game_t *g)

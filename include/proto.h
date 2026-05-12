@@ -16,7 +16,6 @@ extern const int RES_H[NUM_RES];
 int wolf(void);
 sfVertexArray *create_gradient_bg(const sfColor *top, const sfColor *bot,
     float w, float h);
-sfFont *load_font_safe(void);
 void get_resolution(int idx, int *w, int *h);
 void save_settings(settings_t *s);
 
@@ -48,8 +47,6 @@ sfBool button_is_clicked(button_t *btn, const sfVector2f *mouse);
 void render_buttons(sfRenderWindow *win, button_t *btns,
     int count, int selected);
 int game_init(game_t *g);
-int init_window(game_t *g);
 sfRenderWindow *open_fullscreen(void);
-int load_settings(settings_t *s);
 
 #endif

@@ -83,7 +83,7 @@ void get_resolution(int idx, int *w, int *h)
 sfVertexArray *create_gradient_bg(const sfColor *top, const sfColor *bot,
     float w, float h)
 {
-    sfVertexArray *va;
+    sfVertexArray *va = {0};
 
     va = sfVertexArray_create();
     if (!va)
@@ -97,33 +97,11 @@ sfVertexArray *create_gradient_bg(const sfColor *top, const sfColor *bot,
     return va;
 }
 
-sfFont *load_font_safe(void)
-{
-    sfFont *f;
-
-    f = sfFont_createFromFile("assets/fonts/wolf3d.ttf");
-    if (f)
-        return f;
-    f = sfFont_createFromFile(
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf");
-    if (f)
-        return f;
-    f = sfFont_createFromFile(
-        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf");
-    if (f)
-        return f;
-    f = sfFont_createFromFile("/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf");
-    if (f)
-        return f;
-    fprintf(stderr, "Error: no font found\n");
-    return NULL;
-}
-
 sfRenderWindow *open_fullscreen(void)
 {
-    sfVideoMode mode;
-    sfRenderWindow *win;
-    sfVector2i corner;
+    sfVideoMode mode = {0};
+    sfRenderWindow *win = {0};
+    sfVector2i corner = {0};
 
     mode = sfVideoMode_getDesktopMode();
     win = sfRenderWindow_create(mode, TITLE, sfNone, NULL);
@@ -142,9 +120,9 @@ int wolf(void)
     game_t g = {0};
     menu_t m = {0};
 
-    if (!map || game_init(&g) == -1)
+    if (!map || game_init(&g) == EXIT_FAIL)
         return EXIT_FAIL;
-    if (init_menu(&m, &g) == -1) {
+    if (init_menu(&m, &g) == EXIT_FAIL) {
         sfRenderWindow_destroy(g.window);
         return EXIT_FAIL;
     }

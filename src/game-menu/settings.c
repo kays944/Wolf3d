@@ -134,22 +134,3 @@ void save_settings(settings_t *s)
     fprintf(f, "fullscreen %d\n", s->fullscreen);
     fclose(f);
 }
-
-int load_settings(settings_t *s)
-{
-    FILE *f = {0};
-
-    f = fopen(CFG_PATH, "r");
-    if (!f)
-        return EXIT_FAIL;
-    fscanf(f, "music_vol %f\n", &s->music_vol);
-    fscanf(f, "sfx_vol %f\n", &s->sfx_vol);
-    fscanf(f, "res_index %d\n", &s->res_index);
-    fscanf(f, "fullscreen %d\n", (int *)&s->fullscreen);
-    fclose(f);
-    if (s->res_index < 0 || s->res_index >= NUM_RES)
-        s->res_index = RES_DEFAULT;
-    s->win_w = RES_W[s->res_index];
-    s->win_h = RES_H[s->res_index];
-    return EXIT_SUCCESS;
-}

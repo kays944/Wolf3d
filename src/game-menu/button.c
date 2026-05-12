@@ -7,21 +7,6 @@
 
 #include "proto.h"
 
-static void center_text(button_t *btn)
-{
-    sfFloatRect tb = {0};
-    sfVector2f tpos = {0};
-    float tx = 0;
-    float ty = 0;
-
-    tb = sfText_getGlobalBounds(btn->label);
-    tx = btn->pos.x + (btn->size.x - tb.width) / 2.0f;
-    ty = btn->pos.y + (btn->size.y - tb.height) / 2.0f - 4.0f;
-    tpos.x = tx;
-    tpos.y = ty;
-    sfText_setPosition(btn->label, tpos);
-}
-
 static int btn_prepare(button_t *btn, const sfVector2f *pos)
 {
     sfVector2f sz = {0};
@@ -55,6 +40,21 @@ static void btn_apply_style(button_t *btn, sfFont *font, const char *txt)
     sfText_setString(btn->label, txt);
     sfText_setCharacterSize(btn->label, FONT_BTN_SZ);
     sfText_setFillColor(btn->label, sfWhite);
+}
+
+static void center_text(button_t *btn)
+{
+    sfFloatRect tb = {0};
+    sfVector2f tpos = {0};
+    float tx = 0;
+    float ty = 0;
+
+    tb = sfText_getGlobalBounds(btn->label);
+    tx = btn->pos.x + (btn->size.x - tb.width) / 2.0f;
+    ty = btn->pos.y + (btn->size.y - tb.height) / 2.0f - 4.0f;
+    tpos.x = tx;
+    tpos.y = ty;
+    sfText_setPosition(btn->label, tpos);
 }
 
 int init_button(button_t *btn, const sfVector2f *pos,

@@ -7,25 +7,6 @@
 
 #include "proto.h"
 
-static void create_buttons(menu_t *m)
-{
-    const char *labels[MAIN_BTN_COUNT];
-    sfVector2f p = {0};
-    float x = 0;
-
-    labels[0] = "JOUER";
-    labels[1] = "CHOISIR MAP";
-    labels[2] = "PARAMETRES";
-    labels[3] = "QUITTER";
-    x = (m->ww - BTN_W) / 2.0f;
-    for (int i = 0; i < MAIN_BTN_COUNT; i++) {
-        p.x = x;
-        p.y = m->wh * 0.42f + i * (BTN_H + BTN_GAP);
-        init_button(&m->main_btns[i], &p, labels[i], m->font_med);
-        m->main_btns[i].id = i;
-    }
-}
-
 static void setup_title_position(menu_t *m)
 {
     sfFloatRect lb = {0};
@@ -71,6 +52,25 @@ static int menu_clock_and_visuals(menu_t *m)
         return EXIT_FAIL;
     }
     return EXIT_SUCCESS;
+}
+
+static void create_buttons(menu_t *m)
+{
+    const char *labels[MAIN_BTN_COUNT];
+    sfVector2f p = {0};
+    float x = 0;
+
+    labels[0] = "JOUER";
+    labels[1] = "CHOISIR MAP";
+    labels[2] = "PARAMETRES";
+    labels[3] = "QUITTER";
+    x = (m->ww - BTN_W) / 2.0f;
+    for (int i = 0; i < MAIN_BTN_COUNT; i++) {
+        p.x = x;
+        p.y = m->wh * 0.42f + i * (BTN_H + BTN_GAP);
+        init_button(&m->main_btns[i], &p, labels[i], m->font_med);
+        m->main_btns[i].id = i;
+    }
 }
 
 int init_menu(menu_t *m, game_t *g)
