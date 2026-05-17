@@ -19,11 +19,13 @@ sfVertexArray *create_gradient_bg(const sfColor *top, const sfColor *bot,
 void get_resolution(int idx, int *w, int *h);
 void save_settings(settings_t *s);
 
+void setup_title_position(menu_t *m);
 int init_menu(menu_t *m, game_t *g);
 void cleanup_menu(menu_t *m);
 int run_menu(menu_t *m);
 
 void render_menu(menu_t *m);
+void render_menu_background(menu_t *m);
 void draw_filled_rect(sfRenderWindow *win,
     const sfFloatRect *r, const sfColor *col);
 void draw_title(menu_t *m, const char *str, float y);
@@ -48,5 +50,14 @@ void render_buttons(sfRenderWindow *win, button_t *btns,
     int count, int selected);
 int game_init(game_t *g);
 sfRenderWindow *open_fullscreen(void);
+int game_loop(char **map, game_t *g);
+void cleanup_game(game_t *g);
+int init_weapon(player_t *p);
+void destroy_weapon(player_t *p);
+
+int init_sound(sound_t *s, settings_t *set);
+void destroy_sound(sound_t *s);
+void update_sound_vol(sound_t *s, settings_t *set);
+void play_shoot(sound_t *s);
 
 #endif

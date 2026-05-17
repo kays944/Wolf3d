@@ -22,6 +22,11 @@ typedef struct player_s {
     float x;
     float y;
     float angle;
+    sfTexture *weapon_idle;
+    sfTexture *weapon_fire;
+    sfSprite *weapon_spr;
+    sfClock *weapon_clock;
+    sfBool firing;
 } player_t;
 
 typedef enum e_game_state {
@@ -64,6 +69,13 @@ typedef struct s_settings {
     int win_h;
 } settings_t;
 
+typedef struct s_sound {
+    sfMusic *menu_music;
+    sfMusic *game_music;
+    sfSoundBuffer *shoot_buf;
+    sfSound *shoot_snd;
+} sound_t;
+
 typedef struct s_button {
     sfRectangleShape *bg;
     sfText *label;
@@ -80,13 +92,14 @@ typedef struct s_game {
     sfBool running;
     game_state_t state;
     settings_t settings;
+    sound_t sound;
     int selected_map;
 } game_t;
 
 
 int wolf(void);
 void draw(sfRenderWindow *window, player_t *player, char **map);
-int event(sfRenderWindow *window, player_t *player, char **map);
+int event(sfRenderWindow *window, player_t *player, char **map, sound_t *s);
 void close_all(sfRenderWindow *window);
 char **parsing_map(char *path);
 void update_player(sfRenderWindow *window, player_t *player, char **map);
@@ -97,6 +110,7 @@ typedef struct s_menu {
     sfRenderWindow *window;
     sfFont *font_big;
     sfFont *font_med;
+    sfFont *font_title;
     sfClock *clock;
     double dt;
     float ww;
@@ -108,12 +122,15 @@ typedef struct s_menu {
     button_t main_btns[MAIN_BTN_COUNT];
     sfText *title;
     sfVertexArray *bg;
+    sfTexture *bg_tex;
+    sfSprite *bg_spr;
     button_t map_btns[MAP_BTN_COUNT];
     char map_names[MAX_MAPS][MAP_NAME_LEN];
     int map_count;
     int map_selected;
     button_t set_btns[SET_BTN_COUNT];
     settings_t *settings;
+    sound_t *sound;
     int settings_sel;
     int action;
     int chosen_map;

@@ -50,14 +50,18 @@ extern int map[MAP_HEIGHT][MAP_WIDTH];
     #define FONT_SMALL_SZ 18
     #define FONT_LABEL_SZ 20
 
-    #define COL_TITLE sfColor_fromRGB(220, 50, 30)
-    #define COL_HINT sfColor_fromRGB(150, 150, 150)
-    #define COL_LABEL sfColor_fromRGB(200, 200, 200)
-    #define COL_SEL sfColor_fromRGB(255, 200, 40)
+    #define COL_TITLE sfColor_fromRGB(255, 140, 30)
+    #define COL_HINT sfColor_fromRGB(170, 140, 100)
+    #define COL_LABEL sfColor_fromRGB(195, 170, 130)
+    #define COL_SEL sfColor_fromRGB(255, 175, 35)
     #define COL_BG_TOP sfColor_fromRGB(10, 8, 8)
     #define COL_BG_BOT sfColor_fromRGB(70, 15, 10)
-    #define COL_BTN sfColor_fromRGBA(35, 35, 35, 220)
-    #define COL_BTN_HOV sfColor_fromRGBA(110, 25, 15, 240)
+    #define COL_BTN sfColor_fromRGBA(8, 4, 2, 195)
+    #define COL_BTN_HOV sfColor_fromRGBA(28, 12, 4, 225)
+    #define COL_BTN_BORDER sfColor_fromRGBA(180, 70, 15, 85)
+    #define COL_BTN_BORDER_HOV sfColor_fromRGBA(255, 125, 25, 210)
+    #define TITLE_FONT "assets/fonts/MetalMania.ttf"
+    #define TITLE_BIG_SZ 80
 
     #define MAX_MAPS 16
     #define MAP_NAME_LEN 64
@@ -85,5 +89,8 @@ extern int map[MAP_HEIGHT][MAP_WIDTH];
     #define SCR_COUNT 3
     #define BITS_PER_PIXEL 32
 
+    #define SND_MENU    "assets/sounds/song_game-menu.wav"
+    #define SND_GAME    "assets/sounds/song-game.wav"
+    #define SND_SHOOT   "assets/sounds/spas12-sound.wav"
 
 #endif
