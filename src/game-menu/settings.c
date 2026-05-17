@@ -74,9 +74,27 @@ static void toggle_fullscr(settings_t *s)
         s->fullscreen = sfTrue;
 }
 
-static void on_set_adjust(menu_t *m, sfEvent *e)
+static void adjust_vol_or_setting(menu_t *m, int dir)
 {
     float *vol = NULL;
+
+    if (m->settings_sel == SET_MUSIC)
+        vol = &m->settings->music_vol;
+    if (m->settings_sel == SET_SFX)
+        vol = &m->settings->sfx_vol;
+    if (vol != NULL) {
+        apply_vol_step(vol, dir);
+        update_sound_vol(m->sound, m->settings);
+        return;
+    }
+    if (m->settings_sel == SET_RES)
+        cycle_resolution(m, dir);
+    if (m->settings_sel == SET_FULLSCR)
+        toggle_fullscr(m->settings);
+}
+
+static void on_set_adjust(menu_t *m, sfEvent *e)
+{
     int dir = 0;
 
     if (e->key.code != sfKeyLeft && e->key.code != sfKeyRight)
@@ -85,16 +103,7 @@ static void on_set_adjust(menu_t *m, sfEvent *e)
         dir = -1;
     else
         dir = 1;
-    if (m->settings_sel == SET_MUSIC)
-        vol = &m->settings->music_vol;
-    if (m->settings_sel == SET_SFX)
-        vol = &m->settings->sfx_vol;
-    if (vol != NULL)
-        apply_vol_step(vol, dir);
-    if (m->settings_sel == SET_RES)
-        cycle_resolution(m, dir);
-    if (m->settings_sel == SET_FULLSCR)
-        toggle_fullscr(m->settings);
+    adjust_vol_or_setting(m, dir);
 }
 
 void handle_settings_events(menu_t *m, sfEvent *e)

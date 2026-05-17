@@ -6,7 +6,6 @@
 */
 
 #include <stdio.h>
-#include <math.h>
 #include "macros.h"
 #include "wolf.h"
 #include "proto.h"
@@ -14,62 +13,11 @@
 const int RES_W[NUM_RES] = {800, 1024, 1280, 1920};
 const int RES_H[NUM_RES] = {600, 768, 720, 1080};
 
-static sfRenderWindow *creation_window(void)
-{
-    sfVideoMode mode = {WIN_WIDTH, WIN_HEIGHT, FREQUENCY};
-    sfRenderWindow *window = {0};
-
-    window = sfRenderWindow_create(mode, "fen1", sfResize | sfClose, NULL);
-    return window;
-}
-
-static int init_player(char **map, player_t *player)
-{
-    int col = 0;
-    int row = 0;
-    int find = 0;
-
-    for (; col != MAP_HEIGHT; ++row) {
-        if (map[col][row] == 'o') {
-            find = 1;
-            break;
-        }
-        if (row == MAP_WIDTH) {
-            col += 1;
-            row = -1;
-        }
-    }
-    if (find == 0)
-        return EXIT_FAIL;
-    player->x = row * TILE_SIZE + TILE_SIZE / 2;
-    player->y = col * TILE_SIZE + TILE_SIZE / 2;
-    player->angle = fmod(0, 2 * M_PI);
-    return EXIT_SUCCESS;
-}
-
-static int game_loop(char **map, game_t *g)
-{
-    sfRenderWindow *window = creation_window();
-    player_t player = {0};
-
-    if (!window || init_player(map, &player) == EXIT_FAIL)
-        return EXIT_FAIL;
-    while (sfRenderWindow_isOpen(window)) {
-        if (event(window, &player, map) == EVENT_CLOSE)
-            break;
-        draw(window, &player, map);
-    }
-    close_all(window);
-    return EXIT_SUCCESS;
-}
-
 static void set_vert(sfVertex *v, float x, float y, const sfColor *col)
 {
     v->position.x = x;
     v->position.y = y;
     v->color = *col;
-    v->texCoords.x = 0;
-    v->texCoords.y = 0;
 }
 
 void get_resolution(int idx, int *w, int *h)
@@ -97,21 +45,18 @@ sfVertexArray *create_gradient_bg(const sfColor *top, const sfColor *bot,
     return va;
 }
 
-sfRenderWindow *open_fullscreen(void)
+static int start_menu(game_t *g, menu_t *m)
 {
-    sfVideoMode mode = {0};
-    sfRenderWindow *win = {0};
-    sfVector2i corner = {0};
-
-    mode = sfVideoMode_getDesktopMode();
-    win = sfRenderWindow_create(mode, TITLE, sfNone, NULL);
-    if (!win)
-        return NULL;
-    corner.x = 0;
-    corner.y = 0;
-    sfRenderWindow_setPosition(win, corner);
-    sfRenderWindow_requestFocus(win);
-    return win;
+    if (init_sound(&g->sound, &g->settings) == EXIT_FAIL) {
+        sfRenderWindow_destroy(g->window);
+        return EXIT_FAIL;
+    }
+    sfMusic_play(g->sound.menu_music);
+    if (init_menu(m, g) == EXIT_FAIL) {
+        cleanup_game(g);
+        return EXIT_FAIL;
+    }
+    return EXIT_SUCCESS;
 }
 
 int wolf(void)
@@ -122,18 +67,13 @@ int wolf(void)
 
     if (!map || game_init(&g) == EXIT_FAIL)
         return EXIT_FAIL;
-    if (init_menu(&m, &g) == EXIT_FAIL) {
-        sfRenderWindow_destroy(g.window);
+    if (start_menu(&g, &m) == EXIT_FAIL)
         return EXIT_FAIL;
-    }
     run_menu(&m);
     g.selected_map = m.chosen_map;
     cleanup_menu(&m);
     if (m.action == MENU_PLAY)
         game_loop(map, &g);
-    if (g.font_big)
-        sfFont_destroy(g.font_big);
-    if (g.window)
-        sfRenderWindow_destroy(g.window);
+    cleanup_game(&g);
     return EXIT_SUCCESS;
 }

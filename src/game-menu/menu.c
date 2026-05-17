@@ -7,7 +7,7 @@
 
 #include "proto.h"
 
-static void setup_title_position(menu_t *m)
+void setup_title_position(menu_t *m)
 {
     sfFloatRect lb = {0};
     sfVector2f p = {0};
@@ -18,26 +18,75 @@ static void setup_title_position(menu_t *m)
     sfText_setPosition(m->title, p);
 }
 
-static int setup_menu_visuals(menu_t *m)
+static void load_bg_image(menu_t *m)
+{
+    m->bg_tex = sfTexture_createFromFile("./assets/fond_game-menu.jpg", NULL);
+    if (!m->bg_tex)
+        return;
+    sfTexture_setSmooth(m->bg_tex, sfTrue);
+    m->bg_spr = sfSprite_create();
+    if (m->bg_spr) {
+        sfSprite_setTexture(m->bg_spr, m->bg_tex, sfTrue);
+        return;
+    }
+    sfTexture_destroy(m->bg_tex);
+    m->bg_tex = NULL;
+}
+
+static int setup_bg(menu_t *m)
 {
     sfColor top = COL_BG_TOP;
     sfColor bot = COL_BG_BOT;
 
+    load_bg_image(m);
+    if (m->bg_spr) {
+        m->bg = NULL;
+        return EXIT_SUCCESS;
+    }
     m->bg = create_gradient_bg(&top, &bot, m->ww, m->wh);
     if (!m->bg)
-        return -1;
-    m->title = sfText_create();
-    if (!m->title) {
-        sfVertexArray_destroy(m->bg);
-        m->bg = NULL;
         return EXIT_FAIL;
-    }
-    sfText_setFont(m->title, m->font_big);
+    return EXIT_SUCCESS;
+}
+
+static int setup_title(menu_t *m)
+{
+    m->font_title = sfFont_createFromFile(TITLE_FONT);
+    if (!m->font_title)
+        m->font_title = m->font_big;
+    m->title = sfText_create();
+    if (!m->title)
+        return EXIT_FAIL;
+    sfText_setFont(m->title, m->font_title);
     sfText_setString(m->title, "WOLF 3D");
-    sfText_setCharacterSize(m->title, TITLE_SZ);
+    sfText_setCharacterSize(m->title, TITLE_BIG_SZ);
     sfText_setFillColor(m->title, COL_TITLE);
     sfText_setStyle(m->title, sfTextBold);
     setup_title_position(m);
+    return EXIT_SUCCESS;
+}
+
+static void destroy_bg(menu_t *m)
+{
+    if (m->bg_spr)
+        sfSprite_destroy(m->bg_spr);
+    if (m->bg_tex)
+        sfTexture_destroy(m->bg_tex);
+    if (m->bg)
+        sfVertexArray_destroy(m->bg);
+    m->bg_spr = NULL;
+    m->bg_tex = NULL;
+    m->bg = NULL;
+}
+
+static int setup_menu_visuals(menu_t *m)
+{
+    if (setup_bg(m) == EXIT_FAIL)
+        return EXIT_FAIL;
+    if (setup_title(m) == EXIT_FAIL) {
+        destroy_bg(m);
+        return EXIT_FAIL;
+    }
     return EXIT_SUCCESS;
 }
 
@@ -82,6 +131,7 @@ int init_menu(menu_t *m, game_t *g)
     m->font_big = g->font_big;
     m->font_med = g->font_med;
     m->settings = &g->settings;
+    m->sound = &g->sound;
     sz = sfRenderWindow_getSize(m->window);
     m->ww = (float)sz.x;
     m->wh = (float)sz.y;
@@ -103,8 +153,16 @@ void cleanup_menu(menu_t *m)
     cleanup_settings_menu(m);
     if (m->title)
         sfText_destroy(m->title);
+    if (m->font_title && m->font_title != m->font_big)
+        sfFont_destroy(m->font_title);
     if (m->bg)
         sfVertexArray_destroy(m->bg);
+    if (m->bg_spr)
+        sfSprite_destroy(m->bg_spr);
+    if (m->bg_tex)
+        sfTexture_destroy(m->bg_tex);
+    m->bg_spr = NULL;
+    m->bg_tex = NULL;
     if (m->clock)
         sfClock_destroy(m->clock);
 }

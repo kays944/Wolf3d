@@ -23,9 +23,9 @@ static void draw_bar(menu_t *m, float val, float y)
     fill.top = y + 4.0f;
     fill.width = fill_w;
     fill.height = 22.0f;
-    col = sfColor_fromRGB(50, 50, 50);
+    col = sfColor_fromRGB(20, 12, 6);
     draw_filled_rect(m->window, &bg, &col);
-    col = sfColor_fromRGB(180, 40, 20);
+    col = sfColor_fromRGB(210, 90, 15);
     draw_filled_rect(m->window, &fill, &col);
 }
 
@@ -115,8 +115,7 @@ void render_settings(menu_t *m)
 {
     int back_sel = -1;
 
-    if (m->bg)
-        sfRenderWindow_drawVertexArray(m->window, m->bg, NULL);
+    render_menu_background(m);
     draw_title(m, "PARAMETRES", 60.0f);
     draw_hint(m, "Fleches haut/bas, gauche/droite", 130.0f);
     render_settings_inner(m);

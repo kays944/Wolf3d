@@ -28,6 +28,21 @@ static void forward_backward(player_t *player, char **map)
     }
 }
 
+static void update_weapon(player_t *player)
+{
+    sfTime t = {0};
+    float ms = 0;
+
+    if (player->firing == sfFalse)
+        return;
+    t = sfClock_getElapsedTime(player->weapon_clock);
+    ms = sfTime_asMilliseconds(t);
+    if (ms < 150.0f)
+        return;
+    player->firing = sfFalse;
+    sfSprite_setTexture(player->weapon_spr, player->weapon_idle, sfTrue);
+}
+
 void update_player(sfRenderWindow *window, player_t *player, char **map)
 {
     if (sfKeyboard_isKeyPressed(sfKeyZ) || sfKeyboard_isKeyPressed(sfKeyS))
@@ -36,4 +51,5 @@ void update_player(sfRenderWindow *window, player_t *player, char **map)
         player->angle -= ROTATION_SPEED;
     if (sfKeyboard_isKeyPressed(sfKeyD))
         player->angle += ROTATION_SPEED;
+    update_weapon(player);
 }

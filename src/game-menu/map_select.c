@@ -118,8 +118,8 @@ static void draw_map_bg(menu_t *m, int i, float y)
     sfColor nor_bg = {0};
     sfFloatRect bg = {0};
 
-    sel_bg = sfColor_fromRGBA(110, 25, 15, 220);
-    nor_bg = sfColor_fromRGBA(30, 30, 30, 180);
+    sel_bg = sfColor_fromRGBA(130, 55, 10, 225);
+    nor_bg = sfColor_fromRGBA(15, 8, 4, 185);
     bg.left = (m->ww - 600.0f) / 2.0f - 10.0f;
     bg.top = y - 5.0f;
     bg.width = 620.0f;
@@ -157,8 +157,7 @@ void render_map_select(menu_t *m)
     int i = 0;
     float row_y = 0;
 
-    if (m->bg)
-        sfRenderWindow_drawVertexArray(m->window, m->bg, NULL);
+    render_menu_background(m);
     draw_title(m, "CHOISIR UNE MAP", 60.0f);
     draw_hint(m, "Fleches pour naviguer, Entree pour selectionner", 130.0f);
     if (m->map_count == 0) {

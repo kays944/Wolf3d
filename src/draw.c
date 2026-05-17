@@ -115,5 +115,7 @@ void draw(sfRenderWindow *window, player_t *player, char **map)
     sfRenderWindow_clear(window, sfBlack);
     draw_floor_and_ceiling(window);
     cast_all_rays(window, player, map);
+    if (player->weapon_spr)
+        sfRenderWindow_drawSprite(window, player->weapon_spr, NULL);
     sfRenderWindow_display(window);
 }

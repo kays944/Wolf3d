@@ -35,7 +35,7 @@ static void btn_apply_style(button_t *btn, sfFont *font, const char *txt)
 {
     sfRectangleShape_setSize(btn->bg, btn->size);
     sfRectangleShape_setPosition(btn->bg, btn->pos);
-    sfRectangleShape_setOutlineThickness(btn->bg, 2.0f);
+    sfRectangleShape_setOutlineThickness(btn->bg, 1.0f);
     sfText_setFont(btn->label, font);
     sfText_setString(btn->label, txt);
     sfText_setCharacterSize(btn->label, FONT_BTN_SZ);
@@ -102,20 +102,17 @@ sfBool button_is_clicked(button_t *btn, const sfVector2f *mouse)
 static void render_button(sfRenderWindow *win, button_t *btn, sfBool sel)
 {
     sfBool active = sfFalse;
-    sfColor line = {0};
 
     if (!btn->bg || !btn->label)
         return;
     active = btn->hovered || sel;
     if (active) {
         sfRectangleShape_setFillColor(btn->bg, COL_BTN_HOV);
-        line = sfColor_fromRGB(200, 60, 40);
-        sfRectangleShape_setOutlineColor(btn->bg, line);
+        sfRectangleShape_setOutlineColor(btn->bg, COL_BTN_BORDER_HOV);
         sfText_setFillColor(btn->label, COL_SEL);
     } else {
         sfRectangleShape_setFillColor(btn->bg, COL_BTN);
-        line = sfColor_fromRGB(80, 80, 80);
-        sfRectangleShape_setOutlineColor(btn->bg, line);
+        sfRectangleShape_setOutlineColor(btn->bg, COL_BTN_BORDER);
         sfText_setFillColor(btn->label, sfWhite);
     }
     sfRenderWindow_drawRectangleShape(win, btn->bg, NULL);

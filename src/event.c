@@ -6,18 +6,31 @@
 */
 
 #include "macros.h"
-#include "wolf.h"
+#include "proto.h"
 
-int event(sfRenderWindow *window, player_t *player, char **map)
+static void check_fire(player_t *player, sfEvent *e, sound_t *s)
 {
-    sfEvent event = {0};
-    sfVector2i mouse = {0};
+    if (e->type != sfEvtMouseButtonPressed)
+        return;
+    if (e->mouseButton.button != sfMouseLeft)
+        return;
+    if (player->firing == sfTrue)
+        return;
+    player->firing = sfTrue;
+    sfSprite_setTexture(player->weapon_spr, player->weapon_fire, sfTrue);
+    sfClock_restart(player->weapon_clock);
+    play_shoot(s);
+}
 
-    while (sfRenderWindow_pollEvent(window, &event)) {
-        mouse = sfMouse_getPositionRenderWindow(window);
-        if (event.type == sfEvtClosed)
+int event(sfRenderWindow *window, player_t *player, char **map, sound_t *s)
+{
+    sfEvent ev = {0};
+
+    while (sfRenderWindow_pollEvent(window, &ev)) {
+        if (ev.type == sfEvtClosed)
             return EVENT_CLOSE;
-        update_player(window, player, map);
+        check_fire(player, &ev, s);
     }
+    update_player(window, player, map);
     return EXIT_SUCCESS;
 }

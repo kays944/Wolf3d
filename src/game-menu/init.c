@@ -28,6 +28,20 @@ int load_settings(settings_t *s)
     return EXIT_SUCCESS;
 }
 
+sfRenderWindow *open_fullscreen(void)
+{
+    sfVideoMode mode = sfVideoMode_getDesktopMode();
+    sfRenderWindow *win = {0};
+    sfVector2i corner = {0};
+
+    win = sfRenderWindow_create(mode, TITLE, sfNone, NULL);
+    if (!win)
+        return NULL;
+    sfRenderWindow_setPosition(win, corner);
+    sfRenderWindow_requestFocus(win);
+    return win;
+}
+
 int init_window(game_t *g)
 {
     sfVideoMode mode = {0};

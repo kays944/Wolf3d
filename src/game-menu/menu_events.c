@@ -103,6 +103,38 @@ static void handle_menu_event(menu_t *m, sfEvent *e)
         handle_settings_events(m, e);
 }
 
+static void reposition_btn(button_t *btn, const sfVector2f *pos)
+{
+    sfFloatRect tb = {0};
+    sfVector2f tp = {0};
+
+    btn->pos = *pos;
+    if (btn->bg)
+        sfRectangleShape_setPosition(btn->bg, btn->pos);
+    if (!btn->label)
+        return;
+    tb = sfText_getGlobalBounds(btn->label);
+    tp.x = pos->x + (btn->size.x - tb.width) / 2.0f;
+    tp.y = pos->y + (btn->size.y - tb.height) / 2.0f - 4.0f;
+    sfText_setPosition(btn->label, tp);
+}
+
+static void sync_window_size(menu_t *m)
+{
+    sfVector2u sz = sfRenderWindow_getSize(m->window);
+    float x = 0;
+    sfVector2f p = {0};
+
+    m->ww = (float)sz.x;
+    m->wh = (float)sz.y;
+    x = (m->ww - BTN_W) / 2.0f;
+    for (int i = 0; i < MAIN_BTN_COUNT; i++) {
+        p.x = x;
+        p.y = m->wh * 0.42f + i * (BTN_H + BTN_GAP);
+        reposition_btn(&m->main_btns[i], &p);
+    }
+}
+
 int run_menu(menu_t *m)
 {
     sfTime elapsed = {0};
@@ -113,6 +145,7 @@ int run_menu(menu_t *m)
         m->dt = (double)sfTime_asSeconds(elapsed);
         while (sfRenderWindow_pollEvent(m->window, &e))
             handle_menu_event(m, &e);
+        sync_window_size(m);
         render_menu(m);
     }
     return m->action;
