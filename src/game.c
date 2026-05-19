@@ -12,9 +12,9 @@
 static sfRenderWindow *creation_window(void)
 {
     sfVideoMode mode = {WIN_WIDTH, WIN_HEIGHT, FREQUENCY};
-    sfRenderWindow *window = {0};
+    sfRenderWindow *window = NULL;
 
-    window = sfRenderWindow_create(mode, "fen1", sfResize | sfClose, NULL);
+    window = sfRenderWindow_create(mode, TITLE, sfResize | sfClose, NULL);
     if (window)
         sfRenderWindow_setFramerateLimit(window, 60);
     return window;
@@ -70,26 +70,54 @@ void cleanup_game(game_t *g)
         sfRenderWindow_destroy(g->window);
 }
 
+static int init_player_tools(player_t *player, sfRenderWindow *window)
+{
+    if (init_weapon(player) == EXIT_FAIL) {
+        close_all(window);
+        return EXIT_FAIL;
+    }
+    if (init_flashlight(player) == EXIT_FAIL) {
+        destroy_weapon(player);
+        close_all(window);
+        return EXIT_FAIL;
+    }
+    return EXIT_SUCCESS;
+}
+
+static int run_game(sfRenderWindow *w, player_t *p, char **map, game_t *g)
+{
+    int ev = 0;
+    int ret = PAUSE_RESUME;
+
+    sfMusic_stop(g->sound.menu_music);
+    sfMusic_play(g->sound.game_music);
+    while (sfRenderWindow_isOpen(w)) {
+        ev = event(w, p, map, &g->sound);
+        if (ev == EVENT_CLOSE)
+            break;
+        if (ev == EVENT_PAUSE)
+            ret = run_pause(w, g);
+        if (ret != PAUSE_RESUME)
+            break;
+        draw(w, p, map);
+    }
+    sfMusic_stop(g->sound.game_music);
+    return ret;
+}
+
 int game_loop(char **map, game_t *g)
 {
     sfRenderWindow *window = creation_window();
     player_t player = {0};
+    int ret = 0;
 
     if (!window || init_player(map, &player) == EXIT_FAIL)
         return EXIT_FAIL;
-    if (init_weapon(&player) == EXIT_FAIL) {
-        close_all(window);
+    if (init_player_tools(&player, window) == EXIT_FAIL)
         return EXIT_FAIL;
-    }
-    sfMusic_stop(g->sound.menu_music);
-    sfMusic_play(g->sound.game_music);
-    while (sfRenderWindow_isOpen(window)) {
-        if (event(window, &player, map, &g->sound) == EVENT_CLOSE)
-            break;
-        draw(window, &player, map);
-    }
-    sfMusic_stop(g->sound.game_music);
+    ret = run_game(window, &player, map, g);
+    destroy_flashlight(&player);
     destroy_weapon(&player);
     close_all(window);
-    return EXIT_SUCCESS;
+    return ret;
 }

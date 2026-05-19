@@ -31,7 +31,7 @@ void get_resolution(int idx, int *w, int *h)
 sfVertexArray *create_gradient_bg(const sfColor *top, const sfColor *bot,
     float w, float h)
 {
-    sfVertexArray *va = {0};
+    sfVertexArray *va = NULL;
 
     va = sfVertexArray_create();
     if (!va)
@@ -45,35 +45,36 @@ sfVertexArray *create_gradient_bg(const sfColor *top, const sfColor *bot,
     return va;
 }
 
-static int start_menu(game_t *g, menu_t *m)
+static int run_cycle(char **map, game_t *g)
 {
-    if (init_sound(&g->sound, &g->settings) == EXIT_FAIL) {
-        sfRenderWindow_destroy(g->window);
-        return EXIT_FAIL;
-    }
+    menu_t m = {0};
+    int action = 0;
+
     sfMusic_play(g->sound.menu_music);
-    if (init_menu(m, g) == EXIT_FAIL) {
-        cleanup_game(g);
+    if (init_menu(&m, g) == EXIT_FAIL)
         return EXIT_FAIL;
-    }
-    return EXIT_SUCCESS;
+    action = run_menu(&m);
+    g->selected_map = m.chosen_map;
+    cleanup_menu(&m);
+    if (action != MENU_PLAY)
+        return EXIT_SUCCESS;
+    return game_loop(map, g);
 }
 
 int wolf(void)
 {
     char **map = parsing_map(BASIC_MAP_PATH);
     game_t g = {0};
-    menu_t m = {0};
+    int ret = PAUSE_MENU;
 
     if (!map || game_init(&g) == EXIT_FAIL)
         return EXIT_FAIL;
-    if (start_menu(&g, &m) == EXIT_FAIL)
+    if (init_sound(&g.sound, &g.settings) == EXIT_FAIL) {
+        cleanup_game(&g);
         return EXIT_FAIL;
-    run_menu(&m);
-    g.selected_map = m.chosen_map;
-    cleanup_menu(&m);
-    if (m.action == MENU_PLAY)
-        game_loop(map, &g);
+    }
+    while (ret == PAUSE_MENU)
+        ret = run_cycle(map, &g);
     cleanup_game(&g);
     return EXIT_SUCCESS;
 }

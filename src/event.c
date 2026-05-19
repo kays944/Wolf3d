@@ -8,6 +8,15 @@
 #include "macros.h"
 #include "proto.h"
 
+static void check_switch(player_t *player, sfEvent *e)
+{
+    if (e->type != sfEvtKeyPressed)
+        return;
+    if (e->key.code != sfKeyP)
+        return;
+    toggle_flashlight(player);
+}
+
 static void check_fire(player_t *player, sfEvent *e, sound_t *s)
 {
     if (e->type != sfEvtMouseButtonPressed)
@@ -29,7 +38,10 @@ int event(sfRenderWindow *window, player_t *player, char **map, sound_t *s)
     while (sfRenderWindow_pollEvent(window, &ev)) {
         if (ev.type == sfEvtClosed)
             return EVENT_CLOSE;
+        if (ev.type == sfEvtKeyPressed && ev.key.code == sfKeyEscape)
+            return EVENT_PAUSE;
         check_fire(player, &ev, s);
+        check_switch(player, &ev);
     }
     update_player(window, player, map);
     return EXIT_SUCCESS;
