@@ -55,6 +55,15 @@ void cleanup_game(game_t *g);
 int init_weapon(player_t *p);
 void destroy_weapon(player_t *p);
 
+int init_flashlight(player_t *p);
+void destroy_flashlight(player_t *p);
+void draw_flashlight(sfRenderWindow *win, player_t *p);
+void toggle_flashlight(player_t *p);
+
+int run_pause(sfRenderWindow *win, game_t *g);
+void render_pause(pause_t *p);
+void draw_overlay(sfRenderWindow *win, float ww, float wh);
+
 int init_sound(sound_t *s, settings_t *set);
 void destroy_sound(sound_t *s);
 void update_sound_vol(sound_t *s, settings_t *set);

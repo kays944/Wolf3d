@@ -16,7 +16,20 @@
     #define FREQUENCY 32
 
     #define EVENT_CLOSE 1
+    #define EVENT_PAUSE 2
     #define IS_WALL 1
+
+    #define PAUSE_RESUME 0
+    #define PAUSE_MENU 1
+    #define PAUSE_QUIT 2
+
+    #define PBTN_OPT 0
+    #define PBTN_BACK 1
+    #define PBTN_QUIT_ID 2
+    #define PAUSE_BTN_COUNT 3
+
+    #define PSCR_MAIN 0
+    #define PSCR_OPT 1
 
     #define TILE_SIZE 64
     #define MAP_WIDTH 8
@@ -89,8 +102,13 @@ extern int map[MAP_HEIGHT][MAP_WIDTH];
     #define SCR_COUNT 3
     #define BITS_PER_PIXEL 32
 
-    #define SND_MENU    "assets/sounds/song_game-menu.wav"
-    #define SND_GAME    "assets/sounds/song-game.wav"
-    #define SND_SHOOT   "assets/sounds/spas12-sound.wav"
+    #define SND_MENU "assets/sounds/song_game-menu.wav"
+    #define SND_GAME "assets/sounds/song-game.wav"
+    #define SND_SHOOT "assets/sounds/spas12-sound.wav"
+
+    #define FL_R (WIN_HEIGHT / 4.0f)
+    #define FL_FEATHER 100.0f
+    #define FL_R_BIG 1500.0f
+    #define FL_N 64
 
 #endif

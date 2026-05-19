@@ -27,6 +27,11 @@ typedef struct player_s {
     sfSprite *weapon_spr;
     sfClock *weapon_clock;
     sfBool firing;
+    sfBool flashlight;
+    sfTexture *fl_tex;
+    sfSprite *fl_spr;
+    sfVertexArray *fl_feather;
+    sfVertexArray *fl_dark;
 } player_t;
 
 typedef enum e_game_state {
@@ -84,6 +89,22 @@ typedef struct s_button {
     int id;
     sfBool hovered;
 } button_t;
+
+typedef struct s_pause {
+    sfRenderWindow *window;
+    sfFont *font;
+    float ww;
+    float wh;
+    button_t btns[PAUSE_BTN_COUNT];
+    button_t opt_back;
+    int screen;
+    sfBool running;
+    int action;
+    int opt_sel;
+    sfVector2f mouse;
+    sound_t *sound;
+    settings_t *settings;
+} pause_t;
 
 typedef struct s_game {
     sfRenderWindow *window;
