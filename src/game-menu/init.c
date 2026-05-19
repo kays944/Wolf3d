@@ -11,7 +11,7 @@
 
 int load_settings(settings_t *s)
 {
-    FILE *f = {0};
+    FILE *f = NULL;
 
     f = fopen(CFG_PATH, "r");
     if (!f)
@@ -31,7 +31,7 @@ int load_settings(settings_t *s)
 sfRenderWindow *open_fullscreen(void)
 {
     sfVideoMode mode = sfVideoMode_getDesktopMode();
-    sfRenderWindow *win = {0};
+    sfRenderWindow *win = NULL;
     sfVector2i corner = {0};
 
     win = sfRenderWindow_create(mode, TITLE, sfNone, NULL);
@@ -65,7 +65,7 @@ int init_window(game_t *g)
 
 static sfFont *load_font_safe(void)
 {
-    sfFont *f = {0};
+    sfFont *f = NULL;
 
     f = sfFont_createFromFile("assets/fonts/wolf3d.ttf");
     if (f)

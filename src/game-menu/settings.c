@@ -132,7 +132,7 @@ void handle_settings_events(menu_t *m, sfEvent *e)
 
 void save_settings(settings_t *s)
 {
-    FILE *f = {0};
+    FILE *f = NULL;
 
     f = fopen(CFG_PATH, "w");
     if (!f)

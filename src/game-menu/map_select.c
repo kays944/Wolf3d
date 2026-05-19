@@ -9,8 +9,8 @@
 
 static void scan_maps(menu_t *m)
 {
-    DIR *dir = {0};
-    struct dirent *entry = {0};
+    DIR *dir = NULL;
+    struct dirent *entry = NULL;
     size_t nlen = 0;
     size_t elen = strlen(MAP_EXT);
 
@@ -132,7 +132,7 @@ static void draw_map_bg(menu_t *m, int i, float y)
 
 static void draw_map_label(menu_t *m, int i, float y)
 {
-    sfText *txt = {0};
+    sfText *txt = NULL;
     sfVector2f tpos = {0};
 
     txt = sfText_create();
