@@ -17,6 +17,9 @@ SRC			= 	src/main.c 							\
 				src/sound.c 						\
 				src/game.c 							\
 				src/weapon.c 						\
+				src/flashlight.c 					\
+				src/pause.c 						\
+				src/pause_render.c 					\
 				src/utils/free_array.c 				\
 				src/utils/read_file.c 				\
 				src/utils/str_split.c 				\
