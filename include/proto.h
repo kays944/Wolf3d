@@ -69,4 +69,7 @@ void destroy_sound(sound_t *s);
 void update_sound_vol(sound_t *s, settings_t *set);
 void play_shoot(sound_t *s);
 
+int init_health_bar(player_t *p);
+void destroy_health_bar(player_t *p);
+
 #endif

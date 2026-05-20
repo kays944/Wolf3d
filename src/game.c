@@ -9,17 +9,6 @@
 #include "macros.h"
 #include "proto.h"
 
-static sfRenderWindow *creation_window(void)
-{
-    sfVideoMode mode = {WIN_WIDTH, WIN_HEIGHT, FREQUENCY};
-    sfRenderWindow *window = NULL;
-
-    window = sfRenderWindow_create(mode, TITLE, sfResize | sfClose, NULL);
-    if (window)
-        sfRenderWindow_setFramerateLimit(window, 60);
-    return window;
-}
-
 static int find_in_row(char *row, int *r)
 {
     int i = 0;
@@ -70,15 +59,17 @@ void cleanup_game(game_t *g)
         sfRenderWindow_destroy(g->window);
 }
 
-static int init_player_tools(player_t *player, sfRenderWindow *window)
+static int init_player_tools(player_t *player)
 {
-    if (init_weapon(player) == EXIT_FAIL) {
-        close_all(window);
+    if (init_weapon(player) == EXIT_FAIL)
         return EXIT_FAIL;
-    }
     if (init_flashlight(player) == EXIT_FAIL) {
         destroy_weapon(player);
-        close_all(window);
+        return EXIT_FAIL;
+    }
+    if (init_health_bar(player) == EXIT_FAIL) {
+        destroy_flashlight(player);
+        destroy_weapon(player);
         return EXIT_FAIL;
     }
     return EXIT_SUCCESS;
@@ -107,17 +98,19 @@ static int run_game(sfRenderWindow *w, player_t *p, char **map, game_t *g)
 
 int game_loop(char **map, game_t *g)
 {
-    sfRenderWindow *window = creation_window();
+    sfVector2u sz = sfRenderWindow_getSize(g->window);
     player_t player = {0};
     int ret = 0;
 
-    if (!window || init_player(map, &player) == EXIT_FAIL)
+    player.ww = (int)sz.x;
+    player.wh = (int)sz.y;
+    if (init_player(map, &player) == EXIT_FAIL)
         return EXIT_FAIL;
-    if (init_player_tools(&player, window) == EXIT_FAIL)
+    if (init_player_tools(&player) == EXIT_FAIL)
         return EXIT_FAIL;
-    ret = run_game(window, &player, map, g);
+    ret = run_game(g->window, &player, map, g);
+    destroy_health_bar(&player);
     destroy_flashlight(&player);
     destroy_weapon(&player);
-    close_all(window);
     return ret;
 }

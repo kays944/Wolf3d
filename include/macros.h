@@ -106,9 +106,14 @@ extern int map[MAP_HEIGHT][MAP_WIDTH];
     #define SND_GAME "assets/sounds/song-game.wav"
     #define SND_SHOOT "assets/sounds/spas12-sound.wav"
 
-    #define FL_R (WIN_HEIGHT / 4.0f)
     #define FL_FEATHER 100.0f
     #define FL_R_BIG 1500.0f
     #define FL_N 64
+
+    #define HEALTH_BAR_PATH "./assets/health_bar.png"
+    #define HEALTH_FRAME_W 353
+    #define HEALTH_FRAME_H 87
+    #define HEALTH_COLS 2
+    #define HEALTH_FRAMES 6
 
 #endif

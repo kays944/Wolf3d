@@ -14,11 +14,11 @@ static void place_weapon_sprite(player_t *p)
     sfVector2f sc = {0};
     sfVector2f pos = {0};
 
-    sc.x = (float)WIN_WIDTH / 2.0f / sz.x;
+    sc.x = (float)p->ww / 2.0f / sz.x;
     sc.y = sc.x;
     sfSprite_setScale(p->weapon_spr, sc);
-    pos.x = (WIN_WIDTH - sz.x * sc.x) / 2.0f;
-    pos.y = WIN_HEIGHT - sz.y * sc.y;
+    pos.x = (p->ww - sz.x * sc.x) / 2.0f;
+    pos.y = p->wh - sz.y * sc.y;
     sfSprite_setPosition(p->weapon_spr, pos);
 }
 

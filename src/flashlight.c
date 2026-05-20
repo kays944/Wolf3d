@@ -19,7 +19,8 @@ static void add_vertex(sfVertexArray *va, float x, float y, const sfColor *c)
     sfVertexArray_append(va, v);
 }
 
-static void build_feather_ring(sfVertexArray *va, float cx, float cy)
+static void build_feather_ring(sfVertexArray *va, float cx, float cy,
+    float fl_r)
 {
     sfColor dark = sfColor_fromRGBA(0, 0, 0, 210);
     sfColor trans = sfColor_fromRGBA(0, 0, 0, 0);
@@ -27,21 +28,21 @@ static void build_feather_ring(sfVertexArray *va, float cx, float cy)
 
     for (int i = 0; i <= FL_N; i++) {
         a = 2.0f * M_PI * i / FL_N;
-        add_vertex(va, cx + FL_R * cosf(a), cy + FL_R * sinf(a), &trans);
-        add_vertex(va, cx + (FL_R + FL_FEATHER) * cosf(a),
-            cy + (FL_R + FL_FEATHER) * sinf(a), &dark);
+        add_vertex(va, cx + fl_r * cosf(a), cy + fl_r * sinf(a), &trans);
+        add_vertex(va, cx + (fl_r + FL_FEATHER) * cosf(a),
+            cy + (fl_r + FL_FEATHER) * sinf(a), &dark);
     }
 }
 
-static void build_dark_ring(sfVertexArray *va, float cx, float cy)
+static void build_dark_ring(sfVertexArray *va, float cx, float cy, float fl_r)
 {
     sfColor dark = sfColor_fromRGBA(0, 0, 0, 210);
     float a = 0;
 
     for (int i = 0; i <= FL_N; i++) {
         a = 2.0f * M_PI * i / FL_N;
-        add_vertex(va, cx + (FL_R + FL_FEATHER) * cosf(a),
-            cy + (FL_R + FL_FEATHER) * sinf(a), &dark);
+        add_vertex(va, cx + (fl_r + FL_FEATHER) * cosf(a),
+            cy + (fl_r + FL_FEATHER) * sinf(a), &dark);
         add_vertex(va, cx + FL_R_BIG * cosf(a),
             cy + FL_R_BIG * sinf(a), &dark);
     }
@@ -49,14 +50,16 @@ static void build_dark_ring(sfVertexArray *va, float cx, float cy)
 
 static int setup_rings(player_t *p, float cx, float cy)
 {
+    float fl_r = p->wh / 4.0f;
+
     p->fl_feather = sfVertexArray_create();
     p->fl_dark = sfVertexArray_create();
     if (!p->fl_feather || !p->fl_dark)
         return EXIT_FAIL;
     sfVertexArray_setPrimitiveType(p->fl_feather, sfTriangleStrip);
     sfVertexArray_setPrimitiveType(p->fl_dark, sfTriangleStrip);
-    build_feather_ring(p->fl_feather, cx, cy);
-    build_dark_ring(p->fl_dark, cx, cy);
+    build_feather_ring(p->fl_feather, cx, cy, fl_r);
+    build_dark_ring(p->fl_dark, cx, cy, fl_r);
     return EXIT_SUCCESS;
 }
 
@@ -72,19 +75,19 @@ static int load_fl_sprite(player_t *p)
         return EXIT_FAIL;
     sfSprite_setTexture(p->fl_spr, p->fl_tex, sfTrue);
     sz = sfTexture_getSize(p->fl_tex);
-    sc.x = (float)WIN_WIDTH / 2.0f / sz.x;
+    sc.x = (float)p->ww / 2.0f / sz.x;
     sc.y = sc.x;
     sfSprite_setScale(p->fl_spr, sc);
-    pos.x = WIN_WIDTH - sz.x * sc.x;
-    pos.y = WIN_HEIGHT - sz.y * sc.y;
+    pos.x = p->ww - sz.x * sc.x;
+    pos.y = p->wh - sz.y * sc.y;
     sfSprite_setPosition(p->fl_spr, pos);
     return EXIT_SUCCESS;
 }
 
 int init_flashlight(player_t *p)
 {
-    float cx = WIN_WIDTH / 2.0f;
-    float cy = WIN_HEIGHT / 2.0f;
+    float cx = p->ww / 2.0f;
+    float cy = p->wh / 2.0f;
 
     p->fl_feather = NULL;
     p->fl_dark = NULL;

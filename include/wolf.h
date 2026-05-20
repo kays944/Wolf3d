@@ -22,6 +22,8 @@ typedef struct player_s {
     float x;
     float y;
     float angle;
+    int ww;
+    int wh;
     sfTexture *weapon_idle;
     sfTexture *weapon_fire;
     sfSprite *weapon_spr;
@@ -32,6 +34,8 @@ typedef struct player_s {
     sfSprite *fl_spr;
     sfVertexArray *fl_feather;
     sfVertexArray *fl_dark;
+    sfTexture *health_tex;
+    sfSprite *health_spr;
 } player_t;
 
 typedef enum e_game_state {
