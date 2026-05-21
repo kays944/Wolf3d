@@ -52,7 +52,6 @@ typedef enum e_menu_screen {
 
 typedef enum e_main_btn {
     BTN_PLAY = 0,
-    BTN_MAP,
     BTN_SETTINGS,
     BTN_QUIT,
     MAIN_BTN_COUNT
@@ -69,7 +68,7 @@ typedef enum e_set_btn {
     SET_BTN_COUNT
 } set_btn_t;
 
-typedef struct s_settings {
+typedef struct settings_s {
     float music_vol;
     float sfx_vol;
     int res_index;
@@ -78,14 +77,14 @@ typedef struct s_settings {
     int win_h;
 } settings_t;
 
-typedef struct s_sound {
+typedef struct sound_s {
     sfMusic *menu_music;
     sfMusic *game_music;
     sfSoundBuffer *shoot_buf;
     sfSound *shoot_snd;
 } sound_t;
 
-typedef struct s_button {
+typedef struct button_s {
     sfRectangleShape *bg;
     sfText *label;
     sfVector2f pos;
@@ -94,7 +93,14 @@ typedef struct s_button {
     sfBool hovered;
 } button_t;
 
-typedef struct s_pause {
+typedef struct map_s {
+    char **map;
+    char *path;
+    int size_x;
+    int size_y;
+} map_t;
+
+typedef struct pause_s {
     sfRenderWindow *window;
     sfFont *font;
     float ww;
@@ -108,11 +114,11 @@ typedef struct s_pause {
     sfVector2f mouse;
     sound_t *sound;
     settings_t *settings;
-    char **map;
+    map_t *map;
     player_t *player;
 } pause_t;
 
-typedef struct s_game {
+typedef struct game_s {
     sfRenderWindow *window;
     sfFont *font_big;
     sfFont *font_med;
@@ -120,18 +126,18 @@ typedef struct s_game {
     game_state_t state;
     settings_t settings;
     sound_t sound;
-    int selected_map;
+    map_t map;
 } game_t;
 
 
 int wolf(void);
-void draw(sfRenderWindow *window, player_t *player, char **map);
-int event(sfRenderWindow *window, player_t *player, char **map, sound_t *s);
+void draw(sfRenderWindow *window, player_t *player, map_t *m);
+int event(sfRenderWindow *window, player_t *player, map_t *m, sound_t *s);
 void close_all(sfRenderWindow *window);
-char **parsing_map(char *path);
-void update_player(sfRenderWindow *window, player_t *player, char **map);
+int parsing_map(map_t *m, char *path);
+void update_player(sfRenderWindow *window, player_t *player, map_t *m);
 
-int is_wall(int x, int y, char **map);
+int is_wall(int x, int y, map_t *m);
 
 typedef struct s_menu {
     sfRenderWindow *window;

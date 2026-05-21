@@ -27,7 +27,7 @@ static void setup_btns(pause_t *p)
     }
 }
 
-static int init_pause(pause_t *p, game_t *g, char **map, player_t *player)
+static int init_pause(pause_t *p, game_t *g, map_t *map, player_t *player)
 {
     sfVector2u sz = sfRenderWindow_getSize(g->window);
     sfVector2f bpos = {0};
@@ -118,7 +118,7 @@ static void handle_click(pause_t *p, sfVector2f *pos)
         return;
     }
     if (button_is_clicked(&p->btns[PBTN_SAVE], pos)) {
-        saving(p->map, p->player);
+        saving(p->map->map, p->player);
         return;
     }
     if (button_is_clicked(&p->btns[PBTN_BACK], pos)) {
@@ -170,7 +170,7 @@ static void handle_pause_event(pause_t *p, sfEvent *e)
         handle_pause_main(p, e);
 }
 
-int run_pause(sfRenderWindow *win, game_t *g, char **map, player_t *player)
+int run_pause(game_t *g, map_t *map, player_t *player)
 {
     pause_t p = {0};
     sfEvent e = {0};

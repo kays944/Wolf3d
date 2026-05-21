@@ -31,7 +31,7 @@ static void check_fire(player_t *player, sfEvent *e, sound_t *s)
     play_shoot(s);
 }
 
-int event(sfRenderWindow *window, player_t *player, char **map, sound_t *s)
+int event(sfRenderWindow *window, player_t *player, map_t *m, sound_t *s)
 {
     sfEvent ev = {0};
 
@@ -43,6 +43,6 @@ int event(sfRenderWindow *window, player_t *player, char **map, sound_t *s)
         check_fire(player, &ev, s);
         check_switch(player, &ev);
     }
-    update_player(window, player, map);
+    update_player(window, player, m);
     return EXIT_SUCCESS;
 }

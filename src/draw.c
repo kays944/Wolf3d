@@ -9,14 +9,14 @@
 #include "proto.h"
 #include <math.h>
 
-int is_wall(int x, int y, char **map)
+int is_wall(int x, int y, map_t *m)
 {
     int tile_x = x / TILE_SIZE;
     int tile_y = y / TILE_SIZE;
 
-    if (tile_x < 0 || tile_x >= MAP_WIDTH
-        || tile_y < 0 || tile_y >= MAP_HEIGHT
-        || map[tile_y][tile_x] == 'x')
+    if (tile_x < 0 || tile_x >= m->size_x
+        || tile_y < 0 || tile_y >= m->size_y
+        || m->map[tile_y][tile_x] == 'x')
         return IS_WALL;
     return EXIT_SUCCESS;
 }
@@ -35,12 +35,12 @@ static void draw_floor_and_ceiling(sfRenderWindow *window, int ww, int wh)
     sfRectangleShape_destroy(rect);
 }
 
-static float cast_single_ray(player_t *player, float angle, char **map)
+static float cast_single_ray(player_t *player, float angle, map_t *m)
 {
     float x = player->x;
     float y = player->y;
 
-    while (is_wall(x, y, map) != IS_WALL) {
+    while (is_wall(x, y, m) != IS_WALL) {
         x += cosf(angle) * STEP;
         y += sinf(angle) * STEP;
     }
@@ -69,7 +69,7 @@ static sfVector2f wall_draw_height(float dist, int wh, float col_w)
     return size;
 }
 
-static void cast_all_rays(sfRenderWindow *win, player_t *player, char **map)
+static void cast_all_rays(sfRenderWindow *win, player_t *player, map_t *m)
 {
     sfRectangleShape *rect = sfRectangleShape_create();
     sfVector2f size = {0};
@@ -85,7 +85,7 @@ static void cast_all_rays(sfRenderWindow *win, player_t *player, char **map)
         angle = fmodf(player->angle - (FOV / 2) + (FOV * i / NUM_RAYS) + 2 *
             M_PI, 2 * M_PI);
         dist = (dist < DISTANCE_LIMIT) ? DISTANCE_LIMIT :
-            cast_single_ray(player, angle, map);
+            cast_single_ray(player, angle, m);
         size = wall_draw_height(dist, player->wh, col_w);
         pos = (sfVector2f){i * col_w, player->wh / 2.0f - size.y / 2.0f};
         draw_wall_col(win, rect, &pos, &size);
@@ -93,11 +93,11 @@ static void cast_all_rays(sfRenderWindow *win, player_t *player, char **map)
     sfRectangleShape_destroy(rect);
 }
 
-void draw(sfRenderWindow *window, player_t *player, char **map)
+void draw(sfRenderWindow *window, player_t *player, map_t *m)
 {
     sfRenderWindow_clear(window, sfBlack);
     draw_floor_and_ceiling(window, player->ww, player->wh);
-    cast_all_rays(window, player, map);
+    cast_all_rays(window, player, m);
     if (player->weapon_spr && !player->flashlight)
         sfRenderWindow_drawSprite(window, player->weapon_spr, NULL);
     draw_flashlight(window, player);

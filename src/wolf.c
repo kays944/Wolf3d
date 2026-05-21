@@ -45,7 +45,17 @@ sfVertexArray *create_gradient_bg(const sfColor *top, const sfColor *bot,
     return va;
 }
 
-static int run_cycle(char **map, game_t *g)
+static int load_chosen_map(game_t *g, menu_t *m)
+{
+    char path[MAP_NAME_LEN + 32] = {0};
+
+    free_map(&g->map);
+    snprintf(path, sizeof(path), "%s/%s", MAP_DIR,
+        m->map_names[m->chosen_map]);
+    return parsing_map(&g->map, path);
+}
+
+static int run_cycle(game_t *g)
 {
     menu_t m = {0};
     int action = 0;
@@ -54,27 +64,27 @@ static int run_cycle(char **map, game_t *g)
     if (init_menu(&m, g) == EXIT_FAIL)
         return EXIT_FAIL;
     action = run_menu(&m);
-    g->selected_map = m.chosen_map;
+    if (action == MENU_PLAY && load_chosen_map(g, &m) == EXIT_FAIL)
+        action = MENU_QUIT;
     cleanup_menu(&m);
     if (action != MENU_PLAY)
         return EXIT_SUCCESS;
-    return game_loop(map, g);
+    return game_loop(g);
 }
 
 int wolf(void)
 {
-    char **map = parsing_map(BASIC_MAP_PATH);
     game_t g = {0};
     int ret = PAUSE_MENU;
 
-    if (!map || game_init(&g) == EXIT_FAIL)
+    if (game_init(&g) == EXIT_FAIL)
         return EXIT_FAIL;
     if (init_sound(&g.sound, &g.settings) == EXIT_FAIL) {
         cleanup_game(&g);
         return EXIT_FAIL;
     }
     while (ret == PAUSE_MENU)
-        ret = run_cycle(map, &g);
+        ret = run_cycle(&g);
     cleanup_game(&g);
     return EXIT_SUCCESS;
 }

@@ -13,7 +13,7 @@ static int find_in_row(char *row, int *r)
 {
     int i = 0;
 
-    while (i < MAP_WIDTH) {
+    while (row[i]) {
         if (row[i] == 'o') {
             *r = i;
             return EXIT_SUCCESS;
@@ -23,12 +23,12 @@ static int find_in_row(char *row, int *r)
     return EXIT_FAIL;
 }
 
-static int find_start(char **map, int *col, int *row)
+static int find_start(map_t *m, int *col, int *row)
 {
     int c = 0;
 
-    while (c < MAP_HEIGHT) {
-        if (find_in_row(map[c], row) == EXIT_SUCCESS) {
+    while (c < m->size_y) {
+        if (find_in_row(m->map[c], row) == EXIT_SUCCESS) {
             *col = c;
             return EXIT_SUCCESS;
         }
@@ -37,12 +37,12 @@ static int find_start(char **map, int *col, int *row)
     return EXIT_FAIL;
 }
 
-static int init_player(char **map, player_t *player)
+static int init_player(map_t *m, player_t *player)
 {
     int col = 0;
     int row = 0;
 
-    if (find_start(map, &col, &row) == EXIT_FAIL)
+    if (find_start(m, &col, &row) == EXIT_FAIL)
         return EXIT_FAIL;
     player->x = row * TILE_SIZE + TILE_SIZE / 2;
     player->y = col * TILE_SIZE + TILE_SIZE / 2;
@@ -52,6 +52,7 @@ static int init_player(char **map, player_t *player)
 
 void cleanup_game(game_t *g)
 {
+    free_map(&g->map);
     destroy_sound(&g->sound);
     if (g->font_big)
         sfFont_destroy(g->font_big);
@@ -75,7 +76,7 @@ static int init_player_tools(player_t *player)
     return EXIT_SUCCESS;
 }
 
-static int run_game(sfRenderWindow *w, player_t *p, char **map, game_t *g)
+static int run_game(sfRenderWindow *w, player_t *p, game_t *g)
 {
     int ev = 0;
     int ret = PAUSE_RESUME;
@@ -83,20 +84,20 @@ static int run_game(sfRenderWindow *w, player_t *p, char **map, game_t *g)
     sfMusic_stop(g->sound.menu_music);
     sfMusic_play(g->sound.game_music);
     while (sfRenderWindow_isOpen(w)) {
-        ev = event(w, p, map, &g->sound);
+        ev = event(w, p, &g->map, &g->sound);
         if (ev == EVENT_CLOSE)
             break;
         if (ev == EVENT_PAUSE)
-            ret = run_pause(w, g, map, p);
+            ret = run_pause(g, &g->map, p);
         if (ret != PAUSE_RESUME)
             break;
-        draw(w, p, map);
+        draw(w, p, &g->map);
     }
     sfMusic_stop(g->sound.game_music);
     return ret;
 }
 
-int game_loop(char **map, game_t *g)
+int game_loop(game_t *g)
 {
     sfVector2u sz = sfRenderWindow_getSize(g->window);
     player_t player = {0};
@@ -104,11 +105,11 @@ int game_loop(char **map, game_t *g)
 
     player.ww = (int)sz.x;
     player.wh = (int)sz.y;
-    if (init_player(map, &player) == EXIT_FAIL)
+    if (init_player(&g->map, &player) == EXIT_FAIL)
         return EXIT_FAIL;
     if (init_player_tools(&player) == EXIT_FAIL)
         return EXIT_FAIL;
-    ret = run_game(g->window, &player, map, g);
+    ret = run_game(g->window, &player, g);
     destroy_health_bar(&player);
     destroy_flashlight(&player);
     destroy_weapon(&player);

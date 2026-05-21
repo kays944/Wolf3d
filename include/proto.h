@@ -50,7 +50,7 @@ void render_buttons(sfRenderWindow *win, button_t *btns,
     int count, int selected);
 int game_init(game_t *g);
 sfRenderWindow *open_fullscreen(void);
-int game_loop(char **map, game_t *g);
+int game_loop(game_t *g);
 void cleanup_game(game_t *g);
 int init_weapon(player_t *p);
 void destroy_weapon(player_t *p);
@@ -60,10 +60,11 @@ void destroy_flashlight(player_t *p);
 void draw_flashlight(sfRenderWindow *win, player_t *p);
 void toggle_flashlight(player_t *p);
 
-int run_pause(sfRenderWindow *win, game_t *g, char **map, player_t *player);
+int run_pause(game_t *g, map_t *map, player_t *player);
 void render_pause(pause_t *p);
 void draw_overlay(sfRenderWindow *win, float ww, float wh);
 void saving(char **map, player_t *player);
+void free_map(map_t *m);
 
 int init_sound(sound_t *s, settings_t *set);
 void destroy_sound(sound_t *s);

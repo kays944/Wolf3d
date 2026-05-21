@@ -9,7 +9,7 @@
 #include "macros.h"
 #include <math.h>
 
-static void forward_backward(player_t *player, char **map)
+static void forward_backward(player_t *player, map_t *m)
 {
     float new_x = 0;
     float new_y = 0;
@@ -22,7 +22,7 @@ static void forward_backward(player_t *player, char **map)
         new_x = player->x - cos(player->angle) * PLAYER_SPEED;
         new_y = player->y - sin(player->angle) * PLAYER_SPEED;
     }
-    if (is_wall(new_x, new_y, map) != IS_WALL) {
+    if (is_wall(new_x, new_y, m) != IS_WALL) {
         player->x = new_x;
         player->y = new_y;
     }
@@ -43,10 +43,10 @@ static void update_weapon(player_t *player)
     sfSprite_setTexture(player->weapon_spr, player->weapon_idle, sfTrue);
 }
 
-void update_player(sfRenderWindow *window, player_t *player, char **map)
+void update_player(sfRenderWindow *window, player_t *player, map_t *m)
 {
     if (sfKeyboard_isKeyPressed(sfKeyZ) || sfKeyboard_isKeyPressed(sfKeyS))
-        forward_backward(player, map);
+        forward_backward(player, m);
     if (sfKeyboard_isKeyPressed(sfKeyQ))
         player->angle -= ROTATION_SPEED;
     if (sfKeyboard_isKeyPressed(sfKeyD))

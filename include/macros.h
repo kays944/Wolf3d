@@ -11,10 +11,6 @@
     #define EXIT_SUCCESS 0
     #define EXIT_FAIL 84
 
-    #define WIN_WIDTH 1920
-    #define WIN_HEIGHT 1080
-    #define FREQUENCY 32
-
     #define EVENT_CLOSE 1
     #define EVENT_PAUSE 2
     #define IS_WALL 1
@@ -33,10 +29,7 @@
     #define PSCR_OPT 1
 
     #define TILE_SIZE 64
-    #define MAP_WIDTH 8
-    #define MAP_HEIGHT 8
 
-    #define BASIC_MAP_PATH "./assets/maps/basic_map.wolf"
     #define MAP_SAVE_PATH "./assets/maps/map_save.wolf"
 
     #define M_PI 3.14159265358979323846
@@ -48,8 +41,6 @@
 
     #define PLAYER_SPEED 2.0
     #define ROTATION_SPEED 0.05
-
-extern int map[MAP_HEIGHT][MAP_WIDTH];
 
     #define WIN_W 1280
     #define WIN_H 720

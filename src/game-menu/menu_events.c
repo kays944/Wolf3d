@@ -7,22 +7,14 @@
 
 #include "proto.h"
 
-static void confirm_leave(menu_t *m)
-{
-    if (m->selected == BTN_PLAY)
-        m->action = MENU_PLAY;
-    else
-        m->action = MENU_QUIT;
-    m->running = sfFalse;
-}
-
 static void confirm_menu_selection(menu_t *m)
 {
-    if (m->selected == BTN_PLAY || m->selected == BTN_QUIT) {
-        confirm_leave(m);
+    if (m->selected == BTN_QUIT) {
+        m->action = MENU_QUIT;
+        m->running = sfFalse;
         return;
     }
-    if (m->selected == BTN_MAP) {
+    if (m->selected == BTN_PLAY) {
         cleanup_map_select(m);
         init_map_select(m);
         m->screen = SCR_MAP_SELECT;
