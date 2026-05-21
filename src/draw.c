@@ -103,5 +103,7 @@ void draw(sfRenderWindow *window, player_t *player, map_t *m)
     draw_flashlight(window, player);
     if (player->health_spr)
         sfRenderWindow_drawSprite(window, player->health_spr, NULL);
+    if (player->ammo_txt)
+        sfRenderWindow_drawText(window, player->ammo_txt, NULL);
     sfRenderWindow_display(window);
 }

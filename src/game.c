@@ -73,6 +73,12 @@ static int init_player_tools(player_t *player)
         destroy_weapon(player);
         return EXIT_FAIL;
     }
+    if (init_ammo(player) == EXIT_FAIL) {
+        destroy_health_bar(player);
+        destroy_flashlight(player);
+        destroy_weapon(player);
+        return EXIT_FAIL;
+    }
     return EXIT_SUCCESS;
 }
 
@@ -105,11 +111,13 @@ int game_loop(game_t *g)
 
     player.ww = (int)sz.x;
     player.wh = (int)sz.y;
+    player.hud_font = g->font_med;
     if (init_player(&g->map, &player) == EXIT_FAIL)
         return EXIT_FAIL;
     if (init_player_tools(&player) == EXIT_FAIL)
         return EXIT_FAIL;
     ret = run_game(g->window, &player, g);
+    destroy_ammo(&player);
     destroy_health_bar(&player);
     destroy_flashlight(&player);
     destroy_weapon(&player);

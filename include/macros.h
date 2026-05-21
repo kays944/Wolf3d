@@ -109,4 +109,7 @@
     #define HEALTH_COLS 2
     #define HEALTH_FRAMES 6
 
+    #define AMMO_DEFAULT 150
+    #define AMMO_FONT_SZ 30
+
 #endif

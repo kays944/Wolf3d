@@ -23,11 +23,12 @@ static void check_fire(player_t *player, sfEvent *e, sound_t *s)
         return;
     if (e->mouseButton.button != sfMouseLeft)
         return;
-    if (player->firing == sfTrue)
+    if (player->firing == sfTrue || player->ammo <= 0)
         return;
     player->firing = sfTrue;
     sfSprite_setTexture(player->weapon_spr, player->weapon_fire, sfTrue);
     sfClock_restart(player->weapon_clock);
+    decrement_ammo(player);
     play_shoot(s);
 }
 

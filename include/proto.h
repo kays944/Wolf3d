@@ -74,4 +74,8 @@ void play_shoot(sound_t *s);
 int init_health_bar(player_t *p);
 void destroy_health_bar(player_t *p);
 
+int init_ammo(player_t *p);
+void destroy_ammo(player_t *p);
+void decrement_ammo(player_t *p);
+
 #endif
