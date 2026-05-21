@@ -16,6 +16,7 @@ static void setup_btns(pause_t *p)
     int i = 0;
 
     labels[PBTN_OPT] = "OPTIONS";
+    labels[PBTN_SAVE] = "SAUVEGARDER";
     labels[PBTN_BACK] = "REVENIR AU MENU";
     labels[PBTN_QUIT_ID] = "QUITTER";
     for (i = 0; i < PAUSE_BTN_COUNT; i++) {
@@ -26,16 +27,18 @@ static void setup_btns(pause_t *p)
     }
 }
 
-static int init_pause(pause_t *p, sfRenderWindow *win, game_t *g)
+static int init_pause(pause_t *p, game_t *g, char **map, player_t *player)
 {
-    sfVector2u sz = sfRenderWindow_getSize(win);
+    sfVector2u sz = sfRenderWindow_getSize(g->window);
     sfVector2f bpos = {0};
 
     memset(p, 0, sizeof(pause_t));
-    p->window = win;
+    p->window = g->window;
     p->font = g->font_big;
     p->sound = &g->sound;
     p->settings = &g->settings;
+    p->map = map;
+    p->player = player;
     p->ww = (float)sz.x;
     p->wh = (float)sz.y;
     p->running = sfTrue;
@@ -114,6 +117,10 @@ static void handle_click(pause_t *p, sfVector2f *pos)
         p->screen = PSCR_OPT;
         return;
     }
+    if (button_is_clicked(&p->btns[PBTN_SAVE], pos)) {
+        saving(p->map, p->player);
+        return;
+    }
     if (button_is_clicked(&p->btns[PBTN_BACK], pos)) {
         p->action = PAUSE_MENU;
         p->running = sfFalse;
@@ -163,12 +170,12 @@ static void handle_pause_event(pause_t *p, sfEvent *e)
         handle_pause_main(p, e);
 }
 
-int run_pause(sfRenderWindow *win, game_t *g)
+int run_pause(sfRenderWindow *win, game_t *g, char **map, player_t *player)
 {
     pause_t p = {0};
     sfEvent e = {0};
 
-    if (init_pause(&p, win, g) == EXIT_FAIL)
+    if (init_pause(&p, g, map, player) == EXIT_FAIL)
         return PAUSE_QUIT;
     while (sfRenderWindow_isOpen(p.window) && p.running) {
         while (sfRenderWindow_pollEvent(p.window, &e))

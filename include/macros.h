@@ -24,9 +24,10 @@
     #define PAUSE_QUIT 2
 
     #define PBTN_OPT 0
-    #define PBTN_BACK 1
-    #define PBTN_QUIT_ID 2
-    #define PAUSE_BTN_COUNT 3
+    #define PBTN_SAVE 1
+    #define PBTN_BACK 2
+    #define PBTN_QUIT_ID 3
+    #define PAUSE_BTN_COUNT 4
 
     #define PSCR_MAIN 0
     #define PSCR_OPT 1
@@ -35,7 +36,8 @@
     #define MAP_WIDTH 8
     #define MAP_HEIGHT 8
 
-    #define BASIC_MAP_PATH "./assets/basic_map.txt"
+    #define BASIC_MAP_PATH "./assets/maps/basic_map.wolf"
+    #define MAP_SAVE_PATH "./assets/maps/map_save.wolf"
 
     #define M_PI 3.14159265358979323846
 

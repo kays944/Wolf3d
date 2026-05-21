@@ -108,6 +108,8 @@ typedef struct s_pause {
     sfVector2f mouse;
     sound_t *sound;
     settings_t *settings;
+    char **map;
+    player_t *player;
 } pause_t;
 
 typedef struct s_game {

@@ -32,6 +32,7 @@ SRC			= 	src/main.c 							\
 				src/game-menu/settings.c 			\
 				src/game-menu/init.c 				\
 				src/load_health.c 				\
+				src/save.c 					\
 
 
 SRC_TESTS 	= 	$(filter-out $(SRC_MAIN), $(SRC))

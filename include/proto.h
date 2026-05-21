@@ -60,9 +60,10 @@ void destroy_flashlight(player_t *p);
 void draw_flashlight(sfRenderWindow *win, player_t *p);
 void toggle_flashlight(player_t *p);
 
-int run_pause(sfRenderWindow *win, game_t *g);
+int run_pause(sfRenderWindow *win, game_t *g, char **map, player_t *player);
 void render_pause(pause_t *p);
 void draw_overlay(sfRenderWindow *win, float ww, float wh);
+void saving(char **map, player_t *player);
 
 int init_sound(sound_t *s, settings_t *set);
 void destroy_sound(sound_t *s);

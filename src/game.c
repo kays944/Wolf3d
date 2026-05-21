@@ -87,7 +87,7 @@ static int run_game(sfRenderWindow *w, player_t *p, char **map, game_t *g)
         if (ev == EVENT_CLOSE)
             break;
         if (ev == EVENT_PAUSE)
-            ret = run_pause(w, g);
+            ret = run_pause(w, g, map, p);
         if (ret != PAUSE_RESUME)
             break;
         draw(w, p, map);
