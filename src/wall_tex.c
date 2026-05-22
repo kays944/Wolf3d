@@ -70,7 +70,14 @@ int init_wall_tex(player_t *p)
         sfTexture_destroy(p->wall_tex);
         return EXIT_FAIL;
     }
+    p->sky_img = sfImage_createFromFile(SKY_TEX_PATH);
+    if (!p->sky_img) {
+        sfImage_destroy(p->wall_img);
+        sfTexture_destroy(p->wall_tex);
+        return EXIT_FAIL;
+    }
     if (init_ceil_resources(p) == EXIT_FAIL) {
+        sfImage_destroy(p->sky_img);
         sfImage_destroy(p->wall_img);
         sfTexture_destroy(p->wall_tex);
         return EXIT_FAIL;
@@ -100,6 +107,9 @@ static void destroy_floor_ceil(player_t *p)
 void destroy_wall_tex(player_t *p)
 {
     destroy_floor_ceil(p);
+    if (p->sky_img)
+        sfImage_destroy(p->sky_img);
+    p->sky_img = NULL;
     if (p->wall_img)
         sfImage_destroy(p->wall_img);
     p->wall_img = NULL;
