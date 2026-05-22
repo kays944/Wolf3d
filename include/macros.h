@@ -114,6 +114,7 @@
     #define AMMO_FONT_SZ 30
 
     #define WALL_TEX_PATH "./assets/texture_wall_wolf.png"
+    #define SKY_TEX_PATH "./assets/texture_sky.png"
     #define RELOAD_TEX_PATH "./assets/sprite_sheet_reload.png"
     #define RELOAD_COLS 3
     #define RELOAD_ROWS 2

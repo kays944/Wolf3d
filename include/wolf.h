@@ -45,6 +45,7 @@ typedef struct player_s {
     sfClock *reload_clock;
     sfTexture *wall_tex;
     sfImage *wall_img;
+    sfImage *sky_img;
     sfUint8 *ceil_pixels;
     sfTexture *ceil_tex;
     sfSprite *ceil_spr;
