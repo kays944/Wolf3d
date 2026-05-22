@@ -44,6 +44,12 @@ typedef struct player_s {
     sfBool reloading;
     sfClock *reload_clock;
     sfTexture *wall_tex;
+    sfImage *wall_img;
+    sfUint8 *ceil_pixels;
+    sfTexture *ceil_tex;
+    sfSprite *ceil_spr;
+    sfTexture *floor_tex;
+    sfSprite *floor_spr;
 } player_t;
 
 typedef struct s_wall_ctx {
@@ -52,6 +58,21 @@ typedef struct s_wall_ctx {
     sfVector2u tex_sz;
     int wh;
 } wall_ctx_t;
+
+typedef struct s_ceil_ctx {
+    const sfUint8 *wpx;
+    sfUint8 *cpx;
+    int tw;
+    int th;
+    int ww;
+    float posZ;
+    float ldx;
+    float ldy;
+    float rdx;
+    float rdy;
+    float px;
+    float py;
+} ceil_ctx_t;
 
 typedef enum e_game_state {
     STATE_MENU,

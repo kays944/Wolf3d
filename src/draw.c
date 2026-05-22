@@ -21,20 +21,6 @@ int is_wall(int x, int y, map_t *m)
     return EXIT_SUCCESS;
 }
 
-static void draw_floor_and_ceiling(sfRenderWindow *window, int ww, int wh)
-{
-    sfRectangleShape *rect = sfRectangleShape_create();
-
-    sfRectangleShape_setSize(rect, (sfVector2f){ww, wh / 2});
-    sfRectangleShape_setPosition(rect, (sfVector2f){0, 0});
-    sfRectangleShape_setFillColor(rect, sfColor_fromRGB(50, 50, 50));
-    sfRenderWindow_drawRectangleShape(window, rect, NULL);
-    sfRectangleShape_setPosition(rect, (sfVector2f){0, wh / 2});
-    sfRectangleShape_setFillColor(rect, sfColor_fromRGB(100, 100, 100));
-    sfRenderWindow_drawRectangleShape(window, rect, NULL);
-    sfRectangleShape_destroy(rect);
-}
-
 static float cast_single_ray(player_t *player, float angle, map_t *m,
     float *tex_x)
 {
@@ -117,7 +103,8 @@ static void cast_all_rays(sfRenderWindow *win, player_t *player, map_t *m)
 void draw(sfRenderWindow *window, player_t *player, map_t *m)
 {
     sfRenderWindow_clear(window, sfBlack);
-    draw_floor_and_ceiling(window, player->ww, player->wh);
+    draw_floor_tex(window, player);
+    draw_ceil_tex(window, player);
     cast_all_rays(window, player, m);
     if (player->weapon_spr && !player->flashlight)
         sfRenderWindow_drawSprite(window, player->weapon_spr, NULL);

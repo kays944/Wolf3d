@@ -5,8 +5,59 @@
 ** wall_tex.c
 */
 
+#include <stdlib.h>
 #include "macros.h"
 #include "proto.h"
+
+static int init_floor_resources(player_t *p, int half_h)
+{
+    p->floor_tex = sfTexture_create(p->ww, half_h);
+    if (!p->floor_tex)
+        return EXIT_FAIL;
+    p->floor_spr = sfSprite_create();
+    if (!p->floor_spr) {
+        sfTexture_destroy(p->floor_tex);
+        return EXIT_FAIL;
+    }
+    sfSprite_setTexture(p->floor_spr, p->floor_tex, sfTrue);
+    sfSprite_setPosition(p->floor_spr, (sfVector2f){0, (float)half_h});
+    return EXIT_SUCCESS;
+}
+
+static int init_ceil_spr(player_t *p, int half_h)
+{
+    p->ceil_tex = sfTexture_create(p->ww, half_h);
+    if (!p->ceil_tex)
+        return EXIT_FAIL;
+    p->ceil_spr = sfSprite_create();
+    if (!p->ceil_spr) {
+        sfTexture_destroy(p->ceil_tex);
+        return EXIT_FAIL;
+    }
+    sfSprite_setTexture(p->ceil_spr, p->ceil_tex, sfTrue);
+    sfSprite_setPosition(p->ceil_spr, (sfVector2f){0, 0});
+    return EXIT_SUCCESS;
+}
+
+static int init_ceil_resources(player_t *p)
+{
+    int half_h = p->wh / 2;
+
+    p->ceil_pixels = malloc(p->ww * half_h * 4);
+    if (!p->ceil_pixels)
+        return EXIT_FAIL;
+    if (init_ceil_spr(p, half_h) == EXIT_FAIL) {
+        free(p->ceil_pixels);
+        return EXIT_FAIL;
+    }
+    if (init_floor_resources(p, half_h) == EXIT_FAIL) {
+        sfSprite_destroy(p->ceil_spr);
+        sfTexture_destroy(p->ceil_tex);
+        free(p->ceil_pixels);
+        return EXIT_FAIL;
+    }
+    return EXIT_SUCCESS;
+}
 
 int init_wall_tex(player_t *p)
 {
@@ -14,11 +65,44 @@ int init_wall_tex(player_t *p)
     if (!p->wall_tex)
         return EXIT_FAIL;
     sfTexture_setRepeated(p->wall_tex, sfTrue);
+    p->wall_img = sfImage_createFromFile(WALL_TEX_PATH);
+    if (!p->wall_img) {
+        sfTexture_destroy(p->wall_tex);
+        return EXIT_FAIL;
+    }
+    if (init_ceil_resources(p) == EXIT_FAIL) {
+        sfImage_destroy(p->wall_img);
+        sfTexture_destroy(p->wall_tex);
+        return EXIT_FAIL;
+    }
     return EXIT_SUCCESS;
+}
+
+static void destroy_floor_ceil(player_t *p)
+{
+    if (p->floor_spr)
+        sfSprite_destroy(p->floor_spr);
+    p->floor_spr = NULL;
+    if (p->floor_tex)
+        sfTexture_destroy(p->floor_tex);
+    p->floor_tex = NULL;
+    if (p->ceil_spr)
+        sfSprite_destroy(p->ceil_spr);
+    p->ceil_spr = NULL;
+    if (p->ceil_tex)
+        sfTexture_destroy(p->ceil_tex);
+    p->ceil_tex = NULL;
+    if (p->ceil_pixels)
+        free(p->ceil_pixels);
+    p->ceil_pixels = NULL;
 }
 
 void destroy_wall_tex(player_t *p)
 {
+    destroy_floor_ceil(p);
+    if (p->wall_img)
+        sfImage_destroy(p->wall_img);
+    p->wall_img = NULL;
     if (p->wall_tex)
         sfTexture_destroy(p->wall_tex);
     p->wall_tex = NULL;

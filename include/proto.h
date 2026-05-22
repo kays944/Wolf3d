@@ -87,5 +87,7 @@ void update_reload(player_t *p);
 
 int init_wall_tex(player_t *p);
 void destroy_wall_tex(player_t *p);
+void draw_ceil_tex(sfRenderWindow *win, player_t *p);
+void draw_floor_tex(sfRenderWindow *win, player_t *p);
 
 #endif
