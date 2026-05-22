@@ -25,6 +25,7 @@ typedef struct player_s {
     int ww;
     int wh;
     int ammo;
+    int reload_frame;
     sfTexture *weapon_idle;
     sfTexture *weapon_fire;
     sfSprite *weapon_spr;
@@ -39,6 +40,9 @@ typedef struct player_s {
     sfSprite *health_spr;
     sfText *ammo_txt;
     sfFont *hud_font;
+    sfTexture *reload_tex;
+    sfBool reloading;
+    sfClock *reload_clock;
 } player_t;
 
 typedef enum e_game_state {

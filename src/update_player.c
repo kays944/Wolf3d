@@ -7,6 +7,7 @@
 
 #include "wolf.h"
 #include "macros.h"
+#include "proto.h"
 #include <math.h>
 
 static void forward_backward(player_t *player, map_t *m)
@@ -52,4 +53,5 @@ void update_player(sfRenderWindow *window, player_t *player, map_t *m)
     if (sfKeyboard_isKeyPressed(sfKeyD))
         player->angle += ROTATION_SPEED;
     update_weapon(player);
+    update_reload(player);
 }

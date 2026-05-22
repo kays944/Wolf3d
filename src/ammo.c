@@ -48,6 +48,16 @@ void decrement_ammo(player_t *p)
     set_ammo_pos(p);
 }
 
+void reload_ammo(player_t *p)
+{
+    char buf[16] = {0};
+
+    p->ammo = AMMO_DEFAULT;
+    snprintf(buf, sizeof(buf), "MUN  %d", p->ammo);
+    sfText_setString(p->ammo_txt, buf);
+    set_ammo_pos(p);
+}
+
 void destroy_ammo(player_t *p)
 {
     if (p->ammo_txt)

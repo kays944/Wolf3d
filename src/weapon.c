@@ -8,7 +8,7 @@
 #include "macros.h"
 #include "proto.h"
 
-static void place_weapon_sprite(player_t *p)
+void place_weapon_sprite(player_t *p)
 {
     sfVector2u sz = sfTexture_getSize(p->weapon_idle);
     sfVector2f sc = {0};

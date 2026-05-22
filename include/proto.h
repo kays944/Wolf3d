@@ -54,6 +54,7 @@ int game_loop(game_t *g);
 void cleanup_game(game_t *g);
 int init_weapon(player_t *p);
 void destroy_weapon(player_t *p);
+void place_weapon_sprite(player_t *p);
 
 int init_flashlight(player_t *p);
 void destroy_flashlight(player_t *p);
@@ -77,5 +78,11 @@ void destroy_health_bar(player_t *p);
 int init_ammo(player_t *p);
 void destroy_ammo(player_t *p);
 void decrement_ammo(player_t *p);
+void reload_ammo(player_t *p);
+
+int init_reload(player_t *p);
+void destroy_reload(player_t *p);
+void start_reload(player_t *p);
+void update_reload(player_t *p);
 
 #endif

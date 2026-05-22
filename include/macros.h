@@ -109,7 +109,15 @@
     #define HEALTH_COLS 2
     #define HEALTH_FRAMES 6
 
-    #define AMMO_DEFAULT 150
+    #define AMMO_DEFAULT 30
     #define AMMO_FONT_SZ 30
+
+    #define RELOAD_TEX_PATH "./assets/sprite_sheet_reload.png"
+    #define RELOAD_COLS 3
+    #define RELOAD_ROWS 2
+    #define RELOAD_FRAME_COUNT 6
+    #define RELOAD_FRAME_W 426
+    #define RELOAD_FRAME_H 339
+    #define RELOAD_FRAME_MS 120
 
 #endif

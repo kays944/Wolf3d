@@ -60,6 +60,22 @@ void cleanup_game(game_t *g)
         sfRenderWindow_destroy(g->window);
 }
 
+static int init_hud(player_t *player)
+{
+    if (init_health_bar(player) == EXIT_FAIL)
+        return EXIT_FAIL;
+    if (init_ammo(player) == EXIT_FAIL) {
+        destroy_health_bar(player);
+        return EXIT_FAIL;
+    }
+    if (init_reload(player) == EXIT_FAIL) {
+        destroy_ammo(player);
+        destroy_health_bar(player);
+        return EXIT_FAIL;
+    }
+    return EXIT_SUCCESS;
+}
+
 static int init_player_tools(player_t *player)
 {
     if (init_weapon(player) == EXIT_FAIL)
@@ -68,13 +84,7 @@ static int init_player_tools(player_t *player)
         destroy_weapon(player);
         return EXIT_FAIL;
     }
-    if (init_health_bar(player) == EXIT_FAIL) {
-        destroy_flashlight(player);
-        destroy_weapon(player);
-        return EXIT_FAIL;
-    }
-    if (init_ammo(player) == EXIT_FAIL) {
-        destroy_health_bar(player);
+    if (init_hud(player) == EXIT_FAIL) {
         destroy_flashlight(player);
         destroy_weapon(player);
         return EXIT_FAIL;
@@ -117,6 +127,7 @@ int game_loop(game_t *g)
     if (init_player_tools(&player) == EXIT_FAIL)
         return EXIT_FAIL;
     ret = run_game(g->window, &player, g);
+    destroy_reload(&player);
     destroy_ammo(&player);
     destroy_health_bar(&player);
     destroy_flashlight(&player);
