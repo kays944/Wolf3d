@@ -35,62 +35,83 @@ static void draw_floor_and_ceiling(sfRenderWindow *window, int ww, int wh)
     sfRectangleShape_destroy(rect);
 }
 
-static float cast_single_ray(player_t *player, float angle, map_t *m)
+static float cast_single_ray(player_t *player, float angle, map_t *m,
+    float *tex_x)
 {
     float x = player->x;
     float y = player->y;
+    float fx = 0;
 
     while (is_wall(x, y, m) != IS_WALL) {
         x += cosf(angle) * STEP;
         y += sinf(angle) * STEP;
     }
+    fx = fmodf(x, (float)TILE_SIZE);
+    if (fx < 1.0f || fx > TILE_SIZE - 1.0f)
+        *tex_x = fmodf(y, (float)TILE_SIZE) / (float)TILE_SIZE;
+    else
+        *tex_x = fx / (float)TILE_SIZE;
     return sqrtf((x - player->x) * (x - player->x)
         + (y - player->y) * (y - player->y))
         * cosf(player->angle - angle);
 }
 
-static void draw_wall_col(sfRenderWindow *win, sfRectangleShape *rect,
-    const sfVector2f *pos, const sfVector2f *size)
+static int init_wall_ctx(wall_ctx_t *ctx, player_t *p)
 {
-    sfRectangleShape_setSize(rect, *size);
-    sfRectangleShape_setPosition(rect, *pos);
-    sfRenderWindow_drawRectangleShape(win, rect, NULL);
+    ctx->col_w = p->ww / (float)NUM_RAYS;
+    ctx->wh = p->wh;
+    ctx->tex_sz = sfTexture_getSize(p->wall_tex);
+    ctx->va = sfVertexArray_create();
+    if (!ctx->va)
+        return EXIT_FAIL;
+    sfVertexArray_setPrimitiveType(ctx->va, sfQuads);
+    sfVertexArray_resize(ctx->va, NUM_RAYS * 4);
+    return EXIT_SUCCESS;
 }
 
-static sfVector2f wall_draw_height(float dist, int wh, float col_w)
+static void fill_wall_quad(wall_ctx_t *ctx, size_t i, float wall_h, float tx)
 {
-    sfVector2f size = {0};
-    float wall_h = (TILE_SIZE * wh) / dist;
+    sfVertex *v = sfVertexArray_getVertex(ctx->va, i * 4);
+    float x0 = i * ctx->col_w;
+    float y_top = ctx->wh / 2.0f - wall_h / 2.0f;
+    float y_bot = ctx->wh / 2.0f + wall_h / 2.0f;
+    float txi = tx * (ctx->tex_sz.x - 1);
 
-    if (wall_h < wh)
-        size = (sfVector2f){col_w, wall_h};
-    else
-        size = (sfVector2f){col_w, wh};
-    return size;
+    v[0].position = (sfVector2f){x0, y_top};
+    v[0].texCoords = (sfVector2f){txi, 0};
+    v[0].color = sfWhite;
+    v[1].position = (sfVector2f){x0 + ctx->col_w, y_top};
+    v[1].texCoords = (sfVector2f){txi + 1, 0};
+    v[1].color = sfWhite;
+    v[2].position = (sfVector2f){x0 + ctx->col_w, y_bot};
+    v[2].texCoords = (sfVector2f){txi + 1, ctx->tex_sz.y};
+    v[2].color = sfWhite;
+    v[3].position = (sfVector2f){x0, y_bot};
+    v[3].texCoords = (sfVector2f){txi, ctx->tex_sz.y};
+    v[3].color = sfWhite;
 }
 
 static void cast_all_rays(sfRenderWindow *win, player_t *player, map_t *m)
 {
-    sfRectangleShape *rect = sfRectangleShape_create();
-    sfVector2f size = {0};
-    sfVector2f pos = {0};
-    float col_w = player->ww / (float)NUM_RAYS;
+    wall_ctx_t ctx = {0};
+    sfRenderStates rs = sfRenderStates_default();
     float angle = 0;
     float dist = 0;
+    float tex_x = 0;
 
-    if (!rect)
+    if (init_wall_ctx(&ctx, player) == EXIT_FAIL)
         return;
-    sfRectangleShape_setFillColor(rect, sfColor_fromRGB(80, 80, 80));
     for (size_t i = 0; i < NUM_RAYS; i++) {
         angle = fmodf(player->angle - (FOV / 2) + (FOV * i / NUM_RAYS) + 2 *
             M_PI, 2 * M_PI);
-        dist = (dist < DISTANCE_LIMIT) ? DISTANCE_LIMIT :
-            cast_single_ray(player, angle, m);
-        size = wall_draw_height(dist, player->wh, col_w);
-        pos = (sfVector2f){i * col_w, player->wh / 2.0f - size.y / 2.0f};
-        draw_wall_col(win, rect, &pos, &size);
+        dist = cast_single_ray(player, angle, m, &tex_x);
+        if (dist < DISTANCE_LIMIT)
+            dist = DISTANCE_LIMIT;
+        fill_wall_quad(&ctx, i, (TILE_SIZE * player->wh) / dist, tex_x);
     }
-    sfRectangleShape_destroy(rect);
+    rs.texture = player->wall_tex;
+    sfRenderWindow_drawVertexArray(win, ctx.va, &rs);
+    sfVertexArray_destroy(ctx.va);
 }
 
 void draw(sfRenderWindow *window, player_t *player, map_t *m)

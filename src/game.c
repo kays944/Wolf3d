@@ -73,6 +73,12 @@ static int init_hud(player_t *player)
         destroy_health_bar(player);
         return EXIT_FAIL;
     }
+    if (init_wall_tex(player) == EXIT_FAIL) {
+        destroy_reload(player);
+        destroy_ammo(player);
+        destroy_health_bar(player);
+        return EXIT_FAIL;
+    }
     return EXIT_SUCCESS;
 }
 
@@ -127,6 +133,7 @@ int game_loop(game_t *g)
     if (init_player_tools(&player) == EXIT_FAIL)
         return EXIT_FAIL;
     ret = run_game(g->window, &player, g);
+    destroy_wall_tex(&player);
     destroy_reload(&player);
     destroy_ammo(&player);
     destroy_health_bar(&player);

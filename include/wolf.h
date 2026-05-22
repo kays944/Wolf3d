@@ -43,7 +43,15 @@ typedef struct player_s {
     sfTexture *reload_tex;
     sfBool reloading;
     sfClock *reload_clock;
+    sfTexture *wall_tex;
 } player_t;
+
+typedef struct s_wall_ctx {
+    sfVertexArray *va;
+    float col_w;
+    sfVector2u tex_sz;
+    int wh;
+} wall_ctx_t;
 
 typedef enum e_game_state {
     STATE_MENU,

@@ -23,7 +23,9 @@ static void forward_backward(player_t *player, map_t *m)
         new_x = player->x - cos(player->angle) * PLAYER_SPEED;
         new_y = player->y - sin(player->angle) * PLAYER_SPEED;
     }
-    if (is_wall(new_x, new_y, m) != IS_WALL) {
+    if (is_wall(new_x, new_y, m) != IS_WALL
+        && is_wall(new_x + PLAYER_MARGIN * cosf(player->angle),
+            new_y + PLAYER_MARGIN * sinf(player->angle), m) != IS_WALL) {
         player->x = new_x;
         player->y = new_y;
     }

@@ -37,7 +37,8 @@
     #define FOV (M_PI / 3)
     #define NUM_RAYS 800
     #define STEP 1.0
-    #define DISTANCE_LIMIT 0.00001f
+    #define DISTANCE_LIMIT 1.0f
+    #define PLAYER_MARGIN 10.0f
 
     #define PLAYER_SPEED 2.0
     #define ROTATION_SPEED 0.05
@@ -112,6 +113,7 @@
     #define AMMO_DEFAULT 30
     #define AMMO_FONT_SZ 30
 
+    #define WALL_TEX_PATH "./assets/texture_wall_wolf.png"
     #define RELOAD_TEX_PATH "./assets/sprite_sheet_reload.png"
     #define RELOAD_COLS 3
     #define RELOAD_ROWS 2

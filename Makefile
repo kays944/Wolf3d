@@ -24,6 +24,7 @@ SRC			= 	src/main.c 							\
 				src/save.c 							\
 				src/ammo.c 							\
 				src/reload.c 						\
+				src/wall_tex.c 						\
 				src/utils/free_array.c 				\
 				src/utils/read_file.c 				\
 				src/utils/str_split.c 				\

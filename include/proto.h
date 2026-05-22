@@ -85,4 +85,7 @@ void destroy_reload(player_t *p);
 void start_reload(player_t *p);
 void update_reload(player_t *p);
 
+int init_wall_tex(player_t *p);
+void destroy_wall_tex(player_t *p);
+
 #endif
