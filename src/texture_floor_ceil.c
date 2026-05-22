@@ -43,8 +43,8 @@ static void fill_floor_row(ceil_ctx_t *c, int by)
     float fy = c->py + rd * c->ldy;
     float sx = rd * (c->rdx - c->ldx) / c->ww;
     float sy = rd * (c->rdy - c->ldy) / c->ww;
-    int tx;
-    int ty;
+    int tx = 0;
+    int ty = 0;
 
     for (int x = 0; x < c->ww; x++) {
         tx = ((int)(fx * c->tw) % c->tw + c->tw) % c->tw;
@@ -55,19 +55,18 @@ static void fill_floor_row(ceil_ctx_t *c, int by)
     }
 }
 
-static void fill_sky_row(sfUint8 *dst, const sfUint8 *spx, int tw,
-    int ty, float u_base, float u_step, int ww)
+static void fill_sky_row(sfUint8 *dst, const sky_row_t *sr, int ty)
 {
-    int row_base = ty * tw;
-    float u;
-    int tx;
+    int row_base = ty * sr->tw;
+    float u = 0;
+    int tx = 0;
 
-    for (int x = 0; x < ww; x++) {
-        u = fmodf(u_base + x * u_step, 1.0f);
+    for (int x = 0; x < sr->ww; x++) {
+        u = fmodf(sr->u_base + x * sr->u_step, 1.0f);
         if (u < 0)
             u += 1.0f;
-        tx = (int)(u * tw) % tw;
-        memcpy(&dst[x * 4], &spx[(row_base + tx) * 4], 4);
+        tx = (int)(u * sr->tw) % sr->tw;
+        memcpy(&dst[x * 4], &sr->spx[(row_base + tx) * 4], 4);
     }
 }
 
@@ -75,20 +74,20 @@ void draw_ceil_tex(sfRenderWindow *win, player_t *p)
 {
     int half_h = p->wh / 2;
     sfVector2u tsz = sfImage_getSize(p->sky_img);
-    const sfUint8 *spx = sfImage_getPixelsPtr(p->sky_img);
     int tw = (int)tsz.x;
     int th = (int)tsz.y;
     float fov_ratio = FOV / (2.0f * M_PI);
-    float u_base = p->angle / (2.0f * M_PI) - fov_ratio * 0.5f;
-    float u_step = fov_ratio / p->ww;
+    sky_row_t sr = {sfImage_getPixelsPtr(p->sky_img), tw,
+        p->angle / (2.0f * M_PI) - fov_ratio * 0.5f,
+        fov_ratio / p->ww, p->ww};
     int ty;
 
     for (int y = 0; y < half_h; y++) {
         ty = (int)((float)y / half_h * th) % th;
-        fill_sky_row(&p->ceil_pixels[y * p->ww * 4], spx, tw, ty,
-            u_base, u_step, p->ww);
+        fill_sky_row(&p->ceil_pixels[y * p->ww * 4], &sr, ty);
     }
-    sfTexture_updateFromPixels(p->ceil_tex, p->ceil_pixels, p->ww, half_h, 0, 0);
+    sfTexture_updateFromPixels(p->ceil_tex, p->ceil_pixels, p->ww,
+        half_h, 0, 0);
     sfRenderWindow_drawSprite(win, p->ceil_spr, NULL);
 }
 

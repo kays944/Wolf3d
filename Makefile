@@ -25,7 +25,7 @@ SRC			= 	src/main.c 							\
 				src/ammo.c 							\
 				src/reload.c 						\
 				src/wall_tex.c 						\
-				src/texture_floor_ceil.c 				\
+				src/texture_floor_ceil.c 			\
 				src/utils/free_array.c 				\
 				src/utils/read_file.c 				\
 				src/utils/str_split.c 				\

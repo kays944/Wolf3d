@@ -53,14 +53,14 @@ typedef struct player_s {
     sfSprite *floor_spr;
 } player_t;
 
-typedef struct s_wall_ctx {
+typedef struct wall_ctx_s {
     sfVertexArray *va;
     float col_w;
     sfVector2u tex_sz;
     int wh;
 } wall_ctx_t;
 
-typedef struct s_ceil_ctx {
+typedef struct ceil_ctx_s {
     const sfUint8 *wpx;
     sfUint8 *cpx;
     int tw;
@@ -74,6 +74,14 @@ typedef struct s_ceil_ctx {
     float px;
     float py;
 } ceil_ctx_t;
+
+typedef struct sky_row_s {
+    const sfUint8 *spx;
+    int tw;
+    float u_base;
+    float u_step;
+    int ww;
+} sky_row_t;
 
 typedef enum e_game_state {
     STATE_MENU,

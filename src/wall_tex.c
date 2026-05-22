@@ -59,12 +59,8 @@ static int init_ceil_resources(player_t *p)
     return EXIT_SUCCESS;
 }
 
-int init_wall_tex(player_t *p)
+static int init_wall_images(player_t *p)
 {
-    p->wall_tex = sfTexture_createFromFile(WALL_TEX_PATH, NULL);
-    if (!p->wall_tex)
-        return EXIT_FAIL;
-    sfTexture_setRepeated(p->wall_tex, sfTrue);
     p->wall_img = sfImage_createFromFile(WALL_TEX_PATH);
     if (!p->wall_img) {
         sfTexture_destroy(p->wall_tex);
@@ -76,6 +72,17 @@ int init_wall_tex(player_t *p)
         sfTexture_destroy(p->wall_tex);
         return EXIT_FAIL;
     }
+    return EXIT_SUCCESS;
+}
+
+int init_wall_tex(player_t *p)
+{
+    p->wall_tex = sfTexture_createFromFile(WALL_TEX_PATH, NULL);
+    if (!p->wall_tex)
+        return EXIT_FAIL;
+    sfTexture_setRepeated(p->wall_tex, sfTrue);
+    if (init_wall_images(p) == EXIT_FAIL)
+        return EXIT_FAIL;
     if (init_ceil_resources(p) == EXIT_FAIL) {
         sfImage_destroy(p->sky_img);
         sfImage_destroy(p->wall_img);
