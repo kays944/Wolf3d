@@ -123,4 +123,34 @@
     #define RELOAD_FRAME_H 339
     #define RELOAD_FRAME_MS 120
 
+typedef enum e_game_state {
+    STATE_MENU,
+    STATE_GAME,
+    STATE_QUIT
+} game_state_t;
+
+typedef enum e_menu_screen {
+    SCR_MAIN,
+    SCR_MAP_SELECT,
+    SCR_SETTINGS
+} menu_screen_t;
+
+typedef enum e_main_btn {
+    BTN_PLAY = 0,
+    BTN_SETTINGS,
+    BTN_QUIT,
+    MAIN_BTN_COUNT
+} main_btn_t;
+
+typedef enum e_map_btn {
+    BTN_MAP_PLAY = 0,
+    BTN_MAP_BACK,
+    MAP_BTN_COUNT
+} map_btn_t;
+
+typedef enum e_set_btn {
+    BTN_SET_BACK = 0,
+    SET_BTN_COUNT
+} set_btn_t;
+
 #endif
