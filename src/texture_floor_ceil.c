@@ -80,7 +80,7 @@ void draw_ceil_tex(sfRenderWindow *win, player_t *p)
     sky_row_t sr = {sfImage_getPixelsPtr(p->sky_img), tw,
         p->angle / (2.0f * M_PI) - fov_ratio * 0.5f,
         fov_ratio / p->ww, p->ww};
-    int ty;
+    int ty = 0;
 
     for (int y = 0; y < half_h; y++) {
         ty = (int)((float)y / half_h * th) % th;

@@ -16,16 +16,16 @@ SRC			= 	src/main.c 							\
 				src/update_player.c 				\
 				src/sound.c 						\
 				src/game.c 							\
-				src/weapon.c 						\
-				src/flashlight.c 					\
 				src/pause.c 						\
 				src/pause_render.c 					\
-				src/load_health.c 					\
 				src/save.c 							\
-				src/ammo.c 							\
 				src/reload.c 						\
 				src/wall_tex.c 						\
 				src/texture_floor_ceil.c 			\
+				src/tools/weapon.c 					\
+				src/tools/flashlight.c 				\
+				src/tools/ammo.c 					\
+				src/tools/load_health.c 			\
 				src/utils/free_array.c 				\
 				src/utils/read_file.c 				\
 				src/utils/str_split.c 				\
@@ -62,6 +62,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 	mkdir -p $(OBJ_DIR)/utils
 	mkdir -p $(OBJ_DIR)/game-menu
+	mkdir -p $(OBJ_DIR)/tools
 
 $(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
 	$(CC) -c $< -o $@ $(CPPFLAGS)
