@@ -52,7 +52,7 @@ int init_window(game_t *g)
         g->settings.fullscreen = sfFalse;
         mode.width = g->settings.win_w;
         mode.height = g->settings.win_h;
-        mode.bitsPerPixel = 32;
+        mode.bitsPerPixel = BITS_PER_PIXEL;
         g->window = sfRenderWindow_create(mode, TITLE, sfDefaultStyle, NULL);
     }
     if (!g->window) {
@@ -87,7 +87,6 @@ static sfFont *load_font_safe(void)
 
 int game_init(game_t *g)
 {
-    memset(g, 0, sizeof(game_t));
     g->settings.music_vol = VOL_DEFAULT;
     g->settings.sfx_vol = VOL_DEFAULT;
     g->settings.res_index = RES_DEFAULT;

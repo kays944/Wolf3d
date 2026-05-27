@@ -13,9 +13,7 @@
 
 static int row_has_player(char *row)
 {
-    int j = 0;
-
-    for (j = 0; row[j]; j++)
+    for (int j = 0; row[j]; j++)
         if (row[j] == 'o')
             return EXIT_SUCCESS;
     return EXIT_FAIL;
@@ -23,9 +21,7 @@ static int row_has_player(char *row)
 
 static int has_player(char **map)
 {
-    int i = 0;
-
-    for (i = 0; map[i]; i++)
+    for (int i = 0; map[i]; i++)
         if (row_has_player(map[i]) == EXIT_SUCCESS)
             return EXIT_SUCCESS;
     return EXIT_FAIL;
@@ -33,14 +29,13 @@ static int has_player(char **map)
 
 static void set_map_size(map_t *m)
 {
-    int i = 0;
     int len = 0;
 
     m->size_y = 0;
     m->size_x = 0;
-    for (i = 0; m->map[i]; i++) {
+    for (int i = 0; m->map[i]; i++) {
         m->size_y++;
-        len = (int)strlen(m->map[i]);
+        len = strlen(m->map[i]);
         if (len > m->size_x)
             m->size_x = len;
     }

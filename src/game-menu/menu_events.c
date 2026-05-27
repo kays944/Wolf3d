@@ -61,12 +61,11 @@ static void on_key(menu_t *m, sfEvent *e)
 static void process_main_event(menu_t *m, sfEvent *e)
 {
     sfVector2f click = {0};
-    int i = 0;
 
     if (e->type == sfEvtMouseMoved) {
         m->mouse_pos.x = (float)e->mouseMove.x;
         m->mouse_pos.y = (float)e->mouseMove.y;
-        for (i = 0; i < MAIN_BTN_COUNT; i++)
+        for (int i = 0; i < MAIN_BTN_COUNT; i++)
             update_button(&m->main_btns[i], &m->mouse_pos);
     }
     if (e->type == sfEvtKeyPressed)

@@ -77,9 +77,8 @@ int wolf(void)
     game_t g = {0};
     int ret = PAUSE_MENU;
 
-    if (game_init(&g) == EXIT_FAIL)
-        return EXIT_FAIL;
-    if (init_sound(&g.sound, &g.settings) == EXIT_FAIL) {
+    if (game_init(&g) == EXIT_FAIL || init_sound(&g.sound, &g.settings)
+        == EXIT_FAIL) {
         cleanup_game(&g);
         return EXIT_FAIL;
     }

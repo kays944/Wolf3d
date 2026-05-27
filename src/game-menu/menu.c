@@ -125,7 +125,6 @@ int init_menu(menu_t *m, game_t *g)
 {
     sfVector2u sz = {0};
 
-    memset(m, 0, sizeof(menu_t));
     m->window = g->window;
     m->font_big = g->font_big;
     m->font_med = g->font_med;
