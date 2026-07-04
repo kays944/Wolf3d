@@ -25,7 +25,9 @@ typedef struct player_s {
     int ww;
     int wh;
     int hp;
+    float hurt_cd;
     int hurt_flash;
+    sfText *hp_txt;
     sfBool shot_event;
     float *zbuf;
     float dt;

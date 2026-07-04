@@ -44,11 +44,12 @@ static void chase(enemy_t *e, player_t *p, map_t *m)
 
 static void hurt_player(player_t *p, int dmg)
 {
+    if (p->hurt_cd > 0)
+        return;
+    p->hurt_cd = HURT_COOLDOWN;
     p->hp -= dmg;
     p->hurt_flash = HURT_FLASH_FRAMES;
-    for (int i = 0; i < dmg; i++)
-        if (p->health_spr)
-            decrement_health(p->health_spr);
+    set_health_frame(p);
 }
 
 static int hit_chance(float dist)
@@ -78,6 +79,8 @@ void update_enemies(player_t *p, map_t *m, sound_t *s)
 {
     enemy_t *e = NULL;
 
+    if (p->hurt_cd > 0)
+        p->hurt_cd -= p->dt;
     for (int i = 0; i < m->enemy_count; i++) {
         e = &m->enemies[i];
         if (!e->alive)

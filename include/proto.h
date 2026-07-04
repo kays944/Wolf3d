@@ -75,7 +75,7 @@ void play_enemy_shot(sound_t *s);
 
 int init_health_bar(player_t *p);
 void destroy_health_bar(player_t *p);
-void decrement_health(sfSprite *sprite);
+void set_health_frame(player_t *p);
 
 int init_enemies(player_t *p, map_t *m);
 void destroy_enemies(player_t *p);

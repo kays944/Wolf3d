@@ -134,10 +134,11 @@
     #define ENEMY_SIGHT 700.0f
     #define ENEMY_STOP_DIST 170.0f
     #define ENEMY_SHOOT_RANGE 550.0f
-    #define ENEMY_SHOOT_CD 1.5f
-    #define ENEMY_DMG 1
-    #define BOSS_DMG 2
-    #define HIT_BASE 85
+    #define ENEMY_SHOOT_CD 1.8f
+    #define ENEMY_FIRST_CD_MIN 1.0f
+    #define ENEMY_DMG 10
+    #define BOSS_DMG 25
+    #define HIT_BASE 75
     #define HIT_FALL 0.11f
     #define HIT_MIN 20
     #define ENEMY_RADIUS 24.0f
@@ -156,8 +157,10 @@
     #define SHOT_RANGE 700.0f
     #define SHOT_DMG 1
     #define HEADSHOT_DMG 2
-    #define PLAYER_HP 5
+    #define PLAYER_HP 100
+    #define HURT_COOLDOWN 0.6f
     #define HURT_FLASH_FRAMES 12
+    #define HP_FONT_SZ 30
     #define CROSS_SIZE 16.0f
     #define CROSS_THICK 3.0f
 
