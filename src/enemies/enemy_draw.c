@@ -92,7 +92,7 @@ static void draw_one(sfRenderWindow *win, enemy_t *e, player_t *p)
         return;
     base = (TILE_SIZE * p->wh) / c.dist;
     c.size = base * (e->boss ? BOSS_SCALE : 1.0f);
-    c.ybot = p->wh / 2.0f + base / 2.0f;
+    c.ybot = p->wh / 2.0f + base / 2.0f + base * (p->z / TILE_SIZE);
     c.col_w = p->ww / (float)NUM_RAYS;
     c.tsz = sfTexture_getSize(e->boss ? p->boss_tex : p->enemy_tex);
     width = c.size * ((c.tsz.x / (float)ANIM_COLS)

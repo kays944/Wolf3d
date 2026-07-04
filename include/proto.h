@@ -84,6 +84,10 @@ void draw_enemies(sfRenderWindow *win, player_t *p, map_t *m);
 void shoot_enemies(player_t *p, map_t *m);
 float norm_angle(float a);
 int has_los(float ex, float ey, player_t *p, map_t *m);
+void hurt_player(player_t *p, int dmg);
+void spawn_proj(map_t *m, enemy_t *e, player_t *p);
+void update_projs(player_t *p, map_t *m);
+void draw_projs(sfRenderWindow *win, player_t *p, map_t *m);
 void sort_far(enemy_t **arr, int n, player_t *p);
 int enemies_alive(map_t *m);
 

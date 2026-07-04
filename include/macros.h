@@ -138,9 +138,16 @@
     #define ENEMY_FIRST_CD_MIN 1.0f
     #define ENEMY_DMG 10
     #define BOSS_DMG 25
-    #define HIT_BASE 75
-    #define HIT_FALL 0.11f
-    #define HIT_MIN 20
+
+    #define PROJ_TEX_PATH "./assets/fireball.png"
+    #define MAX_PROJS 64
+    #define PROJ_SPEED 320.0f
+    #define PROJ_HIT_RADIUS 26.0f
+    #define PROJ_WORLD_SIZE 24.0f
+    #define PROJ_DODGE_Z 12.0f
+
+    #define JUMP_VEL 170.0f
+    #define GRAVITY 800.0f
     #define ENEMY_RADIUS 24.0f
     #define HEAD_RADIUS 9.0f
     #define LOS_STEP 4.0f

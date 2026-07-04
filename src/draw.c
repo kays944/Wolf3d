@@ -46,6 +46,7 @@ static int init_wall_ctx(wall_ctx_t *ctx, player_t *p)
 {
     ctx->col_w = p->ww / (float)NUM_RAYS;
     ctx->wh = p->wh;
+    ctx->jr = p->z / (float)TILE_SIZE;
     ctx->tex_sz = sfTexture_getSize(p->wall_tex);
     ctx->va = sfVertexArray_create();
     if (!ctx->va)
@@ -59,8 +60,9 @@ static void fill_wall_quad(wall_ctx_t *ctx, size_t i, float wall_h, float tx)
 {
     sfVertex *v = sfVertexArray_getVertex(ctx->va, i * 4);
     float x0 = i * ctx->col_w;
-    float y_top = ctx->wh / 2.0f - wall_h / 2.0f;
-    float y_bot = ctx->wh / 2.0f + wall_h / 2.0f;
+    float shift = wall_h * ctx->jr;
+    float y_top = ctx->wh / 2.0f - wall_h / 2.0f + shift;
+    float y_bot = ctx->wh / 2.0f + wall_h / 2.0f + shift;
     float txi = tx * (ctx->tex_sz.x - 1);
 
     v[0].position = (sfVector2f){x0, y_top};
@@ -108,6 +110,7 @@ void draw(sfRenderWindow *window, player_t *player, map_t *m)
     draw_ceil_tex(window, player);
     cast_all_rays(window, player, m);
     draw_enemies(window, player, m);
+    draw_projs(window, player, m);
     if (player->weapon_spr && !player->flashlight)
         sfRenderWindow_drawSprite(window, player->weapon_spr, NULL);
     draw_flashlight(window, player);

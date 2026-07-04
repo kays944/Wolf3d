@@ -32,6 +32,21 @@ static void forward_backward(player_t *player, map_t *m)
     }
 }
 
+static void update_jump(player_t *player)
+{
+    if (sfKeyboard_isKeyPressed(sfKeySpace) && player->z <= 0
+        && player->z_vel <= 0)
+        player->z_vel = JUMP_VEL;
+    if (player->z <= 0 && player->z_vel <= 0)
+        return;
+    player->z += player->z_vel * player->dt;
+    player->z_vel -= GRAVITY * player->dt;
+    if (player->z <= 0) {
+        player->z = 0;
+        player->z_vel = 0;
+    }
+}
+
 static void update_weapon(player_t *player)
 {
     sfTime t = {0};
@@ -58,6 +73,7 @@ void update_player(sfRenderWindow *window, player_t *player, map_t *m)
         player->angle -= ROTATION_SPEED * player->dt;
     if (sfKeyboard_isKeyPressed(sfKeyD))
         player->angle += ROTATION_SPEED * player->dt;
+    update_jump(player);
     update_weapon(player);
     update_reload(player);
 }

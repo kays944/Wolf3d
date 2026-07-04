@@ -42,7 +42,7 @@ static void chase(enemy_t *e, player_t *p, map_t *m)
         e->y = ny;
 }
 
-static void hurt_player(player_t *p, int dmg)
+void hurt_player(player_t *p, int dmg)
 {
     if (p->hurt_cd > 0)
         return;
@@ -52,16 +52,7 @@ static void hurt_player(player_t *p, int dmg)
     set_health_frame(p);
 }
 
-static int hit_chance(float dist)
-{
-    int chance = HIT_BASE - (int)(dist * HIT_FALL);
-
-    if (chance < HIT_MIN)
-        return HIT_MIN;
-    return chance;
-}
-
-static void try_shoot(enemy_t *e, player_t *p, sound_t *s)
+static void try_shoot(enemy_t *e, map_t *m, player_t *p, sound_t *s)
 {
     float dist = dist_to_player(e, p);
 
@@ -70,9 +61,7 @@ static void try_shoot(enemy_t *e, player_t *p, sound_t *s)
     e->cooldown = ENEMY_SHOOT_CD;
     e->atk_anim = ATK_ANIM_LEN;
     play_enemy_shot(s);
-    if ((rand() % 100) >= hit_chance(dist))
-        return;
-    hurt_player(p, e->boss ? BOSS_DMG : ENEMY_DMG);
+    spawn_proj(m, e, p);
 }
 
 void update_enemies(player_t *p, map_t *m, sound_t *s)
@@ -94,6 +83,6 @@ void update_enemies(player_t *p, map_t *m, sound_t *s)
         if (!has_los(e->x, e->y, p, m))
             continue;
         chase(e, p, m);
-        try_shoot(e, p, s);
+        try_shoot(e, m, p, s);
     }
 }

@@ -27,7 +27,7 @@ static void init_ceil_ctx(ceil_ctx_t *c, player_t *p, sfImage *img)
     c->tw = (int)tsz.x;
     c->th = (int)tsz.y;
     c->ww = p->ww;
-    c->posZ = p->wh / 2.0f;
+    c->posZ = p->wh * (0.5f + p->z / TILE_SIZE);
     c->ldx = cosf(p->angle - FOV / 2.0f);
     c->ldy = sinf(p->angle - FOV / 2.0f);
     c->rdx = cosf(p->angle + FOV / 2.0f);

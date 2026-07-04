@@ -28,6 +28,7 @@ SRC			= 	src/main.c 							\
 				src/enemies/enemy_ai.c 				\
 				src/enemies/enemy_draw.c 			\
 				src/enemies/enemy_shoot.c 			\
+				src/enemies/projectile.c 			\
 				src/tools/weapon.c 					\
 				src/tools/flashlight.c 				\
 				src/tools/ammo.c 					\

@@ -27,6 +27,8 @@ typedef struct player_s {
     int hp;
     float hurt_cd;
     int hurt_flash;
+    float z;
+    float z_vel;
     sfText *hp_txt;
     sfBool shot_event;
     float *zbuf;
@@ -34,6 +36,8 @@ typedef struct player_s {
     sfClock *tick_clock;
     sfTexture *enemy_tex;
     sfTexture *boss_tex;
+    sfTexture *proj_tex;
+    sfSprite *proj_spr;
     int ammo;
     int reload_frame;
     sfTexture *weapon_idle;
@@ -68,6 +72,7 @@ typedef struct wall_ctx_s {
     float col_w;
     sfVector2u tex_sz;
     int wh;
+    float jr;
 } wall_ctx_t;
 
 typedef struct ceil_ctx_s {
@@ -131,6 +136,15 @@ typedef struct enemy_s {
     sfBool boss;
 } enemy_t;
 
+typedef struct proj_s {
+    float x;
+    float y;
+    float dx;
+    float dy;
+    sfBool active;
+    sfBool boss;
+} proj_t;
+
 typedef struct map_s {
     char **map;
     char *path;
@@ -138,6 +152,7 @@ typedef struct map_s {
     int size_y;
     enemy_t enemies[MAX_ENEMIES];
     int enemy_count;
+    proj_t projs[MAX_PROJS];
 } map_t;
 
 typedef struct spr_ctx_s {
