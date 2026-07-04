@@ -29,16 +29,16 @@ static void chase(enemy_t *e, player_t *p, map_t *m)
     nx = e->x + (p->x - e->x) / dist * step;
     ny = e->y + (p->y - e->y) / dist * step;
     e->moving = sfTrue;
-    if (is_wall(nx, ny, m) != IS_WALL) {
+    if (is_blocked(nx, ny, m) != IS_WALL) {
         e->x = nx;
         e->y = ny;
         return;
     }
-    if (is_wall(nx, e->y, m) != IS_WALL) {
+    if (is_blocked(nx, e->y, m) != IS_WALL) {
         e->x = nx;
         return;
     }
-    if (is_wall(e->x, ny, m) != IS_WALL)
+    if (is_blocked(e->x, ny, m) != IS_WALL)
         e->y = ny;
 }
 

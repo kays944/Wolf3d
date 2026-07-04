@@ -109,6 +109,7 @@ void draw(sfRenderWindow *window, player_t *player, map_t *m)
     sfRenderWindow_clear(window, sfBlack);
     draw_background(window, player);
     cast_all_rays(window, player, m);
+    draw_props(window, player, m);
     draw_pickups(window, player, m);
     draw_enemies(window, player, m);
     draw_projs(window, player, m);

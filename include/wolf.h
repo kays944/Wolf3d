@@ -41,6 +41,8 @@ typedef struct player_s {
     sfSprite *proj_spr;
     sfTexture *pack_tex;
     sfSprite *pack_spr;
+    sfTexture *prop_tex[PROP_TYPES];
+    sfSprite *prop_spr;
     int ammo;
     int reload_frame;
     sfTexture *weapon_idle;
@@ -148,6 +150,12 @@ typedef struct pickup_s {
     sfBool active;
 } pickup_t;
 
+typedef struct prop_s {
+    float x;
+    float y;
+    int type;
+} prop_t;
+
 typedef struct proj_s {
     float x;
     float y;
@@ -167,6 +175,8 @@ typedef struct map_s {
     proj_t projs[MAX_PROJS];
     pickup_t packs[MAX_PACKS];
     int pack_count;
+    prop_t props[MAX_PROPS];
+    int prop_count;
 } map_t;
 
 typedef struct spr_ctx_s {

@@ -135,6 +135,7 @@ static void destroy_player_tools(player_t *player)
 {
     if (player->tick_clock)
         sfClock_destroy(player->tick_clock);
+    destroy_props(player);
     destroy_pickups(player);
     destroy_enemies(player);
     destroy_wall_tex(player);
@@ -159,7 +160,8 @@ int game_loop(game_t *g)
     if (init_player_tools(&player) == EXIT_FAIL)
         return EXIT_FAIL;
     if (init_enemies(&player, &g->map) == EXIT_FAIL
-        || init_pickups(&player, &g->map) == EXIT_FAIL) {
+        || init_pickups(&player, &g->map) == EXIT_FAIL
+        || init_props(&player, &g->map) == EXIT_FAIL) {
         destroy_player_tools(&player);
         return EXIT_FAIL;
     }

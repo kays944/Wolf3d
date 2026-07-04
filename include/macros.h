@@ -173,6 +173,13 @@
     #define PACK_RADIUS 30.0f
     #define PACK_WORLD_SIZE 22.0f
 
+    #define MAX_PROPS 32
+    #define PROP_TYPES 4
+    #define PROP_BARREL 0
+    #define PROP_CANDLE 1
+    #define PROP_SKELETON 2
+    #define PROP_GORE 3
+
     #define SHOT_RANGE 700.0f
     #define SHOT_DMG 50
     #define HEADSHOT_DMG 100

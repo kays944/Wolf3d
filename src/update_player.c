@@ -16,8 +16,8 @@ static void move_axis(player_t *p, map_t *m, float ang)
     float nx = p->x + cosf(ang) * step;
     float ny = p->y + sinf(ang) * step;
 
-    if (is_wall(nx, ny, m) == IS_WALL
-        || is_wall(nx + PLAYER_MARGIN * cosf(ang),
+    if (is_blocked(nx, ny, m) == IS_WALL
+        || is_blocked(nx + PLAYER_MARGIN * cosf(ang),
             ny + PLAYER_MARGIN * sinf(ang), m) == IS_WALL)
         return;
     p->x = nx;

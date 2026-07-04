@@ -93,6 +93,11 @@ int init_pickups(player_t *p, map_t *m);
 void destroy_pickups(player_t *p);
 void update_pickups(player_t *p, map_t *m);
 void draw_pickups(sfRenderWindow *win, player_t *p, map_t *m);
+
+int is_blocked(float x, float y, map_t *m);
+int init_props(player_t *p, map_t *m);
+void destroy_props(player_t *p);
+void draw_props(sfRenderWindow *win, player_t *p, map_t *m);
 void sort_far(enemy_t **arr, int n, player_t *p);
 int enemies_alive(map_t *m);
 

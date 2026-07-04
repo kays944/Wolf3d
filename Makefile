@@ -24,6 +24,7 @@ SRC			= 	src/main.c 							\
 				src/texture_floor_ceil.c 			\
 				src/hud_fx.c 						\
 				src/pickup.c 						\
+				src/props.c 						\
 				src/enemies/enemy.c 				\
 				src/enemies/enemy_utils.c 			\
 				src/enemies/enemy_ai.c 				\
