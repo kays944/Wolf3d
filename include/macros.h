@@ -113,6 +113,10 @@
 
     #define AMMO_DEFAULT 30
     #define AMMO_FONT_SZ 30
+    #define AMMO_RESERVE_START 60
+    #define AMMO_RESERVE_MAX 90
+    #define AMMO_BOX_VALUE 20
+    #define AMMO_TEX_PATH "./assets/props/ammo_box.png"
 
     #define WALL_TEX_PATH "./assets/texture_wall_wolf.png"
     #define SKY_TEX_PATH "./assets/texture_sky.png"
@@ -172,6 +176,9 @@
     #define PACK_HP 25
     #define PACK_RADIUS 30.0f
     #define PACK_WORLD_SIZE 22.0f
+    #define PACK_KINDS 2
+    #define PACK_MEDKIT 0
+    #define PACK_AMMO 1
 
     #define MAX_PROPS 32
     #define PROP_TYPES 4

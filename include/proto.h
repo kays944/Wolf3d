@@ -110,6 +110,7 @@ int init_ammo(player_t *p);
 void destroy_ammo(player_t *p);
 void decrement_ammo(player_t *p);
 void reload_ammo(player_t *p);
+void refresh_ammo_text(player_t *p);
 
 int init_reload(player_t *p);
 void destroy_reload(player_t *p);

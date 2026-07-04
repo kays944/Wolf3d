@@ -39,11 +39,12 @@ typedef struct player_s {
     sfTexture *boss_tex;
     sfTexture *proj_tex;
     sfSprite *proj_spr;
-    sfTexture *pack_tex;
+    sfTexture *pack_tex[PACK_KINDS];
     sfSprite *pack_spr;
     sfTexture *prop_tex[PROP_TYPES];
     sfSprite *prop_spr;
     int ammo;
+    int reserve;
     int reload_frame;
     sfTexture *weapon_idle;
     sfTexture *weapon_fire;
@@ -147,6 +148,7 @@ typedef struct enemy_s {
 typedef struct pickup_s {
     float x;
     float y;
+    int type;
     sfBool active;
 } pickup_t;
 

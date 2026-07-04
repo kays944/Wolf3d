@@ -56,6 +56,8 @@ void start_reload(player_t *p)
 {
     if (p->reloading || p->firing)
         return;
+    if (p->ammo >= AMMO_DEFAULT || p->reserve <= 0)
+        return;
     p->reloading = sfTrue;
     p->reload_frame = 0;
     sfSprite_setTexture(p->weapon_spr, p->reload_tex, sfFalse);
