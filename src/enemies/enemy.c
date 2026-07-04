@@ -22,6 +22,8 @@ static void spawn_at(map_t *m, int tx, int ty, sfBool boss)
     e->cooldown = ENEMY_FIRST_CD_MIN + (rand() % 150) / 100.0f;
     e->anim_t = (rand() % 100) / 100.0f;
     e->atk_anim = 0;
+    e->death_t = 0;
+    e->dying = sfFalse;
     e->moving = sfFalse;
     e->alive = sfTrue;
     e->boss = boss;

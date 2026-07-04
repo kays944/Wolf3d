@@ -39,6 +39,8 @@ typedef struct player_s {
     sfTexture *boss_tex;
     sfTexture *proj_tex;
     sfSprite *proj_spr;
+    sfTexture *pack_tex;
+    sfSprite *pack_spr;
     int ammo;
     int reload_frame;
     sfTexture *weapon_idle;
@@ -133,10 +135,18 @@ typedef struct enemy_s {
     float cooldown;
     float anim_t;
     float atk_anim;
+    float death_t;
+    sfBool dying;
     sfBool moving;
     sfBool alive;
     sfBool boss;
 } enemy_t;
+
+typedef struct pickup_s {
+    float x;
+    float y;
+    sfBool active;
+} pickup_t;
 
 typedef struct proj_s {
     float x;
@@ -155,6 +165,8 @@ typedef struct map_s {
     enemy_t enemies[MAX_ENEMIES];
     int enemy_count;
     proj_t projs[MAX_PROJS];
+    pickup_t packs[MAX_PACKS];
+    int pack_count;
 } map_t;
 
 typedef struct spr_ctx_s {

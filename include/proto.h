@@ -88,6 +88,11 @@ void hurt_player(player_t *p, int dmg);
 void spawn_proj(map_t *m, enemy_t *e, player_t *p);
 void update_projs(player_t *p, map_t *m);
 void draw_projs(sfRenderWindow *win, player_t *p, map_t *m);
+
+int init_pickups(player_t *p, map_t *m);
+void destroy_pickups(player_t *p);
+void update_pickups(player_t *p, map_t *m);
+void draw_pickups(sfRenderWindow *win, player_t *p, map_t *m);
 void sort_far(enemy_t **arr, int n, player_t *p);
 int enemies_alive(map_t *m);
 

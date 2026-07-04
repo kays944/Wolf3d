@@ -25,6 +25,16 @@ static void set_frame(spr_ctx_t *c, enemy_t *e)
     int col = 0;
     int row = 0;
 
+    if (e->dying) {
+        row = DEATH_ROW;
+        col = (int)(e->death_t / DEATH_FRAME_LEN);
+        col = col >= DEATH_FRAMES ? DEATH_FRAMES - 1 : col;
+        c->cw = c->tsz.x / (float)ANIM_COLS;
+        c->ch = c->tsz.y / (float)ANIM_ROWS;
+        c->u0 = col * c->cw;
+        c->v0 = row * c->ch;
+        return;
+    }
     if (e->atk_anim > 0) {
         row = 1;
         col = (int)((ATK_ANIM_LEN - e->atk_anim) / ATK_ANIM_LEN
@@ -95,6 +105,8 @@ static void draw_hp_bar(sfRenderWindow *win, spr_ctx_t *c,
     sfRectangleShape *r = NULL;
     int mid = (c->i0 + c->i1) / 2;
 
+    if (e->dying)
+        return;
     if (mid < 0 || mid >= NUM_RAYS || c->dist >= p->zbuf[mid])
         return;
     r = sfRectangleShape_create();

@@ -74,6 +74,10 @@ void update_enemies(player_t *p, map_t *m, sound_t *s)
         e = &m->enemies[i];
         if (!e->alive)
             continue;
+        if (e->dying) {
+            e->death_t += p->dt;
+            continue;
+        }
         e->anim_t += p->dt;
         e->moving = sfFalse;
         if (e->cooldown > 0)

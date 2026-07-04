@@ -29,8 +29,10 @@ static void damage_enemy(enemy_t *e, player_t *p)
     if (aim_hit(e, p, HEAD_RADIUS * scale))
         dmg = HEADSHOT_DMG;
     e->hp -= dmg;
-    if (e->hp <= 0)
-        e->alive = sfFalse;
+    if (e->hp <= 0) {
+        e->dying = sfTrue;
+        e->death_t = 0;
+    }
 }
 
 void shoot_enemies(player_t *p, map_t *m)
@@ -41,7 +43,8 @@ void shoot_enemies(player_t *p, map_t *m)
     for (int i = 0; i < m->enemy_count; i++) {
         e = &m->enemies[i];
         scale = e->boss ? BOSS_SCALE : 1.0f;
-        if (!e->alive || !aim_hit(e, p, ENEMY_RADIUS * scale))
+        if (!e->alive || e->dying
+            || !aim_hit(e, p, ENEMY_RADIUS * scale))
             continue;
         if (!has_los(e->x, e->y, p, m))
             continue;

@@ -60,12 +60,21 @@ void sort_far(enemy_t **arr, int n, player_t *p)
             swap_if_closer(arr, j, p);
 }
 
+static int is_threat(enemy_t *e)
+{
+    if (!e->alive)
+        return 0;
+    if (!e->dying)
+        return 1;
+    return e->death_t < DEATH_FRAMES * DEATH_FRAME_LEN + 0.4f;
+}
+
 int enemies_alive(map_t *m)
 {
     int count = 0;
 
     for (int i = 0; i < m->enemy_count; i++)
-        if (m->enemies[i].alive)
+        if (is_threat(&m->enemies[i]))
             count++;
     return count;
 }
