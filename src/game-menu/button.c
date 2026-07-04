@@ -125,3 +125,5 @@ void render_buttons(sfRenderWindow *win, button_t *btns,
     for (int i = 0; i < count; i++)
         render_button(win, &btns[i], (i == selected));
 }
+
+

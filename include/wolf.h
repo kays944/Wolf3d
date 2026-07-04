@@ -29,6 +29,7 @@ typedef struct player_s {
     int hurt_flash;
     float z;
     float z_vel;
+    float pitch;
     sfText *hp_txt;
     sfBool shot_event;
     float *zbuf;
@@ -73,6 +74,7 @@ typedef struct wall_ctx_s {
     sfVector2u tex_sz;
     int wh;
     float jr;
+    float hy;
 } wall_ctx_t;
 
 typedef struct ceil_ctx_s {
@@ -162,6 +164,7 @@ typedef struct spr_ctx_s {
     float dist;
     float size;
     float x0;
+    float width;
     float ybot;
     float u0;
     float v0;

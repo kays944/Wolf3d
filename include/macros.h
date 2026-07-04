@@ -127,7 +127,7 @@
     #define ENEMY_TEX_PATH "./assets/enemy.png"
     #define BOSS_TEX_PATH "./assets/boss.png"
     #define MAX_ENEMIES 16
-    #define ENEMY_HP 2
+    #define ENEMY_HP 100
     #define BOSS_HP (ENEMY_HP * 2)
     #define BOSS_SCALE 1.6f
     #define ENEMY_SPEED 95.0f
@@ -148,6 +148,9 @@
 
     #define JUMP_VEL 170.0f
     #define GRAVITY 800.0f
+    #define PITCH_SPEED 550.0f
+    #define PITCH_MAX_DIV 3
+    #define WEAPON_X_RATIO 0.034f
     #define ENEMY_RADIUS 24.0f
     #define HEAD_RADIUS 9.0f
     #define LOS_STEP 4.0f
@@ -162,8 +165,12 @@
     #define ATK_ANIM_LEN 0.45f
 
     #define SHOT_RANGE 700.0f
-    #define SHOT_DMG 1
-    #define HEADSHOT_DMG 2
+    #define SHOT_DMG 50
+    #define HEADSHOT_DMG 100
+    #define HPBAR_W_RATIO 0.7f
+    #define HPBAR_H_RATIO 0.045f
+    #define HPBAR_MIN_H 3.0f
+    #define HPBAR_GAP 5.0f
     #define PLAYER_HP 100
     #define HURT_COOLDOWN 0.6f
     #define HURT_FLASH_FRAMES 12

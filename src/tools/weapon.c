@@ -17,7 +17,7 @@ void place_weapon_sprite(player_t *p)
     sc.x = (float)p->ww / 2.0f / sz.x;
     sc.y = sc.x;
     sfSprite_setScale(p->weapon_spr, sc);
-    pos.x = (p->ww - sz.x * sc.x) / 2.0f;
+    pos.x = (p->ww - sz.x * sc.x) / 2.0f + p->ww * WEAPON_X_RATIO;
     pos.y = p->wh - sz.y * sc.y;
     sfSprite_setPosition(p->weapon_spr, pos);
 }

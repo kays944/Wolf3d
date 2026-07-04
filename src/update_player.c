@@ -10,26 +10,48 @@
 #include "proto.h"
 #include <math.h>
 
-static void forward_backward(player_t *player, map_t *m)
+static void move_axis(player_t *p, map_t *m, float ang)
 {
-    float step = PLAYER_SPEED * player->dt;
-    float new_x = 0;
-    float new_y = 0;
+    float step = PLAYER_SPEED * p->dt;
+    float nx = p->x + cosf(ang) * step;
+    float ny = p->y + sinf(ang) * step;
 
-    if (sfKeyboard_isKeyPressed(sfKeyZ)) {
-        new_x = player->x + cos(player->angle) * step;
-        new_y = player->y + sin(player->angle) * step;
-    }
-    if (sfKeyboard_isKeyPressed(sfKeyS)) {
-        new_x = player->x - cos(player->angle) * step;
-        new_y = player->y - sin(player->angle) * step;
-    }
-    if (is_wall(new_x, new_y, m) != IS_WALL
-        && is_wall(new_x + PLAYER_MARGIN * cosf(player->angle),
-            new_y + PLAYER_MARGIN * sinf(player->angle), m) != IS_WALL) {
-        player->x = new_x;
-        player->y = new_y;
-    }
+    if (is_wall(nx, ny, m) == IS_WALL
+        || is_wall(nx + PLAYER_MARGIN * cosf(ang),
+            ny + PLAYER_MARGIN * sinf(ang), m) == IS_WALL)
+        return;
+    p->x = nx;
+    p->y = ny;
+}
+
+static void move_input(player_t *p, map_t *m)
+{
+    if (sfKeyboard_isKeyPressed(sfKeyZ))
+        move_axis(p, m, p->angle);
+    if (sfKeyboard_isKeyPressed(sfKeyS))
+        move_axis(p, m, p->angle + M_PI);
+    if (sfKeyboard_isKeyPressed(sfKeyQ))
+        move_axis(p, m, p->angle - M_PI / 2);
+    if (sfKeyboard_isKeyPressed(sfKeyD))
+        move_axis(p, m, p->angle + M_PI / 2);
+}
+
+static void look_input(player_t *p)
+{
+    float max_pitch = p->wh / (float)PITCH_MAX_DIV;
+
+    if (sfKeyboard_isKeyPressed(sfKeyLeft))
+        p->angle -= ROTATION_SPEED * p->dt;
+    if (sfKeyboard_isKeyPressed(sfKeyRight))
+        p->angle += ROTATION_SPEED * p->dt;
+    if (sfKeyboard_isKeyPressed(sfKeyUp))
+        p->pitch += PITCH_SPEED * p->dt;
+    if (sfKeyboard_isKeyPressed(sfKeyDown))
+        p->pitch -= PITCH_SPEED * p->dt;
+    if (p->pitch > max_pitch)
+        p->pitch = max_pitch;
+    if (p->pitch < -max_pitch)
+        p->pitch = -max_pitch;
 }
 
 static void update_jump(player_t *player)
@@ -67,12 +89,8 @@ void update_player(sfRenderWindow *window, player_t *player, map_t *m)
     float dt = sfTime_asSeconds(sfClock_restart(player->tick_clock));
 
     player->dt = dt < DT_MAX ? dt : DT_MAX;
-    if (sfKeyboard_isKeyPressed(sfKeyZ) || sfKeyboard_isKeyPressed(sfKeyS))
-        forward_backward(player, m);
-    if (sfKeyboard_isKeyPressed(sfKeyQ))
-        player->angle -= ROTATION_SPEED * player->dt;
-    if (sfKeyboard_isKeyPressed(sfKeyD))
-        player->angle += ROTATION_SPEED * player->dt;
+    move_input(player, m);
+    look_input(player);
     update_jump(player);
     update_weapon(player);
     update_reload(player);

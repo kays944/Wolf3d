@@ -9,24 +9,9 @@
 #include "macros.h"
 #include "proto.h"
 
-static int init_floor_resources(player_t *p, int half_h)
+static int init_ceil_spr(player_t *p)
 {
-    p->floor_tex = sfTexture_create(p->ww, half_h);
-    if (!p->floor_tex)
-        return EXIT_FAIL;
-    p->floor_spr = sfSprite_create();
-    if (!p->floor_spr) {
-        sfTexture_destroy(p->floor_tex);
-        return EXIT_FAIL;
-    }
-    sfSprite_setTexture(p->floor_spr, p->floor_tex, sfTrue);
-    sfSprite_setPosition(p->floor_spr, (sfVector2f){0, (float)half_h});
-    return EXIT_SUCCESS;
-}
-
-static int init_ceil_spr(player_t *p, int half_h)
-{
-    p->ceil_tex = sfTexture_create(p->ww, half_h);
+    p->ceil_tex = sfTexture_create(p->ww, p->wh);
     if (!p->ceil_tex)
         return EXIT_FAIL;
     p->ceil_spr = sfSprite_create();
@@ -41,19 +26,12 @@ static int init_ceil_spr(player_t *p, int half_h)
 
 static int init_ceil_resources(player_t *p)
 {
-    int half_h = p->wh / 2;
-
-    p->ceil_pixels = malloc(p->ww * half_h * 4);
+    p->ceil_pixels = malloc(p->ww * p->wh * 4);
     if (!p->ceil_pixels)
         return EXIT_FAIL;
-    if (init_ceil_spr(p, half_h) == EXIT_FAIL) {
+    if (init_ceil_spr(p) == EXIT_FAIL) {
         free(p->ceil_pixels);
-        return EXIT_FAIL;
-    }
-    if (init_floor_resources(p, half_h) == EXIT_FAIL) {
-        sfSprite_destroy(p->ceil_spr);
-        sfTexture_destroy(p->ceil_tex);
-        free(p->ceil_pixels);
+        p->ceil_pixels = NULL;
         return EXIT_FAIL;
     }
     return EXIT_SUCCESS;

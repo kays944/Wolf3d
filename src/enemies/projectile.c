@@ -78,7 +78,8 @@ static void draw_one_proj(sfRenderWindow *win, proj_t *pr, player_t *p)
     if (ray < 0 || ray >= NUM_RAYS || dist >= p->zbuf[ray])
         return;
     size = (PROJ_WORLD_SIZE * p->wh) / dist;
-    cy = p->wh / 2.0f + (TILE_SIZE * p->wh / dist) * (p->z / TILE_SIZE);
+    cy = p->wh / 2.0f + p->pitch
+        + (TILE_SIZE * p->wh / dist) * (p->z / TILE_SIZE);
     sfSprite_setScale(p->proj_spr, (sfVector2f){size / tsz.x,
             size / tsz.y});
     sfSprite_setPosition(p->proj_spr, (sfVector2f){(rel / FOV + 0.5f)
