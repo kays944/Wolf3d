@@ -161,8 +161,7 @@
     #define PAD_BTN_JUMP 0
     #define PAD_BTN_FLASH 2
     #define PAD_BTN_RELOAD 3
-    #define PAD_BTN_FIRE_R1 5
-    #define PAD_BTN_FIRE_R2 7
+    #define PAD_BTN_FIRE 7
     #define PAD_BTN_PAUSE 9
     #define ENEMY_RADIUS 24.0f
     #define HEAD_RADIUS 9.0f

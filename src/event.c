@@ -54,7 +54,7 @@ static void check_pad_buttons(player_t *player, sfEvent *e, sound_t *s)
     if (e->type != sfEvtJoystickButtonPressed)
         return;
     btn = e->joystickButton.button;
-    if (btn == PAD_BTN_FIRE_R1 || btn == PAD_BTN_FIRE_R2)
+    if (btn == PAD_BTN_FIRE)
         do_fire(player, s);
     if (btn == PAD_BTN_RELOAD)
         start_reload(player);
