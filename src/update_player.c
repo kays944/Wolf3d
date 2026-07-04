@@ -26,14 +26,20 @@ static void move_axis(player_t *p, map_t *m, float ang)
 
 static void move_input(player_t *p, map_t *m)
 {
+    float fw = 0;
+    float side = 0;
+
     if (sfKeyboard_isKeyPressed(sfKeyZ))
-        move_axis(p, m, p->angle);
+        fw += 1;
     if (sfKeyboard_isKeyPressed(sfKeyS))
-        move_axis(p, m, p->angle + M_PI);
-    if (sfKeyboard_isKeyPressed(sfKeyQ))
-        move_axis(p, m, p->angle - M_PI / 2);
+        fw -= 1;
     if (sfKeyboard_isKeyPressed(sfKeyD))
-        move_axis(p, m, p->angle + M_PI / 2);
+        side += 1;
+    if (sfKeyboard_isKeyPressed(sfKeyQ))
+        side -= 1;
+    if (fw == 0 && side == 0)
+        return;
+    move_axis(p, m, p->angle + atan2f(side, fw));
 }
 
 static void look_input(player_t *p)

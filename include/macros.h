@@ -40,7 +40,7 @@
     #define DISTANCE_LIMIT 1.0f
     #define PLAYER_MARGIN 10.0f
 
-    #define PLAYER_SPEED 260.0f
+    #define PLAYER_SPEED 175.0f
     #define ROTATION_SPEED 3.0f
     #define DT_MAX 0.05f
 
