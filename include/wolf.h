@@ -122,6 +122,9 @@ typedef struct enemy_s {
     float y;
     int hp;
     float cooldown;
+    float anim_t;
+    float atk_anim;
+    sfBool moving;
     sfBool alive;
     sfBool boss;
 } enemy_t;
@@ -143,6 +146,10 @@ typedef struct spr_ctx_s {
     float size;
     float x0;
     float ybot;
+    float u0;
+    float v0;
+    float cw;
+    float ch;
     int i0;
     int i1;
 } spr_ctx_t;

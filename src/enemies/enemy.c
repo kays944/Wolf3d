@@ -20,6 +20,9 @@ static void spawn_at(map_t *m, int tx, int ty, sfBool boss)
     e->y = ty * TILE_SIZE + TILE_SIZE / 2;
     e->hp = boss ? BOSS_HP : ENEMY_HP;
     e->cooldown = (rand() % 100) / 100.0f;
+    e->anim_t = (rand() % 100) / 100.0f;
+    e->atk_anim = 0;
+    e->moving = sfFalse;
     e->alive = sfTrue;
     e->boss = boss;
     m->enemy_count++;

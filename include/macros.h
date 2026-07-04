@@ -146,6 +146,13 @@
     #define ENEMY_SND_PITCH 0.6f
     #define ENEMY_SND_VOL 0.5f
 
+    #define ANIM_COLS 4
+    #define ANIM_ROWS 2
+    #define WALK_FRAMES 4
+    #define ATK_FRAMES 3
+    #define WALK_FPS 7.0f
+    #define ATK_ANIM_LEN 0.45f
+
     #define SHOT_RANGE 700.0f
     #define SHOT_DMG 1
     #define HEADSHOT_DMG 2

@@ -20,21 +20,40 @@ static void append_vert(sfVertexArray *va, const sfVector2f *pos,
     sfVertexArray_append(va, v);
 }
 
+static void set_frame(spr_ctx_t *c, enemy_t *e)
+{
+    int col = 0;
+    int row = 0;
+
+    if (e->atk_anim > 0) {
+        row = 1;
+        col = (int)((ATK_ANIM_LEN - e->atk_anim) / ATK_ANIM_LEN
+            * ATK_FRAMES);
+        col = col >= ATK_FRAMES ? ATK_FRAMES - 1 : col;
+    } else if (e->moving)
+        col = (int)(e->anim_t * WALK_FPS) % WALK_FRAMES;
+    c->cw = c->tsz.x / (float)ANIM_COLS;
+    c->ch = c->tsz.y / (float)ANIM_ROWS;
+    c->u0 = col * c->cw;
+    c->v0 = row * c->ch;
+}
+
 static void append_quad(spr_ctx_t *c, int i)
 {
     float span = (float)(c->i1 - c->i0 + 1);
-    float u = (i - c->i0) / span * c->tsz.x;
-    float du = c->tsz.x / span;
+    float u = c->u0 + (i - c->i0) / span * c->cw;
+    float du = c->cw / span;
     float x = i * c->col_w;
     float yt = c->ybot - c->size;
     float yb = c->ybot;
 
-    append_vert(c->va, &(sfVector2f){x, yt}, &(sfVector2f){u, 0});
+    append_vert(c->va, &(sfVector2f){x, yt}, &(sfVector2f){u, c->v0});
     append_vert(c->va, &(sfVector2f){x + c->col_w, yt},
-        &(sfVector2f){u + du, 0});
+        &(sfVector2f){u + du, c->v0});
     append_vert(c->va, &(sfVector2f){x + c->col_w, yb},
-        &(sfVector2f){u + du, c->tsz.y});
-    append_vert(c->va, &(sfVector2f){x, yb}, &(sfVector2f){u, c->tsz.y});
+        &(sfVector2f){u + du, c->v0 + c->ch});
+    append_vert(c->va, &(sfVector2f){x, yb},
+        &(sfVector2f){u, c->v0 + c->ch});
 }
 
 static void render_strips(sfRenderWindow *win, spr_ctx_t *c,
@@ -47,7 +66,7 @@ static void render_strips(sfRenderWindow *win, spr_ctx_t *c,
         return;
     sfVertexArray_setPrimitiveType(c->va, sfQuads);
     rs.texture = e->boss ? p->boss_tex : p->enemy_tex;
-    c->tsz = sfTexture_getSize(rs.texture);
+    set_frame(c, e);
     for (int i = c->i0; i <= c->i1; i++) {
         if (i < 0 || i >= NUM_RAYS || c->dist >= p->zbuf[i])
             continue;
@@ -64,6 +83,7 @@ static void draw_one(sfRenderWindow *win, enemy_t *e, player_t *p)
     float dy = e->y - p->y;
     float rel = norm_angle(atan2f(dy, dx) - p->angle);
     float base = 0;
+    float width = 0;
 
     if (fabsf(rel) > FOV / 2 + 0.5f)
         return;
@@ -74,9 +94,12 @@ static void draw_one(sfRenderWindow *win, enemy_t *e, player_t *p)
     c.size = base * (e->boss ? BOSS_SCALE : 1.0f);
     c.ybot = p->wh / 2.0f + base / 2.0f;
     c.col_w = p->ww / (float)NUM_RAYS;
-    c.x0 = (rel / FOV + 0.5f) * p->ww - c.size / 2.0f;
+    c.tsz = sfTexture_getSize(e->boss ? p->boss_tex : p->enemy_tex);
+    width = c.size * ((c.tsz.x / (float)ANIM_COLS)
+        / (c.tsz.y / (float)ANIM_ROWS));
+    c.x0 = (rel / FOV + 0.5f) * p->ww - width / 2.0f;
     c.i0 = (int)(c.x0 / c.col_w);
-    c.i1 = (int)((c.x0 + c.size) / c.col_w);
+    c.i1 = (int)((c.x0 + width) / c.col_w);
     render_strips(win, &c, e, p);
 }
 

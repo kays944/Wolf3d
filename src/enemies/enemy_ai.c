@@ -28,6 +28,7 @@ static void chase(enemy_t *e, player_t *p, map_t *m)
         return;
     nx = e->x + (p->x - e->x) / dist * step;
     ny = e->y + (p->y - e->y) / dist * step;
+    e->moving = sfTrue;
     if (is_wall(nx, ny, m) != IS_WALL) {
         e->x = nx;
         e->y = ny;
@@ -66,6 +67,7 @@ static void try_shoot(enemy_t *e, player_t *p, sound_t *s)
     if (dist > ENEMY_SHOOT_RANGE || e->cooldown > 0)
         return;
     e->cooldown = ENEMY_SHOOT_CD;
+    e->atk_anim = ATK_ANIM_LEN;
     play_enemy_shot(s);
     if ((rand() % 100) >= hit_chance(dist))
         return;
@@ -80,8 +82,12 @@ void update_enemies(player_t *p, map_t *m, sound_t *s)
         e = &m->enemies[i];
         if (!e->alive)
             continue;
+        e->anim_t += p->dt;
+        e->moving = sfFalse;
         if (e->cooldown > 0)
             e->cooldown -= p->dt;
+        if (e->atk_anim > 0)
+            e->atk_anim -= p->dt;
         if (!has_los(e->x, e->y, p, m))
             continue;
         chase(e, p, m);

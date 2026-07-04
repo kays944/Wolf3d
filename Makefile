@@ -51,11 +51,11 @@ OBJ_DIR		=	obj
 
 OBJ			=	$(SRC:src/%.c=$(OBJ_DIR)/%.o)
 
-CC 			:= 	epiclang
+CC 			:= 	gcc
 
 NAME		= 	wolf3d
 
-CFLAGS 		=
+CFLAGS 		= 	-O2
 
 CPPFLAGS	= 	-I./include
 
@@ -72,7 +72,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)/enemies
 
 $(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
-	$(CC) -c $< -o $@ $(CPPFLAGS)
+	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 $(NAME):	$(OBJ)
 	$(CC) -o $(NAME) $(OBJ) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
