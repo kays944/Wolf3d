@@ -91,6 +91,8 @@ static void adjust_vol_or_setting(menu_t *m, int dir)
         cycle_resolution(m, dir);
     if (m->settings_sel == SET_FULLSCR)
         toggle_fullscr(m->settings);
+    if (m->settings_sel == SET_INPUT)
+        m->settings->gamepad = m->settings->gamepad ? 0 : 1;
 }
 
 static void on_set_adjust(menu_t *m, sfEvent *e)
@@ -141,5 +143,6 @@ void save_settings(settings_t *s)
     fprintf(f, "sfx_vol %f\n", s->sfx_vol);
     fprintf(f, "res_index %d\n", s->res_index);
     fprintf(f, "fullscreen %d\n", s->fullscreen);
+    fprintf(f, "gamepad %d\n", s->gamepad);
     fclose(f);
 }

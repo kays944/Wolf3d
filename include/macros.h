@@ -88,8 +88,9 @@
     #define SET_SFX 1
     #define SET_RES 2
     #define SET_FULLSCR 3
-    #define SET_BACK 4
-    #define SET_ITEM_COUNT 5
+    #define SET_INPUT 4
+    #define SET_BACK 5
+    #define SET_ITEM_COUNT 6
 
     #define MENU_QUIT -1
     #define MENU_PLAY 0

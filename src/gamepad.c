@@ -42,7 +42,7 @@ static void pad_look(player_t *p)
 
 void update_gamepad(player_t *p, map_t *m)
 {
-    if (!sfJoystick_isConnected(PAD_ID))
+    if (!p->use_pad || !sfJoystick_isConnected(PAD_ID))
         return;
     pad_move(p, m);
     pad_look(p);

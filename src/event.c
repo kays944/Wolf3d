@@ -10,7 +10,7 @@
 
 static void check_switch(player_t *player, sfEvent *e)
 {
-    if (e->type != sfEvtKeyPressed)
+    if (player->use_pad || e->type != sfEvtKeyPressed)
         return;
     if (e->key.code != sfKeyP)
         return;
@@ -19,7 +19,7 @@ static void check_switch(player_t *player, sfEvent *e)
 
 static void check_reload(player_t *player, sfEvent *e)
 {
-    if (e->type != sfEvtKeyPressed)
+    if (player->use_pad || e->type != sfEvtKeyPressed)
         return;
     if (e->key.code != sfKeyR)
         return;
@@ -40,7 +40,7 @@ static void do_fire(player_t *player, sound_t *s)
 
 static void check_fire(player_t *player, sfEvent *e, sound_t *s)
 {
-    if (e->type != sfEvtMouseButtonPressed)
+    if (player->use_pad || e->type != sfEvtMouseButtonPressed)
         return;
     if (e->mouseButton.button != sfMouseLeft)
         return;
@@ -51,7 +51,7 @@ static void check_pad_buttons(player_t *player, sfEvent *e, sound_t *s)
 {
     unsigned int btn = 0;
 
-    if (e->type != sfEvtJoystickButtonPressed)
+    if (!player->use_pad || e->type != sfEvtJoystickButtonPressed)
         return;
     btn = e->joystickButton.button;
     if (btn == PAD_BTN_FIRE)

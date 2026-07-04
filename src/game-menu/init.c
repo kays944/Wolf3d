@@ -20,6 +20,7 @@ int load_settings(settings_t *s)
     fscanf(f, "sfx_vol %f\n", &s->sfx_vol);
     fscanf(f, "res_index %d\n", &s->res_index);
     fscanf(f, "fullscreen %d\n", (int *)&s->fullscreen);
+    fscanf(f, "gamepad %d\n", &s->gamepad);
     fclose(f);
     if (s->res_index < 0 || s->res_index >= NUM_RES)
         s->res_index = RES_DEFAULT;

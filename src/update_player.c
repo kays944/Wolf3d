@@ -46,31 +46,33 @@ static void look_input(player_t *p)
 {
     float max_pitch = p->wh / (float)PITCH_MAX_DIV;
 
-    if (sfKeyboard_isKeyPressed(sfKeyLeft))
-        p->angle -= ROTATION_SPEED * p->dt;
-    if (sfKeyboard_isKeyPressed(sfKeyRight))
-        p->angle += ROTATION_SPEED * p->dt;
-    if (sfKeyboard_isKeyPressed(sfKeyUp))
-        p->pitch += PITCH_SPEED * p->dt;
-    if (sfKeyboard_isKeyPressed(sfKeyDown))
-        p->pitch -= PITCH_SPEED * p->dt;
+    if (!p->use_pad) {
+        if (sfKeyboard_isKeyPressed(sfKeyLeft))
+            p->angle -= ROTATION_SPEED * p->dt;
+        if (sfKeyboard_isKeyPressed(sfKeyRight))
+            p->angle += ROTATION_SPEED * p->dt;
+        if (sfKeyboard_isKeyPressed(sfKeyUp))
+            p->pitch += PITCH_SPEED * p->dt;
+        if (sfKeyboard_isKeyPressed(sfKeyDown))
+            p->pitch -= PITCH_SPEED * p->dt;
+    }
     if (p->pitch > max_pitch)
         p->pitch = max_pitch;
     if (p->pitch < -max_pitch)
         p->pitch = -max_pitch;
 }
 
-static int jump_pressed(void)
+static int jump_pressed(player_t *p)
 {
-    if (sfKeyboard_isKeyPressed(sfKeySpace))
-        return 1;
-    return sfJoystick_isConnected(PAD_ID)
-        && sfJoystick_isButtonPressed(PAD_ID, PAD_BTN_JUMP);
+    if (p->use_pad)
+        return sfJoystick_isConnected(PAD_ID)
+            && sfJoystick_isButtonPressed(PAD_ID, PAD_BTN_JUMP);
+    return sfKeyboard_isKeyPressed(sfKeySpace);
 }
 
 static void update_jump(player_t *player)
 {
-    if (jump_pressed() && player->z <= 0
+    if (jump_pressed(player) && player->z <= 0
         && player->z_vel <= 0)
         player->z_vel = JUMP_VEL;
     if (player->z <= 0 && player->z_vel <= 0)
@@ -103,8 +105,11 @@ void update_player(sfRenderWindow *window, player_t *player, map_t *m)
     float dt = sfTime_asSeconds(sfClock_restart(player->tick_clock));
 
     player->dt = dt < DT_MAX ? dt : DT_MAX;
-    move_input(player, m);
-    update_gamepad(player, m);
+    if (player->use_pad) {
+        update_gamepad(player, m);
+    } else {
+        move_input(player, m);
+    }
     look_input(player);
     update_jump(player);
     update_weapon(player);

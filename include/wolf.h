@@ -32,6 +32,7 @@ typedef struct player_s {
     float pitch;
     sfText *hp_txt;
     sfBool shot_event;
+    sfBool use_pad;
     float *zbuf;
     float dt;
     sfClock *tick_clock;
@@ -110,6 +111,7 @@ typedef struct settings_s {
     float sfx_vol;
     int res_index;
     sfBool fullscreen;
+    int gamepad;
     int win_w;
     int win_h;
 } settings_t;

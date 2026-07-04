@@ -109,6 +109,10 @@ static void render_settings_inner(menu_t *m)
     if (m->settings->fullscreen == sfTrue)
         fs = "ON";
     draw_option(m, "Plein ecran :", fs, SET_FULLSCR);
+    if (m->settings->gamepad)
+        draw_option(m, "Controles :", "< MANETTE >", SET_INPUT);
+    else
+        draw_option(m, "Controles :", "< CLAVIER >", SET_INPUT);
 }
 
 void render_settings(menu_t *m)

@@ -155,6 +155,7 @@ int game_loop(game_t *g)
     player.ww = (int)sz.x;
     player.wh = (int)sz.y;
     player.hud_font = g->font_med;
+    player.use_pad = g->settings.gamepad ? sfTrue : sfFalse;
     if (init_player(&g->map, &player) == EXIT_FAIL)
         return EXIT_FAIL;
     if (init_player_tools(&player) == EXIT_FAIL)
