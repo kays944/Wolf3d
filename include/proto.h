@@ -71,9 +71,26 @@ int init_sound(sound_t *s, settings_t *set);
 void destroy_sound(sound_t *s);
 void update_sound_vol(sound_t *s, settings_t *set);
 void play_shoot(sound_t *s);
+void play_enemy_shot(sound_t *s);
 
 int init_health_bar(player_t *p);
 void destroy_health_bar(player_t *p);
+void decrement_health(sfSprite *sprite);
+
+int init_enemies(player_t *p, map_t *m);
+void destroy_enemies(player_t *p);
+void update_enemies(player_t *p, map_t *m, sound_t *s);
+void draw_enemies(sfRenderWindow *win, player_t *p, map_t *m);
+void shoot_enemies(player_t *p, map_t *m);
+float norm_angle(float a);
+int has_los(float ex, float ey, player_t *p, map_t *m);
+void sort_far(enemy_t **arr, int n, player_t *p);
+int enemies_alive(map_t *m);
+
+void draw_hurt_flash(sfRenderWindow *win, player_t *p);
+void draw_crosshair(sfRenderWindow *win, player_t *p);
+void show_end_screen(sfRenderWindow *win, player_t *p, const char *msg);
+int check_game_end(sfRenderWindow *win, player_t *p, map_t *m);
 
 int init_ammo(player_t *p);
 void destroy_ammo(player_t *p);

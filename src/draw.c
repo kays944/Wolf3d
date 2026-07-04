@@ -93,6 +93,7 @@ static void cast_all_rays(sfRenderWindow *win, player_t *player, map_t *m)
         dist = cast_single_ray(player, angle, m, &tex_x);
         if (dist < DISTANCE_LIMIT)
             dist = DISTANCE_LIMIT;
+        player->zbuf[i] = dist;
         fill_wall_quad(&ctx, i, (TILE_SIZE * player->wh) / dist, tex_x);
     }
     rs.texture = player->wall_tex;
@@ -106,9 +107,12 @@ void draw(sfRenderWindow *window, player_t *player, map_t *m)
     draw_floor_tex(window, player);
     draw_ceil_tex(window, player);
     cast_all_rays(window, player, m);
+    draw_enemies(window, player, m);
     if (player->weapon_spr && !player->flashlight)
         sfRenderWindow_drawSprite(window, player->weapon_spr, NULL);
     draw_flashlight(window, player);
+    draw_crosshair(window, player);
+    draw_hurt_flash(window, player);
     if (player->health_spr)
         sfRenderWindow_drawSprite(window, player->health_spr, NULL);
     if (player->ammo_txt)

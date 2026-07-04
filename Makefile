@@ -22,6 +22,12 @@ SRC			= 	src/main.c 							\
 				src/reload.c 						\
 				src/wall_tex.c 						\
 				src/texture_floor_ceil.c 			\
+				src/hud_fx.c 						\
+				src/enemies/enemy.c 				\
+				src/enemies/enemy_utils.c 			\
+				src/enemies/enemy_ai.c 				\
+				src/enemies/enemy_draw.c 			\
+				src/enemies/enemy_shoot.c 			\
 				src/tools/weapon.c 					\
 				src/tools/flashlight.c 				\
 				src/tools/ammo.c 					\
@@ -63,6 +69,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)/utils
 	mkdir -p $(OBJ_DIR)/game-menu
 	mkdir -p $(OBJ_DIR)/tools
+	mkdir -p $(OBJ_DIR)/enemies
 
 $(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
 	$(CC) -c $< -o $@ $(CPPFLAGS)

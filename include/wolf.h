@@ -24,6 +24,14 @@ typedef struct player_s {
     float angle;
     int ww;
     int wh;
+    int hp;
+    int hurt_flash;
+    sfBool shot_event;
+    float *zbuf;
+    float dt;
+    sfClock *tick_clock;
+    sfTexture *enemy_tex;
+    sfTexture *boss_tex;
     int ammo;
     int reload_frame;
     sfTexture *weapon_idle;
@@ -97,6 +105,7 @@ typedef struct sound_s {
     sfMusic *game_music;
     sfSoundBuffer *shoot_buf;
     sfSound *shoot_snd;
+    sfSound *enemy_snd;
 } sound_t;
 
 typedef struct button_s {
@@ -108,12 +117,35 @@ typedef struct button_s {
     sfBool hovered;
 } button_t;
 
+typedef struct enemy_s {
+    float x;
+    float y;
+    int hp;
+    float cooldown;
+    sfBool alive;
+    sfBool boss;
+} enemy_t;
+
 typedef struct map_s {
     char **map;
     char *path;
     int size_x;
     int size_y;
+    enemy_t enemies[MAX_ENEMIES];
+    int enemy_count;
 } map_t;
+
+typedef struct spr_ctx_s {
+    sfVertexArray *va;
+    sfVector2u tsz;
+    float col_w;
+    float dist;
+    float size;
+    float x0;
+    float ybot;
+    int i0;
+    int i1;
+} spr_ctx_t;
 
 typedef struct pause_s {
     sfRenderWindow *window;

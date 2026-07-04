@@ -47,6 +47,10 @@ static int init_player(map_t *m, player_t *player)
     player->x = row * TILE_SIZE + TILE_SIZE / 2;
     player->y = col * TILE_SIZE + TILE_SIZE / 2;
     player->angle = 0;
+    player->hp = PLAYER_HP;
+    player->tick_clock = sfClock_create();
+    if (!player->tick_clock)
+        return EXIT_FAIL;
     return EXIT_SUCCESS;
 }
 
@@ -98,6 +102,13 @@ static int init_player_tools(player_t *player)
     return EXIT_SUCCESS;
 }
 
+static int end_ret(sfRenderWindow *w)
+{
+    if (sfRenderWindow_isOpen(w))
+        return PAUSE_MENU;
+    return PAUSE_RESUME;
+}
+
 static int run_game(sfRenderWindow *w, player_t *p, game_t *g)
 {
     int ev = 0;
@@ -105,18 +116,32 @@ static int run_game(sfRenderWindow *w, player_t *p, game_t *g)
 
     sfMusic_stop(g->sound.menu_music);
     sfMusic_play(g->sound.game_music);
-    while (sfRenderWindow_isOpen(w)) {
+    while (sfRenderWindow_isOpen(w) && ret == PAUSE_RESUME) {
         ev = event(w, p, &g->map, &g->sound);
         if (ev == EVENT_CLOSE)
             break;
         if (ev == EVENT_PAUSE)
             ret = run_pause(g, &g->map, p);
-        if (ret != PAUSE_RESUME)
-            break;
-        draw(w, p, &g->map);
+        if (ret == PAUSE_RESUME && check_game_end(w, p, &g->map))
+            ret = end_ret(w);
+        if (ret == PAUSE_RESUME)
+            draw(w, p, &g->map);
     }
     sfMusic_stop(g->sound.game_music);
     return ret;
+}
+
+static void destroy_player_tools(player_t *player)
+{
+    if (player->tick_clock)
+        sfClock_destroy(player->tick_clock);
+    destroy_enemies(player);
+    destroy_wall_tex(player);
+    destroy_reload(player);
+    destroy_ammo(player);
+    destroy_health_bar(player);
+    destroy_flashlight(player);
+    destroy_weapon(player);
 }
 
 int game_loop(game_t *g)
@@ -132,12 +157,11 @@ int game_loop(game_t *g)
         return EXIT_FAIL;
     if (init_player_tools(&player) == EXIT_FAIL)
         return EXIT_FAIL;
+    if (init_enemies(&player, &g->map) == EXIT_FAIL) {
+        destroy_player_tools(&player);
+        return EXIT_FAIL;
+    }
     ret = run_game(g->window, &player, g);
-    destroy_wall_tex(&player);
-    destroy_reload(&player);
-    destroy_ammo(&player);
-    destroy_health_bar(&player);
-    destroy_flashlight(&player);
-    destroy_weapon(&player);
+    destroy_player_tools(&player);
     return ret;
 }

@@ -35,6 +35,7 @@ static void check_fire(player_t *player, sfEvent *e, sound_t *s)
     if (player->firing || player->reloading || player->ammo <= 0)
         return;
     player->firing = sfTrue;
+    player->shot_event = sfTrue;
     sfSprite_setTexture(player->weapon_spr, player->weapon_fire, sfTrue);
     sfClock_restart(player->weapon_clock);
     decrement_ammo(player);
@@ -54,6 +55,11 @@ int event(sfRenderWindow *window, player_t *player, map_t *m, sound_t *s)
         check_switch(player, &ev);
         check_reload(player, &ev);
     }
+    if (player->shot_event) {
+        shoot_enemies(player, m);
+        player->shot_event = sfFalse;
+    }
     update_player(window, player, m);
+    update_enemies(player, m, s);
     return EXIT_SUCCESS;
 }

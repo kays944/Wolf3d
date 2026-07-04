@@ -12,16 +12,17 @@
 
 static void forward_backward(player_t *player, map_t *m)
 {
+    float step = PLAYER_SPEED * player->dt;
     float new_x = 0;
     float new_y = 0;
 
     if (sfKeyboard_isKeyPressed(sfKeyZ)) {
-        new_x = player->x + cos(player->angle) * PLAYER_SPEED;
-        new_y = player->y + sin(player->angle) * PLAYER_SPEED;
+        new_x = player->x + cos(player->angle) * step;
+        new_y = player->y + sin(player->angle) * step;
     }
     if (sfKeyboard_isKeyPressed(sfKeyS)) {
-        new_x = player->x - cos(player->angle) * PLAYER_SPEED;
-        new_y = player->y - sin(player->angle) * PLAYER_SPEED;
+        new_x = player->x - cos(player->angle) * step;
+        new_y = player->y - sin(player->angle) * step;
     }
     if (is_wall(new_x, new_y, m) != IS_WALL
         && is_wall(new_x + PLAYER_MARGIN * cosf(player->angle),
@@ -48,12 +49,15 @@ static void update_weapon(player_t *player)
 
 void update_player(sfRenderWindow *window, player_t *player, map_t *m)
 {
+    float dt = sfTime_asSeconds(sfClock_restart(player->tick_clock));
+
+    player->dt = dt < DT_MAX ? dt : DT_MAX;
     if (sfKeyboard_isKeyPressed(sfKeyZ) || sfKeyboard_isKeyPressed(sfKeyS))
         forward_backward(player, m);
     if (sfKeyboard_isKeyPressed(sfKeyQ))
-        player->angle -= ROTATION_SPEED;
+        player->angle -= ROTATION_SPEED * player->dt;
     if (sfKeyboard_isKeyPressed(sfKeyD))
-        player->angle += ROTATION_SPEED;
+        player->angle += ROTATION_SPEED * player->dt;
     update_weapon(player);
     update_reload(player);
 }

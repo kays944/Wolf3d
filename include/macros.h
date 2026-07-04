@@ -40,8 +40,9 @@
     #define DISTANCE_LIMIT 1.0f
     #define PLAYER_MARGIN 10.0f
 
-    #define PLAYER_SPEED 2.0
-    #define ROTATION_SPEED 0.05
+    #define PLAYER_SPEED 260.0f
+    #define ROTATION_SPEED 3.0f
+    #define DT_MAX 0.05f
 
     #define WIN_W 1280
     #define WIN_H 720
@@ -122,6 +123,41 @@
     #define RELOAD_FRAME_W 426
     #define RELOAD_FRAME_H 339
     #define RELOAD_FRAME_MS 120
+
+    #define ENEMY_TEX_PATH "./assets/enemy.png"
+    #define BOSS_TEX_PATH "./assets/boss.png"
+    #define MAX_ENEMIES 16
+    #define ENEMY_HP 2
+    #define BOSS_HP (ENEMY_HP * 2)
+    #define BOSS_SCALE 1.6f
+    #define ENEMY_SPEED 95.0f
+    #define ENEMY_SIGHT 700.0f
+    #define ENEMY_STOP_DIST 170.0f
+    #define ENEMY_SHOOT_RANGE 550.0f
+    #define ENEMY_SHOOT_CD 1.5f
+    #define ENEMY_DMG 1
+    #define BOSS_DMG 2
+    #define HIT_BASE 85
+    #define HIT_FALL 0.11f
+    #define HIT_MIN 20
+    #define ENEMY_RADIUS 24.0f
+    #define HEAD_RADIUS 9.0f
+    #define LOS_STEP 4.0f
+    #define ENEMY_SND_PITCH 0.6f
+    #define ENEMY_SND_VOL 0.5f
+
+    #define SHOT_RANGE 700.0f
+    #define SHOT_DMG 1
+    #define HEADSHOT_DMG 2
+    #define PLAYER_HP 5
+    #define HURT_FLASH_FRAMES 12
+    #define CROSS_SIZE 16.0f
+    #define CROSS_THICK 3.0f
+
+    #define END_MSG_WIN "LEVEL CLEAR"
+    #define END_MSG_LOSE "YOU DIED"
+    #define END_SCREEN_MS 2500.0f
+    #define END_FONT_SZ 80
 
 typedef enum e_game_state {
     STATE_MENU,

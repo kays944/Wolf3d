@@ -1,0 +1,71 @@
+/*
+** EPITECH PROJECT, 2025
+** wolf3d
+** File description:
+** enemy_utils.c
+*/
+
+#include <math.h>
+#include "macros.h"
+#include "proto.h"
+
+float norm_angle(float a)
+{
+    while (a > M_PI)
+        a -= 2 * M_PI;
+    while (a < -M_PI)
+        a += 2 * M_PI;
+    return a;
+}
+
+int has_los(float ex, float ey, player_t *p, map_t *m)
+{
+    float dx = p->x - ex;
+    float dy = p->y - ey;
+    float dist = sqrtf(dx * dx + dy * dy);
+
+    if (dist < 1.0f)
+        return 1;
+    dx = dx / dist * LOS_STEP;
+    dy = dy / dist * LOS_STEP;
+    for (float t = 0; t < dist; t += LOS_STEP) {
+        if (is_wall(ex, ey, m) == IS_WALL)
+            return 0;
+        ex += dx;
+        ey += dy;
+    }
+    return 1;
+}
+
+static float dist_sq(enemy_t *e, player_t *p)
+{
+    return (e->x - p->x) * (e->x - p->x) + (e->y - p->y) * (e->y - p->y);
+}
+
+static void swap_if_closer(enemy_t **arr, int j, player_t *p)
+{
+    enemy_t *tmp = NULL;
+
+    if (dist_sq(arr[j], p) >= dist_sq(arr[j + 1], p))
+        return;
+    tmp = arr[j];
+    arr[j] = arr[j + 1];
+    arr[j + 1] = tmp;
+}
+
+void sort_far(enemy_t **arr, int n, player_t *p)
+{
+    for (int i = 0; i < n - 1; i++)
+        for (int j = 0; j < n - 1 - i; j++)
+            swap_if_closer(arr, j, p);
+}
+
+int enemies_alive(map_t *m)
+{
+    int count = 0;
+
+    for (int i = 0; i < m->enemy_count; i++)
+        if (m->enemies[i].alive)
+            count++;
+    return count;
+}
