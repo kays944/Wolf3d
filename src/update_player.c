@@ -10,9 +10,9 @@
 #include "proto.h"
 #include <math.h>
 
-static void move_axis(player_t *p, map_t *m, float ang)
+void player_step(player_t *p, map_t *m, float ang, float mag)
 {
-    float step = PLAYER_SPEED * p->dt;
+    float step = PLAYER_SPEED * p->dt * mag;
     float nx = p->x + cosf(ang) * step;
     float ny = p->y + sinf(ang) * step;
 
@@ -39,7 +39,7 @@ static void move_input(player_t *p, map_t *m)
         side -= 1;
     if (fw == 0 && side == 0)
         return;
-    move_axis(p, m, p->angle + atan2f(side, fw));
+    player_step(p, m, p->angle + atan2f(side, fw), 1.0f);
 }
 
 static void look_input(player_t *p)
@@ -60,9 +60,17 @@ static void look_input(player_t *p)
         p->pitch = -max_pitch;
 }
 
+static int jump_pressed(void)
+{
+    if (sfKeyboard_isKeyPressed(sfKeySpace))
+        return 1;
+    return sfJoystick_isConnected(PAD_ID)
+        && sfJoystick_isButtonPressed(PAD_ID, PAD_BTN_JUMP);
+}
+
 static void update_jump(player_t *player)
 {
-    if (sfKeyboard_isKeyPressed(sfKeySpace) && player->z <= 0
+    if (jump_pressed() && player->z <= 0
         && player->z_vel <= 0)
         player->z_vel = JUMP_VEL;
     if (player->z <= 0 && player->z_vel <= 0)
@@ -96,6 +104,7 @@ void update_player(sfRenderWindow *window, player_t *player, map_t *m)
 
     player->dt = dt < DT_MAX ? dt : DT_MAX;
     move_input(player, m);
+    update_gamepad(player, m);
     look_input(player);
     update_jump(player);
     update_weapon(player);

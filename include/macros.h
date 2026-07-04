@@ -155,6 +155,15 @@
     #define PITCH_SPEED 550.0f
     #define PITCH_MAX_DIV 3
     #define WEAPON_X_RATIO 0.034f
+
+    #define PAD_ID 0
+    #define PAD_DEADZONE 18.0f
+    #define PAD_BTN_JUMP 0
+    #define PAD_BTN_FLASH 2
+    #define PAD_BTN_RELOAD 3
+    #define PAD_BTN_FIRE_R1 5
+    #define PAD_BTN_FIRE_R2 7
+    #define PAD_BTN_PAUSE 9
     #define ENEMY_RADIUS 24.0f
     #define HEAD_RADIUS 9.0f
     #define LOS_STEP 4.0f

@@ -25,6 +25,7 @@ SRC			= 	src/main.c 							\
 				src/hud_fx.c 						\
 				src/pickup.c 						\
 				src/props.c 						\
+				src/gamepad.c 						\
 				src/enemies/enemy.c 				\
 				src/enemies/enemy_utils.c 			\
 				src/enemies/enemy_ai.c 				\

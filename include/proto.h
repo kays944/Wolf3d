@@ -95,6 +95,8 @@ void update_pickups(player_t *p, map_t *m);
 void draw_pickups(sfRenderWindow *win, player_t *p, map_t *m);
 
 int is_blocked(float x, float y, map_t *m);
+void player_step(player_t *p, map_t *m, float ang, float mag);
+void update_gamepad(player_t *p, map_t *m);
 int init_props(player_t *p, map_t *m);
 void destroy_props(player_t *p);
 void draw_props(sfRenderWindow *win, player_t *p, map_t *m);

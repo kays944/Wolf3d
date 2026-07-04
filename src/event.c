@@ -26,12 +26,8 @@ static void check_reload(player_t *player, sfEvent *e)
     start_reload(player);
 }
 
-static void check_fire(player_t *player, sfEvent *e, sound_t *s)
+static void do_fire(player_t *player, sound_t *s)
 {
-    if (e->type != sfEvtMouseButtonPressed)
-        return;
-    if (e->mouseButton.button != sfMouseLeft)
-        return;
     if (player->firing || player->reloading || player->ammo <= 0)
         return;
     player->firing = sfTrue;
@@ -40,6 +36,30 @@ static void check_fire(player_t *player, sfEvent *e, sound_t *s)
     sfClock_restart(player->weapon_clock);
     decrement_ammo(player);
     play_shoot(s);
+}
+
+static void check_fire(player_t *player, sfEvent *e, sound_t *s)
+{
+    if (e->type != sfEvtMouseButtonPressed)
+        return;
+    if (e->mouseButton.button != sfMouseLeft)
+        return;
+    do_fire(player, s);
+}
+
+static void check_pad_buttons(player_t *player, sfEvent *e, sound_t *s)
+{
+    unsigned int btn = 0;
+
+    if (e->type != sfEvtJoystickButtonPressed)
+        return;
+    btn = e->joystickButton.button;
+    if (btn == PAD_BTN_FIRE_R1 || btn == PAD_BTN_FIRE_R2)
+        do_fire(player, s);
+    if (btn == PAD_BTN_RELOAD)
+        start_reload(player);
+    if (btn == PAD_BTN_FLASH)
+        toggle_flashlight(player);
 }
 
 int event(sfRenderWindow *window, player_t *player, map_t *m, sound_t *s)
@@ -51,7 +71,11 @@ int event(sfRenderWindow *window, player_t *player, map_t *m, sound_t *s)
             return EVENT_CLOSE;
         if (ev.type == sfEvtKeyPressed && ev.key.code == sfKeyEscape)
             return EVENT_PAUSE;
+        if (ev.type == sfEvtJoystickButtonPressed
+            && ev.joystickButton.button == PAD_BTN_PAUSE)
+            return EVENT_PAUSE;
         check_fire(player, &ev, s);
+        check_pad_buttons(player, &ev, s);
         check_switch(player, &ev);
         check_reload(player, &ev);
     }
