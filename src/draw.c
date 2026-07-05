@@ -162,7 +162,7 @@ void draw(sfRenderWindow *window, player_t *player, map_t *m)
     draw_markers(window, player, m);
     draw_enemies(window, player, m);
     draw_projs(window, player, m);
-    draw_flashlight(window, player);
+    draw_flashlight(window, player, m);
     if (player->weapon_spr)
         sfRenderWindow_drawSprite(window, player->weapon_spr, NULL);
     draw_crosshair(window, player);
@@ -176,6 +176,7 @@ void draw(sfRenderWindow *window, player_t *player, map_t *m)
         sfRenderWindow_drawText(window, player->ammo_txt, NULL);
     draw_score(window, player);
     draw_fps(window, player);
+    draw_night_hud(window, player, m);
     draw_key_hint(window, player);
     draw_minimap(window, player, m);
     sfRenderWindow_display(window);

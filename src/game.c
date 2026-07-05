@@ -175,6 +175,7 @@ int game_loop(game_t *g)
     }
     init_doors(&g->map);
     init_keyexit(&g->map);
+    init_night(&g->map);
     if (g->pending_load) {
         g->pending_load = sfFalse;
         apply_save(&player, &g->map);

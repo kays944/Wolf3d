@@ -164,8 +164,6 @@ typedef struct enemy_s {
     float anim_t;
     float atk_anim;
     float death_t;
-    float blind;
-    sfBool lit;
     sfBool dying;
     sfBool moving;
     sfBool alive;
@@ -217,6 +215,8 @@ typedef struct map_s {
     door_t doors[MAX_DOORS];
     int door_count;
     sfBool has_exit;
+    sfBool night;
+    float night_cd;
 } map_t;
 
 typedef struct spr_ctx_s {

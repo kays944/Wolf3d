@@ -60,8 +60,13 @@ void place_weapon_sprite(player_t *p);
 
 int init_flashlight(player_t *p);
 void destroy_flashlight(player_t *p);
-void draw_flashlight(sfRenderWindow *win, player_t *p);
+void draw_flashlight(sfRenderWindow *win, player_t *p, map_t *m);
 void toggle_flashlight(player_t *p);
+
+void init_night(map_t *m);
+void update_night(player_t *p, map_t *m);
+void draw_night_hud(sfRenderWindow *win, player_t *p, map_t *m);
+void spawn_enemy(map_t *m, float x, float y, int type);
 
 int run_pause(game_t *g, map_t *map, player_t *player);
 void render_pause(pause_t *p);

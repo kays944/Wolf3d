@@ -34,6 +34,7 @@ SRC			= 	src/main.c 							\
 				src/minimap.c 						\
 				src/door.c 						\
 				src/keyexit.c 						\
+				src/night.c 						\
 				src/marker.c 						\
 				src/enemies/enemy.c 				\
 				src/enemies/enemy_utils.c 			\

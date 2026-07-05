@@ -17,26 +17,18 @@ static float dist_to_player(enemy_t *e, player_t *p)
     return sqrtf(dx * dx + dy * dy);
 }
 
-static int lit_by_flash(enemy_t *e, player_t *p)
+static float sight_range(player_t *p, map_t *m)
 {
-    float dx = e->x - p->x;
-    float dy = e->y - p->y;
-    float dist = sqrtf(dx * dx + dy * dy);
-    float rel = 0;
-
-    if (!p->flashlight || dist > FL_BEAM_RANGE)
-        return 0;
-    rel = norm_angle(atan2f(dy, dx) - p->angle);
-    return fabsf(rel) < FL_BEAM_HALF;
+    if (m->night && !p->flashlight)
+        return NIGHT_SIGHT;
+    return ENEMY_SIGHT;
 }
 
-static void update_flash_blind(enemy_t *e, player_t *p)
+static float fire_range(player_t *p, map_t *m)
 {
-    sfBool lit = lit_by_flash(e, p) ? sfTrue : sfFalse;
-
-    if (lit && !e->lit)
-        e->blind = FL_BLIND_TIME;
-    e->lit = lit;
+    if (m->night && !p->flashlight)
+        return NIGHT_SIGHT;
+    return ENEMY_SHOOT_RANGE;
 }
 
 static float enemy_speed(enemy_t *e)
@@ -51,11 +43,11 @@ static float enemy_speed(enemy_t *e)
 static void chase(enemy_t *e, player_t *p, map_t *m)
 {
     float dist = dist_to_player(e, p);
-    float step = enemy_speed(e) * p->dt * (e->blind > 0 ? FL_BLIND_SLOW : 1.0f);
+    float step = enemy_speed(e) * p->dt;
     float nx = 0;
     float ny = 0;
 
-    if (dist <= ENEMY_STOP_DIST || dist > ENEMY_SIGHT)
+    if (dist <= ENEMY_STOP_DIST || dist > sight_range(p, m))
         return;
     nx = e->x + (p->x - e->x) / dist * step;
     ny = e->y + (p->y - e->y) / dist * step;
@@ -87,7 +79,7 @@ static void try_shoot(enemy_t *e, map_t *m, player_t *p, sound_t *s)
 {
     float dist = dist_to_player(e, p);
 
-    if (e->blind > 0 || dist > ENEMY_SHOOT_RANGE || e->cooldown > 0)
+    if (dist > fire_range(p, m) || e->cooldown > 0)
         return;
     e->cooldown = ENEMY_SHOOT_CD;
     e->atk_anim = ATK_ANIM_LEN;
@@ -115,13 +107,8 @@ void update_enemies(player_t *p, map_t *m, sound_t *s)
             e->cooldown -= p->dt;
         if (e->atk_anim > 0)
             e->atk_anim -= p->dt;
-        if (e->blind > 0)
-            e->blind -= p->dt;
-        if (!has_los(e->x, e->y, p, m)) {
-            e->lit = sfFalse;
+        if (!has_los(e->x, e->y, p, m))
             continue;
-        }
-        update_flash_blind(e, p);
         chase(e, p, m);
         try_shoot(e, m, p, s);
     }

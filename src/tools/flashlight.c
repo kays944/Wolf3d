@@ -124,12 +124,12 @@ void destroy_flashlight(player_t *p)
         sfVertexArray_destroy(p->fl_dark);
 }
 
-void draw_flashlight(sfRenderWindow *win, player_t *p)
+void draw_flashlight(sfRenderWindow *win, player_t *p, map_t *m)
 {
-    float lit = p->wh * (p->flashlight ? FL_LIT_ON : FL_LIT_OFF);
-    sfUint8 al = p->flashlight ? FL_ALPHA_ON : FL_ALPHA_OFF;
+    float lit = p->wh * (p->flashlight ? FL_LIT_ON : NIGHT_LIT_OFF);
+    sfUint8 al = p->flashlight ? FL_ALPHA_ON : NIGHT_ALPHA_OFF;
 
-    if (!p->fl_feather || !p->fl_dark)
+    if (!m->night || !p->fl_feather || !p->fl_dark)
         return;
     refresh_vignette(p, lit, al);
     sfRenderWindow_drawVertexArray(win, p->fl_feather, NULL);

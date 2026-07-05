@@ -26,10 +26,11 @@ static void write_enemies(FILE *f, map_t *m)
 {
     enemy_t *e = NULL;
 
+    fprintf(f, "night %d %.3f\n", m->night ? 1 : 0, m->night_cd);
     fprintf(f, "enemies %d\n", m->enemy_count);
     for (int i = 0; i < m->enemy_count; i++) {
         e = &m->enemies[i];
-        fprintf(f, "enemy %.2f %.2f %d %d %.3f\n",
+        fprintf(f, "enemy %d %.2f %.2f %d %d %.3f\n", e->type,
             e->x, e->y, e->hp, e->dying ? 1 : 0, e->death_t);
     }
 }

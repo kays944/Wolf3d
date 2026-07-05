@@ -32,15 +32,15 @@ static int hp_for(int type, int level)
     return ENEMY_HP + (level - 1) * ENEMY_HP_PER_LEVEL;
 }
 
-static void spawn_at(map_t *m, int tx, int ty, int type)
+void spawn_enemy(map_t *m, float x, float y, int type)
 {
     enemy_t *e = NULL;
 
     if (m->enemy_count >= MAX_ENEMIES)
         return;
     e = &m->enemies[m->enemy_count];
-    e->x = tx * TILE_SIZE + TILE_SIZE / 2;
-    e->y = ty * TILE_SIZE + TILE_SIZE / 2;
+    e->x = x;
+    e->y = y;
     e->type = type;
     e->boss = (type == ENEMY_TYPE_BOSS);
     e->hp = hp_for(type, m->level);
@@ -49,12 +49,16 @@ static void spawn_at(map_t *m, int tx, int ty, int type)
     e->anim_t = (rand() % 100) / 100.0f;
     e->atk_anim = 0;
     e->death_t = 0;
-    e->blind = 0;
-    e->lit = sfFalse;
     e->dying = sfFalse;
     e->moving = sfFalse;
     e->alive = sfTrue;
     m->enemy_count++;
+}
+
+static void spawn_at(map_t *m, int tx, int ty, int type)
+{
+    spawn_enemy(m, tx * TILE_SIZE + TILE_SIZE / 2,
+        ty * TILE_SIZE + TILE_SIZE / 2, type);
 }
 
 static void scan_row(map_t *m, int row)

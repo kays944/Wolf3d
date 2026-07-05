@@ -113,13 +113,15 @@
     #define FL_R_BIG 1500.0f
     #define FL_N 64
     #define FL_LIT_ON 0.52f
-    #define FL_LIT_OFF 0.17f
-    #define FL_ALPHA_ON 140
-    #define FL_ALPHA_OFF 232
-    #define FL_BEAM_HALF 0.40f
-    #define FL_BEAM_RANGE 680.0f
-    #define FL_BLIND_TIME 0.5f
-    #define FL_BLIND_SLOW 0.35f
+    #define FL_ALPHA_ON 150
+
+    #define NIGHT_DELAY 5.0f
+    #define NIGHT_MSG_TIME 2.0f
+    #define NIGHT_LIT_OFF 0.12f
+    #define NIGHT_ALPHA_OFF 250
+    #define NIGHT_SIGHT 260.0f
+    #define NIGHT_FONT_SZ 44
+    #define COL_NIGHT sfColor_fromRGB(150, 60, 220)
 
     #define HEALTH_BAR_PATH "./assets/health_bar.png"
     #define HEALTH_FRAME_W 353
@@ -192,7 +194,7 @@
     #define ENEMY_TEX_PATH "./assets/enemy.png"
     #define BOSS_TEX_PATH "./assets/boss.png"
     #define RUNNER_TEX_PATH "./assets/runner.png"
-    #define MAX_ENEMIES 16
+    #define MAX_ENEMIES 32
     #define ENEMY_HP 100
     #define ENEMY_HP_PER_LEVEL 25
     #define BOSS_HP (ENEMY_HP * 2)

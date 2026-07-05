@@ -37,22 +37,40 @@ static int read_player(FILE *f, player_t *p)
     return EXIT_SUCCESS;
 }
 
-static int read_enemies(FILE *f, map_t *m)
+static int read_one_enemy(FILE *f, map_t *m, int i)
 {
-    enemy_t *e = NULL;
-    int n = 0;
+    enemy_t tmp = {0};
+    int type = 0;
     int dying = 0;
 
-    if (fscanf(f, "enemies %d\n", &n) != 1 || n != m->enemy_count)
+    if (fscanf(f, "enemy %d %f %f %d %d %f\n", &type,
+        &tmp.x, &tmp.y, &tmp.hp, &dying, &tmp.death_t) != 6)
         return EXIT_FAIL;
-    for (int i = 0; i < n; i++) {
-        e = &m->enemies[i];
-        if (fscanf(f, "enemy %f %f %d %d %f\n",
-            &e->x, &e->y, &e->hp, &dying, &e->death_t) != 5)
+    if (type < ENEMY_TYPE_GRUNT || type > ENEMY_TYPE_BOSS)
+        return EXIT_FAIL;
+    spawn_enemy(m, tmp.x, tmp.y, type);
+    if (m->enemy_count != i + 1)
+        return EXIT_FAIL;
+    m->enemies[i].hp = tmp.hp;
+    m->enemies[i].dying = dying ? sfTrue : sfFalse;
+    m->enemies[i].death_t = tmp.death_t;
+    return EXIT_SUCCESS;
+}
+
+static int read_enemies(FILE *f, map_t *m)
+{
+    int n = 0;
+    int night = 0;
+
+    if (fscanf(f, "night %d %f\n", &night, &m->night_cd) != 2)
+        return EXIT_FAIL;
+    m->night = night ? sfTrue : sfFalse;
+    if (fscanf(f, "enemies %d\n", &n) != 1 || n > MAX_ENEMIES || n < 0)
+        return EXIT_FAIL;
+    m->enemy_count = 0;
+    for (int i = 0; i < n; i++)
+        if (read_one_enemy(f, m, i) == EXIT_FAIL)
             return EXIT_FAIL;
-        e->dying = dying ? sfTrue : sfFalse;
-        e->moving = sfFalse;
-    }
     return EXIT_SUCCESS;
 }
 
