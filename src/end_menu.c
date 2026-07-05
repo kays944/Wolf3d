@@ -92,6 +92,8 @@ static int end_mouse(button_t *btns, int n, sfEvent *e, int *sel)
 
 static int end_event(sfEvent *e, int *sel, int n, sfRenderWindow *win)
 {
+    int act = pad_menu_action(e);
+
     if (e->type == sfEvtClosed) {
         sfRenderWindow_close(win);
         return 1;
@@ -102,16 +104,12 @@ static int end_event(sfEvent *e, int *sel, int n, sfRenderWindow *win)
         end_nav(sel, n, 1);
     if (e->type == sfEvtKeyPressed && e->key.code == sfKeyReturn)
         return 1;
-    if (e->type == sfEvtJoystickButtonPressed
-        && e->joystickButton.button == PAD_BTN_JUMP)
+    if (act == PM_UP)
+        end_nav(sel, n, -1);
+    if (act == PM_DOWN)
+        end_nav(sel, n, 1);
+    if (act == PM_OK)
         return 1;
-    if (e->type == sfEvtJoystickMoved && (e->joystickMove.axis
-        == sfJoystickPovY || e->joystickMove.axis == sfJoystickY)) {
-        if (e->joystickMove.position < -50)
-            end_nav(sel, n, -1);
-        if (e->joystickMove.position > 50)
-            end_nav(sel, n, 1);
-    }
     return 0;
 }
 

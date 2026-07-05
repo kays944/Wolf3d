@@ -111,23 +111,71 @@ static void handle_opt_click(pause_t *p, sfEvent *e)
     }
 }
 
-static void handle_click(pause_t *p, sfVector2f *pos)
+static void pause_activate(pause_t *p, int id)
 {
-    if (button_is_clicked(&p->btns[PBTN_OPT], pos)) {
+    if (id == PBTN_OPT) {
         p->screen = PSCR_OPT;
         return;
     }
-    if (button_is_clicked(&p->btns[PBTN_SAVE], pos)) {
+    if (id == PBTN_SAVE) {
         save_game(p->map, p->player);
         return;
     }
-    if (button_is_clicked(&p->btns[PBTN_BACK], pos)) {
+    if (id == PBTN_BACK) {
         p->action = PAUSE_MENU;
         p->running = sfFalse;
         return;
     }
-    if (button_is_clicked(&p->btns[PBTN_QUIT_ID], pos)) {
+    if (id == PBTN_QUIT_ID) {
         p->action = PAUSE_QUIT;
+        p->running = sfFalse;
+    }
+}
+
+static void handle_click(pause_t *p, sfVector2f *pos)
+{
+    for (int i = 0; i < PAUSE_BTN_COUNT; i++)
+        if (button_is_clicked(&p->btns[i], pos)) {
+            pause_activate(p, i);
+            return;
+        }
+}
+
+static void nav_pause(pause_t *p, int dir)
+{
+    p->sel = p->sel + dir;
+    if (p->sel < 0)
+        p->sel = PAUSE_BTN_COUNT - 1;
+    if (p->sel >= PAUSE_BTN_COUNT)
+        p->sel = 0;
+}
+
+static void on_pause_key(pause_t *p, sfEvent *e)
+{
+    if (e->key.code == sfKeyEscape) {
+        p->action = PAUSE_RESUME;
+        p->running = sfFalse;
+    }
+    if (e->key.code == sfKeyUp)
+        nav_pause(p, -1);
+    if (e->key.code == sfKeyDown)
+        nav_pause(p, 1);
+    if (e->key.code == sfKeyReturn)
+        pause_activate(p, p->sel);
+}
+
+static void on_pause_pad(pause_t *p, sfEvent *e)
+{
+    int act = pad_menu_action(e);
+
+    if (act == PM_UP)
+        nav_pause(p, -1);
+    if (act == PM_DOWN)
+        nav_pause(p, 1);
+    if (act == PM_OK)
+        pause_activate(p, p->sel);
+    if (act == PM_BACK) {
+        p->action = PAUSE_RESUME;
         p->running = sfFalse;
     }
 }
@@ -135,24 +183,36 @@ static void handle_click(pause_t *p, sfVector2f *pos)
 static void handle_pause_main(pause_t *p, sfEvent *e)
 {
     sfVector2f pos = {0};
-    int i = 0;
 
     if (e->type == sfEvtMouseMoved) {
         p->mouse.x = (float)e->mouseMove.x;
         p->mouse.y = (float)e->mouseMove.y;
-        for (i = 0; i < PAUSE_BTN_COUNT; i++)
+        for (int i = 0; i < PAUSE_BTN_COUNT; i++)
             update_button(&p->btns[i], &p->mouse);
     }
-    if (e->type == sfEvtKeyPressed && e->key.code == sfKeyEscape) {
-        p->action = PAUSE_RESUME;
-        p->running = sfFalse;
-    }
+    if (e->type == sfEvtKeyPressed)
+        on_pause_key(p, e);
+    on_pause_pad(p, e);
     if (e->type == sfEvtMouseButtonPressed
         && e->mouseButton.button == sfMouseLeft) {
         pos.x = (float)e->mouseButton.x;
         pos.y = (float)e->mouseButton.y;
         handle_click(p, &pos);
     }
+}
+
+static void on_opt_pad(pause_t *p, sfEvent *e)
+{
+    int act = pad_menu_action(e);
+
+    if (act == PM_UP || act == PM_DOWN)
+        p->opt_sel = p->opt_sel == 0 ? 1 : 0;
+    if (act == PM_LEFT)
+        adjust_vol(p, -1);
+    if (act == PM_RIGHT)
+        adjust_vol(p, 1);
+    if (act == PM_BACK || act == PM_OK)
+        p->screen = PSCR_MAIN;
 }
 
 static void handle_pause_event(pause_t *p, sfEvent *e)
@@ -162,10 +222,19 @@ static void handle_pause_event(pause_t *p, sfEvent *e)
         p->running = sfFalse;
         return;
     }
+    if (e->type == sfEvtJoystickButtonPressed
+        && e->joystickButton.button == PAD_BTN_PAUSE
+        && p->screen == PSCR_MAIN) {
+        p->action = PAUSE_RESUME;
+        p->running = sfFalse;
+        return;
+    }
     if (p->screen == PSCR_OPT && e->type == sfEvtKeyPressed)
         handle_opt_key(p, e);
-    if (p->screen == PSCR_OPT)
+    if (p->screen == PSCR_OPT) {
+        on_opt_pad(p, e);
         handle_opt_click(p, e);
+    }
     if (p->screen == PSCR_MAIN)
         handle_pause_main(p, e);
 }

@@ -38,23 +38,30 @@ static void cycle_resolution(menu_t *m, int dir)
     get_resolution(idx, &m->settings->win_w, &m->settings->win_h);
 }
 
+static void nav_settings(menu_t *m, int dir)
+{
+    m->settings_sel = m->settings_sel + dir;
+    if (m->settings_sel < 0)
+        m->settings_sel = SET_ITEM_COUNT - 1;
+    if (m->settings_sel >= SET_ITEM_COUNT)
+        m->settings_sel = 0;
+}
+
+static void leave_settings(menu_t *m)
+{
+    cleanup_settings_menu(m);
+    m->screen = SCR_MAIN;
+}
+
 static void on_set_nav(menu_t *m, sfEvent *e)
 {
-    if (e->key.code == sfKeyUp) {
-        m->settings_sel = m->settings_sel - 1;
-        if (m->settings_sel < 0)
-            m->settings_sel = SET_ITEM_COUNT - 1;
-    }
-    if (e->key.code == sfKeyDown) {
-        m->settings_sel = m->settings_sel + 1;
-        if (m->settings_sel >= SET_ITEM_COUNT)
-            m->settings_sel = 0;
-    }
+    if (e->key.code == sfKeyUp)
+        nav_settings(m, -1);
+    if (e->key.code == sfKeyDown)
+        nav_settings(m, 1);
     if ((e->key.code == sfKeyReturn && m->settings_sel == SET_BACK)
-        || e->key.code == sfKeyEscape) {
-        cleanup_settings_menu(m);
-        m->screen = SCR_MAIN;
-    }
+        || e->key.code == sfKeyEscape)
+        leave_settings(m);
 }
 
 static void apply_vol_step(float *vol, int dir)
@@ -119,10 +126,31 @@ static void on_set_adjust(menu_t *m, sfEvent *e)
     adjust_vol_or_setting(m, dir);
 }
 
+static void on_set_pad(menu_t *m, sfEvent *e)
+{
+    int act = pad_menu_action(e);
+
+    if (act == PM_UP)
+        nav_settings(m, -1);
+    if (act == PM_DOWN)
+        nav_settings(m, 1);
+    if (act == PM_LEFT)
+        adjust_vol_or_setting(m, -1);
+    if (act == PM_RIGHT)
+        adjust_vol_or_setting(m, 1);
+    if (act == PM_BACK || (act == PM_OK && m->settings_sel == SET_BACK)) {
+        leave_settings(m);
+        return;
+    }
+    if (act == PM_OK)
+        adjust_vol_or_setting(m, 1);
+}
+
 void handle_settings_events(menu_t *m, sfEvent *e)
 {
     sfVector2f pos = {0};
 
+    on_set_pad(m, e);
     if (e->type == sfEvtMouseMoved) {
         m->mouse_pos.x = (float)e->mouseMove.x;
         m->mouse_pos.y = (float)e->mouseMove.y;

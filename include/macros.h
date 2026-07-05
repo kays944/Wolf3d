@@ -140,6 +140,8 @@
 
     #define MINI_CELL 7.0f
     #define MINI_MARGIN 14.0f
+    #define MINI_MAX_W 0.26f
+    #define MINI_TOP_OFFSET 88.0f
     #define MINI_DOT 2.4f
     #define MINI_PLAYER_DOT 3.4f
     #define MINI_BOSS_DOT 4.2f
@@ -224,6 +226,18 @@
     #define PITCH_SPEED 550.0f
     #define PITCH_MAX_DIV 3
     #define WEAPON_X_RATIO 0.034f
+
+    #define PM_NONE 0
+    #define PM_UP 1
+    #define PM_DOWN 2
+    #define PM_LEFT 3
+    #define PM_RIGHT 4
+    #define PM_OK 5
+    #define PM_BACK 6
+    #define PAD_BTN_OK 0
+    #define PAD_BTN_MENU_BACK 2
+    #define PAD_MENU_HI 60.0f
+    #define PAD_MENU_LO 40.0f
 
     #define PAD_ID 0
     #define PAD_DEADZONE 18.0f

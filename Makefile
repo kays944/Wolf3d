@@ -49,6 +49,7 @@ SRC			= 	src/main.c 							\
 				src/utils/read_file.c 				\
 				src/utils/str_split.c 				\
 				src/game-menu/button.c 				\
+				src/game-menu/pad_menu.c 			\
 				src/game-menu/map_select.c 			\
 				src/game-menu/menu_events.c 		\
 				src/game-menu/menu_render.c 		\

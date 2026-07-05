@@ -9,10 +9,21 @@
 #include "macros.h"
 #include "proto.h"
 
-static void mini_origin(player_t *p, map_t *m, float *ox, float *oy)
+typedef struct mini_s {
+    float ox;
+    float oy;
+    float cell;
+    float k;
+} mini_t;
+
+static void mini_geo(player_t *p, map_t *m, mini_t *g)
 {
-    *ox = p->ww - MINI_MARGIN - m->size_x * MINI_CELL;
-    *oy = MINI_MARGIN;
+    g->cell = MINI_CELL;
+    if (m->size_x * g->cell > p->ww * MINI_MAX_W)
+        g->cell = p->ww * MINI_MAX_W / m->size_x;
+    g->k = g->cell / MINI_CELL;
+    g->ox = MINI_MARGIN;
+    g->oy = MINI_TOP_OFFSET;
 }
 
 static void mini_dot(sfRenderWindow *win, sfVector2f c, float r, sfColor col)
@@ -29,34 +40,35 @@ static void mini_dot(sfRenderWindow *win, sfVector2f c, float r, sfColor col)
     sfCircleShape_destroy(dot);
 }
 
-static void draw_mini_bg(sfRenderWindow *win, map_t *m, float ox, float oy)
+static void draw_mini_bg(sfRenderWindow *win, map_t *m, mini_t *g)
 {
     sfRectangleShape *bg = sfRectangleShape_create();
 
     if (!bg)
         return;
-    sfRectangleShape_setPosition(bg, (sfVector2f){ox - 3.0f, oy - 3.0f});
-    sfRectangleShape_setSize(bg, (sfVector2f){m->size_x * MINI_CELL + 6.0f,
-            m->size_y * MINI_CELL + 6.0f});
+    sfRectangleShape_setPosition(bg,
+        (sfVector2f){g->ox - 3.0f, g->oy - 3.0f});
+    sfRectangleShape_setSize(bg, (sfVector2f){m->size_x * g->cell + 6.0f,
+            m->size_y * g->cell + 6.0f});
     sfRectangleShape_setFillColor(bg, COL_MINI_BG);
     sfRenderWindow_drawRectangleShape(win, bg, NULL);
     sfRectangleShape_destroy(bg);
 }
 
-static void draw_mini_walls(sfRenderWindow *win, map_t *m, float ox, float oy)
+static void draw_mini_walls(sfRenderWindow *win, map_t *m, mini_t *g)
 {
     sfRectangleShape *cell = sfRectangleShape_create();
 
     if (!cell)
         return;
-    sfRectangleShape_setSize(cell, (sfVector2f){MINI_CELL, MINI_CELL});
+    sfRectangleShape_setSize(cell, (sfVector2f){g->cell, g->cell});
     sfRectangleShape_setFillColor(cell, COL_MINI_WALL);
     for (int y = 0; y < m->size_y; y++)
         for (int x = 0; m->map[y][x]; x++)
             if (m->map[y][x] == 'x' || m->map[y][x] == 'm'
                 || m->map[y][x] == 'n') {
                 sfRectangleShape_setPosition(cell, (sfVector2f){
-                        ox + x * MINI_CELL, oy + y * MINI_CELL});
+                        g->ox + x * g->cell, g->oy + y * g->cell});
                 sfRenderWindow_drawRectangleShape(win, cell, NULL);
             }
     sfRectangleShape_destroy(cell);
@@ -73,7 +85,7 @@ static sfColor enemy_mini_col(enemy_t *e)
     return COL_MINI_GRUNT;
 }
 
-static void draw_mini_enemies(sfRenderWindow *win, map_t *m, float ox, float oy)
+static void draw_mini_enemies(sfRenderWindow *win, map_t *m, mini_t *g)
 {
     enemy_t *e = NULL;
     sfVector2f c = {0};
@@ -82,54 +94,54 @@ static void draw_mini_enemies(sfRenderWindow *win, map_t *m, float ox, float oy)
         e = &m->enemies[i];
         if (!e->alive || e->dying)
             continue;
-        c.x = ox + (e->x / TILE_SIZE) * MINI_CELL;
-        c.y = oy + (e->y / TILE_SIZE) * MINI_CELL;
-        mini_dot(win, c, e->boss ? MINI_BOSS_DOT : MINI_DOT,
+        c.x = g->ox + (e->x / TILE_SIZE) * g->cell;
+        c.y = g->oy + (e->y / TILE_SIZE) * g->cell;
+        mini_dot(win, c, (e->boss ? MINI_BOSS_DOT : MINI_DOT) * g->k,
             enemy_mini_col(e));
     }
 }
 
-static void draw_mini_markers(sfRenderWindow *win, map_t *m, float ox,
-    float oy)
+static void draw_mini_markers(sfRenderWindow *win, map_t *m, mini_t *g)
 {
     sfVector2f c = {0};
 
     for (int y = 0; y < m->size_y; y++)
         for (int x = 0; m->map[y][x]; x++) {
-            c.x = ox + (x + 0.5f) * MINI_CELL;
-            c.y = oy + (y + 0.5f) * MINI_CELL;
+            c.x = g->ox + (x + 0.5f) * g->cell;
+            c.y = g->oy + (y + 0.5f) * g->cell;
             if (m->map[y][x] == 'K')
-                mini_dot(win, c, MINI_PLAYER_DOT, COL_KEY);
+                mini_dot(win, c, MINI_PLAYER_DOT * g->k, COL_KEY);
             if (m->map[y][x] == 'E')
-                mini_dot(win, c, MINI_PLAYER_DOT, COL_EXIT);
+                mini_dot(win, c, MINI_PLAYER_DOT * g->k, COL_EXIT);
             if (m->map[y][x] == 'D')
-                mini_dot(win, c, MINI_DOT, COL_KEY);
+                mini_dot(win, c, MINI_DOT * g->k, COL_KEY);
+            if (m->map[y][x] == 'd')
+                mini_dot(win, c, MINI_DOT * g->k,
+                    sfColor_fromRGB(170, 170, 180));
         }
 }
 
-static void draw_mini_player(sfRenderWindow *win, player_t *p, float ox,
-    float oy)
+static void draw_mini_player(sfRenderWindow *win, player_t *p, mini_t *g)
 {
-    sfVector2f c = {ox + (p->x / TILE_SIZE) * MINI_CELL,
-        oy + (p->y / TILE_SIZE) * MINI_CELL};
-    sfVector2f nose = {c.x + cosf(p->angle) * MINI_DIR_LEN,
-        c.y + sinf(p->angle) * MINI_DIR_LEN};
+    sfVector2f c = {g->ox + (p->x / TILE_SIZE) * g->cell,
+        g->oy + (p->y / TILE_SIZE) * g->cell};
+    sfVector2f nose = {c.x + cosf(p->angle) * MINI_DIR_LEN * g->k,
+        c.y + sinf(p->angle) * MINI_DIR_LEN * g->k};
 
-    mini_dot(win, nose, MINI_DOT, COL_MINI_PLAYER);
-    mini_dot(win, c, MINI_PLAYER_DOT, COL_MINI_PLAYER);
+    mini_dot(win, nose, MINI_DOT * g->k, COL_MINI_PLAYER);
+    mini_dot(win, c, MINI_PLAYER_DOT * g->k, COL_MINI_PLAYER);
 }
 
 void draw_minimap(sfRenderWindow *win, player_t *p, map_t *m)
 {
-    float ox = 0;
-    float oy = 0;
+    mini_t g = {0};
 
     if (!m->map)
         return;
-    mini_origin(p, m, &ox, &oy);
-    draw_mini_bg(win, m, ox, oy);
-    draw_mini_walls(win, m, ox, oy);
-    draw_mini_markers(win, m, ox, oy);
-    draw_mini_enemies(win, m, ox, oy);
-    draw_mini_player(win, p, ox, oy);
+    mini_geo(p, m, &g);
+    draw_mini_bg(win, m, &g);
+    draw_mini_walls(win, m, &g);
+    draw_mini_markers(win, m, &g);
+    draw_mini_enemies(win, m, &g);
+    draw_mini_player(win, p, &g);
 }

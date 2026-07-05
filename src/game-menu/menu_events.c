@@ -43,24 +43,39 @@ static void handle_mouse_click(menu_t *m, const sfVector2f *pos)
     }
 }
 
+static void nav_main(menu_t *m, int dir)
+{
+    m->selected = m->selected + dir;
+    if (m->selected < 0)
+        m->selected = MAIN_BTN_COUNT - 1;
+    if (m->selected >= MAIN_BTN_COUNT)
+        m->selected = 0;
+}
+
 static void on_key(menu_t *m, sfEvent *e)
 {
-    if (e->key.code == sfKeyUp) {
-        m->selected = m->selected - 1;
-        if (m->selected < 0)
-            m->selected = MAIN_BTN_COUNT - 1;
-    }
-    if (e->key.code == sfKeyDown) {
-        m->selected = m->selected + 1;
-        if (m->selected >= MAIN_BTN_COUNT)
-            m->selected = 0;
-    }
+    if (e->key.code == sfKeyUp)
+        nav_main(m, -1);
+    if (e->key.code == sfKeyDown)
+        nav_main(m, 1);
     if (e->key.code == sfKeyReturn)
         confirm_menu_selection(m);
     if (e->key.code == sfKeyEscape) {
         m->action = MENU_QUIT;
         m->running = sfFalse;
     }
+}
+
+static void on_pad(menu_t *m, sfEvent *e)
+{
+    int act = pad_menu_action(e);
+
+    if (act == PM_UP)
+        nav_main(m, -1);
+    if (act == PM_DOWN)
+        nav_main(m, 1);
+    if (act == PM_OK)
+        confirm_menu_selection(m);
 }
 
 static void process_main_event(menu_t *m, sfEvent *e)
@@ -75,6 +90,7 @@ static void process_main_event(menu_t *m, sfEvent *e)
     }
     if (e->type == sfEvtKeyPressed)
         on_key(m, e);
+    on_pad(m, e);
     if (e->type == sfEvtMouseButtonPressed
         && e->mouseButton.button == sfMouseLeft) {
         click.x = (float)e->mouseButton.x;

@@ -36,6 +36,8 @@ void cleanup_map_select(menu_t *m);
 void handle_map_events(menu_t *m, sfEvent *e);
 void render_map_select(menu_t *m);
 
+int pad_menu_action(sfEvent *e);
+
 int init_settings_menu(menu_t *m);
 void cleanup_settings_menu(menu_t *m);
 void handle_settings_events(menu_t *m, sfEvent *e);

@@ -255,6 +255,7 @@ typedef struct pause_s {
     int screen;
     sfBool running;
     int action;
+    int sel;
     int opt_sel;
     sfVector2f mouse;
     sound_t *sound;

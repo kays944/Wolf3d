@@ -87,24 +87,47 @@ static void confirm_map_selection(menu_t *m)
     m->running = sfFalse;
 }
 
+static void nav_map(menu_t *m, int dir)
+{
+    if (m->map_count <= 0)
+        return;
+    m->map_selected = m->map_selected + dir;
+    if (m->map_selected < 0)
+        m->map_selected = m->map_count - 1;
+    if (m->map_selected >= m->map_count)
+        m->map_selected = 0;
+}
+
+static void leave_map_select(menu_t *m)
+{
+    cleanup_map_select(m);
+    m->screen = SCR_MAIN;
+}
+
 static void on_map_key(menu_t *m, sfEvent *e)
 {
-    if (e->key.code == sfKeyUp && m->map_count > 0) {
-        m->map_selected = m->map_selected - 1;
-        if (m->map_selected < 0)
-            m->map_selected = m->map_count - 1;
-    }
-    if (e->key.code == sfKeyDown && m->map_count > 0) {
-        m->map_selected = m->map_selected + 1;
-        if (m->map_selected >= m->map_count)
-            m->map_selected = 0;
-    }
+    if (e->key.code == sfKeyUp)
+        nav_map(m, -1);
+    if (e->key.code == sfKeyDown)
+        nav_map(m, 1);
     if (e->key.code == sfKeyReturn)
         confirm_map_selection(m);
-    if (e->key.code == sfKeyEscape) {
-        cleanup_map_select(m);
-        m->screen = SCR_MAIN;
-    }
+    if (e->key.code == sfKeyEscape)
+        leave_map_select(m);
+}
+
+static void on_map_pad(menu_t *m, sfEvent *e)
+{
+    int act = pad_menu_action(e);
+
+    if (act == PM_UP)
+        nav_map(m, -1);
+    if (act == PM_DOWN)
+        nav_map(m, 1);
+    if (act == PM_OK)
+        confirm_map_selection(m);
+    if (act == PM_BACK)
+        leave_map_select(m);
 }
 
 static void on_map_click(menu_t *m, sfEvent *e)
@@ -115,10 +138,8 @@ static void on_map_click(menu_t *m, sfEvent *e)
     pos.y = (float)e->mouseButton.y;
     if (button_is_clicked(&m->map_btns[BTN_MAP_PLAY], &pos))
         confirm_map_selection(m);
-    if (button_is_clicked(&m->map_btns[BTN_MAP_BACK], &pos)) {
-        cleanup_map_select(m);
-        m->screen = SCR_MAIN;
-    }
+    if (button_is_clicked(&m->map_btns[BTN_MAP_BACK], &pos))
+        leave_map_select(m);
 }
 
 void handle_map_events(menu_t *m, sfEvent *e)
@@ -131,6 +152,7 @@ void handle_map_events(menu_t *m, sfEvent *e)
     }
     if (e->type == sfEvtKeyPressed)
         on_map_key(m, e);
+    on_map_pad(m, e);
     if (e->type == sfEvtMouseButtonPressed
         && e->mouseButton.button == sfMouseLeft)
         on_map_click(m, e);

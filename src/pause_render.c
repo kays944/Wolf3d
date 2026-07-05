@@ -86,7 +86,7 @@ static void render_pause_main(pause_t *p)
 {
     draw_overlay(p->window, p->ww, p->wh);
     draw_pause_title(p, "PAUSE");
-    render_buttons(p->window, p->btns, PAUSE_BTN_COUNT, -1);
+    render_buttons(p->window, p->btns, PAUSE_BTN_COUNT, p->sel);
 }
 
 void render_pause(pause_t *p)
