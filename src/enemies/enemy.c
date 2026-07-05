@@ -50,6 +50,7 @@ static void spawn_at(map_t *m, int tx, int ty, int type)
     e->atk_anim = 0;
     e->death_t = 0;
     e->blind = 0;
+    e->lit = sfFalse;
     e->dying = sfFalse;
     e->moving = sfFalse;
     e->alive = sfTrue;

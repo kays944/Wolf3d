@@ -30,6 +30,15 @@ static int lit_by_flash(enemy_t *e, player_t *p)
     return fabsf(rel) < FL_BEAM_HALF;
 }
 
+static void update_flash_blind(enemy_t *e, player_t *p)
+{
+    sfBool lit = lit_by_flash(e, p) ? sfTrue : sfFalse;
+
+    if (lit && !e->lit)
+        e->blind = FL_BLIND_TIME;
+    e->lit = lit;
+}
+
 static float enemy_speed(enemy_t *e)
 {
     if (e->type == ENEMY_TYPE_BRUTE)
@@ -108,10 +117,11 @@ void update_enemies(player_t *p, map_t *m, sound_t *s)
             e->atk_anim -= p->dt;
         if (e->blind > 0)
             e->blind -= p->dt;
-        if (!has_los(e->x, e->y, p, m))
+        if (!has_los(e->x, e->y, p, m)) {
+            e->lit = sfFalse;
             continue;
-        if (lit_by_flash(e, p))
-            e->blind = FL_BLIND_TIME;
+        }
+        update_flash_blind(e, p);
         chase(e, p, m);
         try_shoot(e, m, p, s);
     }

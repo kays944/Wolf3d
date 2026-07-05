@@ -165,6 +165,7 @@ typedef struct enemy_s {
     float atk_anim;
     float death_t;
     float blind;
+    sfBool lit;
     sfBool dying;
     sfBool moving;
     sfBool alive;

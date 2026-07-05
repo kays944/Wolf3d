@@ -206,9 +206,9 @@
     #define RUNNER_SPEED 155.0f
     #define BOSS_SCALE 1.6f
     #define ENEMY_SPEED 95.0f
-    #define ENEMY_SIGHT 700.0f
+    #define ENEMY_SIGHT 950.0f
     #define ENEMY_STOP_DIST 170.0f
-    #define ENEMY_SHOOT_RANGE 550.0f
+    #define ENEMY_SHOOT_RANGE 800.0f
     #define ENEMY_SHOOT_CD 1.8f
     #define ENEMY_FIRST_CD_MIN 1.0f
     #define ENEMY_DMG 10
