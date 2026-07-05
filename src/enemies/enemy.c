@@ -81,11 +81,12 @@ int init_enemies(player_t *p, map_t *m)
         m->projs[i].active = sfFalse;
     p->enemy_tex = sfTexture_createFromFile(ENEMY_TEX_PATH, NULL);
     p->boss_tex = sfTexture_createFromFile(BOSS_TEX_PATH, NULL);
+    p->runner_tex = sfTexture_createFromFile(RUNNER_TEX_PATH, NULL);
     p->proj_tex = sfTexture_createFromFile(PROJ_TEX_PATH, NULL);
     p->proj_spr = sfSprite_create();
     p->zbuf = malloc(sizeof(float) * NUM_RAYS);
-    if (!p->enemy_tex || !p->boss_tex || !p->proj_tex || !p->proj_spr
-        || !p->zbuf) {
+    if (!p->enemy_tex || !p->boss_tex || !p->runner_tex || !p->proj_tex
+        || !p->proj_spr || !p->zbuf) {
         destroy_enemies(p);
         return EXIT_FAIL;
     }
@@ -105,11 +106,14 @@ void destroy_enemies(player_t *p)
         sfTexture_destroy(p->enemy_tex);
     if (p->boss_tex)
         sfTexture_destroy(p->boss_tex);
+    if (p->runner_tex)
+        sfTexture_destroy(p->runner_tex);
     if (p->zbuf)
         free(p->zbuf);
     p->proj_spr = NULL;
     p->proj_tex = NULL;
     p->enemy_tex = NULL;
     p->boss_tex = NULL;
+    p->runner_tex = NULL;
     p->zbuf = NULL;
 }

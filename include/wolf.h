@@ -39,10 +39,13 @@ typedef struct player_s {
     sfClock *tick_clock;
     sfTexture *enemy_tex;
     sfTexture *boss_tex;
+    sfTexture *runner_tex;
     sfTexture *proj_tex;
     sfSprite *proj_spr;
     sfTexture *pack_tex[PACK_KINDS];
     sfSprite *pack_spr;
+    sfTexture *key_tex;
+    sfSprite *key_spr;
     sfTexture *prop_tex[PROP_TYPES];
     sfSprite *prop_spr;
     int ammo;
@@ -52,6 +55,10 @@ typedef struct player_s {
     sfBool has_key;
     sfBool reached_exit;
     sfText *score_txt;
+    sfText *fps_txt;
+    float fps_acc;
+    int fps_frames;
+    sfBool show_fps;
     int reload_frame;
     sfTexture *weapon_idle;
     sfTexture *weapon_fire;
@@ -70,7 +77,7 @@ typedef struct player_s {
     sfTexture *reload_tex;
     sfBool reloading;
     sfClock *reload_clock;
-    sfTexture *wall_tex;
+    sfTexture *wall_texs[WALL_KINDS];
     sfImage *wall_img;
     sfImage *sky_img;
     sfUint8 *ceil_pixels;
@@ -81,13 +88,18 @@ typedef struct player_s {
 } player_t;
 
 typedef struct wall_ctx_s {
-    sfVertexArray *va;
+    sfVertexArray *vas[WALL_KINDS];
     float col_w;
-    sfVector2u tex_sz;
+    sfVector2u tex_sz[WALL_KINDS];
     int wh;
     float jr;
     float hy;
 } wall_ctx_t;
+
+typedef struct wall_hit_s {
+    float tex_x;
+    int kind;
+} wall_hit_t;
 
 typedef struct ceil_ctx_s {
     const sfUint8 *wpx;
@@ -129,6 +141,8 @@ typedef struct sound_s {
     sfSoundBuffer *shoot_buf;
     sfSound *shoot_snd;
     sfSound *enemy_snd;
+    sfSoundBuffer *reload_buf;
+    sfSound *reload_snd;
 } sound_t;
 
 typedef struct button_s {
@@ -254,6 +268,7 @@ typedef struct game_s {
     sfFont *font_big;
     sfFont *font_med;
     sfBool running;
+    sfBool pending_load;
     game_state_t state;
     settings_t settings;
     sound_t sound;

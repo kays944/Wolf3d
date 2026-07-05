@@ -37,8 +37,12 @@ int init_pickups(player_t *p, map_t *m)
     for (int i = 0; i < m->size_y; i++)
         scan_pack_row(m, i);
     p->pack_spr = sfSprite_create();
-    if (!p->pack_spr)
+    p->key_spr = sfSprite_create();
+    p->key_tex = sfTexture_createFromFile(KEY_TEX_PATH, NULL);
+    if (!p->pack_spr || !p->key_spr || !p->key_tex) {
+        destroy_pickups(p);
         return EXIT_FAIL;
+    }
     for (int t = 0; t < PACK_KINDS; t++) {
         p->pack_tex[t] = sfTexture_createFromFile(PACK_PATHS[t], NULL);
         if (!p->pack_tex[t]) {
@@ -53,7 +57,13 @@ void destroy_pickups(player_t *p)
 {
     if (p->pack_spr)
         sfSprite_destroy(p->pack_spr);
+    if (p->key_spr)
+        sfSprite_destroy(p->key_spr);
+    if (p->key_tex)
+        sfTexture_destroy(p->key_tex);
     p->pack_spr = NULL;
+    p->key_spr = NULL;
+    p->key_tex = NULL;
     for (int t = 0; t < PACK_KINDS; t++) {
         if (p->pack_tex[t])
             sfTexture_destroy(p->pack_tex[t]);

@@ -37,17 +37,47 @@ static int init_ceil_resources(player_t *p)
     return EXIT_SUCCESS;
 }
 
+static const char *WALL_PATHS[WALL_KINDS] = {
+    WALL_TEX_PATH,
+    BRICK_TEX_PATH,
+    COLD_TEX_PATH,
+    DOOR_TEX_PATH,
+    DOOR_LOCKED_TEX_PATH,
+};
+
+static void destroy_wall_texs(player_t *p)
+{
+    for (int k = 0; k < WALL_KINDS; k++) {
+        if (p->wall_texs[k])
+            sfTexture_destroy(p->wall_texs[k]);
+        p->wall_texs[k] = NULL;
+    }
+}
+
+static int init_wall_texs(player_t *p)
+{
+    for (int k = 0; k < WALL_KINDS; k++) {
+        p->wall_texs[k] = sfTexture_createFromFile(WALL_PATHS[k], NULL);
+        if (!p->wall_texs[k]) {
+            destroy_wall_texs(p);
+            return EXIT_FAIL;
+        }
+        sfTexture_setRepeated(p->wall_texs[k], sfTrue);
+    }
+    return EXIT_SUCCESS;
+}
+
 static int init_wall_images(player_t *p)
 {
     p->wall_img = sfImage_createFromFile(WALL_TEX_PATH);
     if (!p->wall_img) {
-        sfTexture_destroy(p->wall_tex);
+        destroy_wall_texs(p);
         return EXIT_FAIL;
     }
     p->sky_img = sfImage_createFromFile(SKY_TEX_PATH);
     if (!p->sky_img) {
         sfImage_destroy(p->wall_img);
-        sfTexture_destroy(p->wall_tex);
+        destroy_wall_texs(p);
         return EXIT_FAIL;
     }
     return EXIT_SUCCESS;
@@ -55,16 +85,14 @@ static int init_wall_images(player_t *p)
 
 int init_wall_tex(player_t *p)
 {
-    p->wall_tex = sfTexture_createFromFile(WALL_TEX_PATH, NULL);
-    if (!p->wall_tex)
+    if (init_wall_texs(p) == EXIT_FAIL)
         return EXIT_FAIL;
-    sfTexture_setRepeated(p->wall_tex, sfTrue);
     if (init_wall_images(p) == EXIT_FAIL)
         return EXIT_FAIL;
     if (init_ceil_resources(p) == EXIT_FAIL) {
         sfImage_destroy(p->sky_img);
         sfImage_destroy(p->wall_img);
-        sfTexture_destroy(p->wall_tex);
+        destroy_wall_texs(p);
         return EXIT_FAIL;
     }
     return EXIT_SUCCESS;
@@ -98,7 +126,5 @@ void destroy_wall_tex(player_t *p)
     if (p->wall_img)
         sfImage_destroy(p->wall_img);
     p->wall_img = NULL;
-    if (p->wall_tex)
-        sfTexture_destroy(p->wall_tex);
-    p->wall_tex = NULL;
+    destroy_wall_texs(p);
 }

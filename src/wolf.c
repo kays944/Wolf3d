@@ -101,8 +101,15 @@ static int run_cycle(game_t *g)
     action = run_menu(&m);
     if (action == MENU_PLAY && load_chosen_map(g, &m) == EXIT_FAIL)
         action = MENU_QUIT;
+    if (action == MENU_CONTINUE) {
+        if (load_saved_map(g) == EXIT_FAIL) {
+            cleanup_menu(&m);
+            return PAUSE_MENU;
+        }
+        g->pending_load = sfTrue;
+    }
     cleanup_menu(&m);
-    if (action != MENU_PLAY)
+    if (action != MENU_PLAY && action != MENU_CONTINUE)
         return EXIT_SUCCESS;
     return play_maps(g);
 }

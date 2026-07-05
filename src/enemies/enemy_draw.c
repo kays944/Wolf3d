@@ -11,13 +11,18 @@
 
 static sfColor enemy_tint(enemy_t *e)
 {
-    if (e->boss)
-        return sfWhite;
     if (e->type == ENEMY_TYPE_BRUTE)
         return sfColor_fromRGB(255, 140, 140);
-    if (e->type == ENEMY_TYPE_RUNNER)
-        return sfColor_fromRGB(150, 230, 255);
     return sfWhite;
+}
+
+static sfTexture *foe_tex(player_t *p, enemy_t *e)
+{
+    if (e->boss)
+        return p->boss_tex;
+    if (e->type == ENEMY_TYPE_RUNNER)
+        return p->runner_tex;
+    return p->enemy_tex;
 }
 
 static void append_vert(sfVertexArray *va, const sfVector2f *pos,
@@ -87,7 +92,7 @@ static void render_strips(sfRenderWindow *win, spr_ctx_t *c,
     if (!c->va)
         return;
     sfVertexArray_setPrimitiveType(c->va, sfQuads);
-    rs.texture = e->boss ? p->boss_tex : p->enemy_tex;
+    rs.texture = foe_tex(p, e);
     set_frame(c, e);
     for (int i = c->i0; i <= c->i1; i++) {
         if (i < 0 || i >= NUM_RAYS || c->dist >= p->zbuf[i])
@@ -154,7 +159,7 @@ static void draw_one(sfRenderWindow *win, enemy_t *e, player_t *p)
     c.ybot = p->wh / 2.0f + p->pitch + base / 2.0f
         + base * (p->z / TILE_SIZE);
     c.col_w = p->ww / (float)NUM_RAYS;
-    c.tsz = sfTexture_getSize(e->boss ? p->boss_tex : p->enemy_tex);
+    c.tsz = sfTexture_getSize(foe_tex(p, e));
     width = c.size * ((c.tsz.x / (float)ANIM_COLS)
         / (c.tsz.y / (float)ANIM_ROWS));
     c.width = width;

@@ -53,7 +53,8 @@ static void draw_mini_walls(sfRenderWindow *win, map_t *m, float ox, float oy)
     sfRectangleShape_setFillColor(cell, COL_MINI_WALL);
     for (int y = 0; y < m->size_y; y++)
         for (int x = 0; m->map[y][x]; x++)
-            if (m->map[y][x] == 'x') {
+            if (m->map[y][x] == 'x' || m->map[y][x] == 'm'
+                || m->map[y][x] == 'n') {
                 sfRectangleShape_setPosition(cell, (sfVector2f){
                         ox + x * MINI_CELL, oy + y * MINI_CELL});
                 sfRenderWindow_drawRectangleShape(win, cell, NULL);

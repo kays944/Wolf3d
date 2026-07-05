@@ -52,12 +52,13 @@ void destroy_reload(player_t *p)
     p->reload_tex = NULL;
 }
 
-void start_reload(player_t *p)
+void start_reload(player_t *p, sound_t *s)
 {
     if (p->reloading || p->firing)
         return;
     if (p->ammo >= AMMO_DEFAULT || p->reserve <= 0)
         return;
+    play_reload(s);
     p->reloading = sfTrue;
     p->reload_frame = 0;
     sfSprite_setTexture(p->weapon_spr, p->reload_tex, sfFalse);

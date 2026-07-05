@@ -64,7 +64,10 @@ void toggle_flashlight(player_t *p);
 int run_pause(game_t *g, map_t *map, player_t *player);
 void render_pause(pause_t *p);
 void draw_overlay(sfRenderWindow *win, float ww, float wh);
-void saving(char **map, player_t *player);
+void save_game(map_t *m, player_t *p);
+int save_exists(void);
+int load_saved_map(game_t *g);
+int apply_save(player_t *p, map_t *m);
 void free_map(map_t *m);
 
 int init_sound(sound_t *s, settings_t *set);
@@ -72,6 +75,7 @@ void destroy_sound(sound_t *s);
 void update_sound_vol(sound_t *s, settings_t *set);
 void play_shoot(sound_t *s);
 void play_enemy_shot(sound_t *s);
+void play_reload(sound_t *s);
 
 int init_health_bar(player_t *p);
 void destroy_health_bar(player_t *p);
@@ -95,6 +99,7 @@ void update_pickups(player_t *p, map_t *m);
 void draw_pickups(sfRenderWindow *win, player_t *p, map_t *m);
 
 int is_blocked(float x, float y, map_t *m);
+int wall_kind(char c);
 void player_step(player_t *p, map_t *m, float ang, float mag);
 void update_gamepad(player_t *p, map_t *m);
 int init_props(player_t *p, map_t *m);
@@ -102,6 +107,7 @@ void destroy_props(player_t *p);
 void draw_props(sfRenderWindow *win, player_t *p, map_t *m);
 void sort_far(enemy_t **arr, int n, player_t *p);
 int enemies_alive(map_t *m);
+int blocked_by_enemy(player_t *p, map_t *m, float nx, float ny);
 
 void draw_hurt_flash(sfRenderWindow *win, player_t *p);
 void draw_crosshair(sfRenderWindow *win, player_t *p);
@@ -115,6 +121,11 @@ void draw_end_scene(sfRenderWindow *win, player_t *p, sfText *t, float el);
 int init_ammo(player_t *p);
 void destroy_ammo(player_t *p);
 
+int init_fps(player_t *p);
+void destroy_fps(player_t *p);
+void update_fps(player_t *p, float raw_dt);
+void draw_fps(sfRenderWindow *win, player_t *p);
+
 int init_score(player_t *p);
 void destroy_score(player_t *p);
 void add_kill(player_t *p, enemy_t *e, int headshot);
@@ -123,7 +134,8 @@ void draw_score(sfRenderWindow *win, player_t *p);
 void draw_minimap(sfRenderWindow *win, player_t *p, map_t *m);
 
 void init_doors(map_t *m);
-void update_doors(player_t *p, map_t *m);
+int try_open_door(player_t *p, map_t *m);
+void draw_door_hint(sfRenderWindow *win, player_t *p, map_t *m);
 void init_keyexit(map_t *m);
 void update_keyexit(player_t *p, map_t *m);
 void draw_key_hint(sfRenderWindow *win, player_t *p);
@@ -134,7 +146,7 @@ void refresh_ammo_text(player_t *p);
 
 int init_reload(player_t *p);
 void destroy_reload(player_t *p);
-void start_reload(player_t *p);
+void start_reload(player_t *p, sound_t *s);
 void update_reload(player_t *p);
 
 int init_wall_tex(player_t *p);

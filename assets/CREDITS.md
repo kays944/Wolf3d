@@ -17,4 +17,9 @@
 - License: CC0 1.0 (public domain) — no attribution required.
 - The sheets contain walk, attack and death animation frames
   (Demonario also has a fireball attack) usable for future animation.
-- `sprites/smorficus.png` is a spare third monster (blue demon).
+- `runner.png` (Smorficus, blue demon) is built from `sprites/smorficus.png`:
+  4 walk + 3 attack frames from the sheet, death frames synthesized (squash).
+
+## Sounds
+
+- `sounds/reload-sound.wav` (shotgun pump) is synthesized, no license needed.

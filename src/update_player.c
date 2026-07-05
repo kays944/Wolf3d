@@ -20,6 +20,8 @@ void player_step(player_t *p, map_t *m, float ang, float mag)
         || is_blocked(nx + PLAYER_MARGIN * cosf(ang),
             ny + PLAYER_MARGIN * sinf(ang), m) == IS_WALL)
         return;
+    if (blocked_by_enemy(p, m, nx, ny))
+        return;
     p->x = nx;
     p->y = ny;
 }
@@ -104,6 +106,7 @@ void update_player(sfRenderWindow *window, player_t *player, map_t *m)
 {
     float dt = sfTime_asSeconds(sfClock_restart(player->tick_clock));
 
+    update_fps(player, dt);
     player->dt = dt < DT_MAX ? dt : DT_MAX;
     if (player->use_pad) {
         update_gamepad(player, m);

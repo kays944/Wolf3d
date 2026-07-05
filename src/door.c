@@ -40,32 +40,66 @@ static float door_dist(door_t *d, player_t *p)
     return sqrtf((cx - p->x) * (cx - p->x) + (cy - p->y) * (cy - p->y));
 }
 
-static void set_open(map_t *m, door_t *d, sfBool open)
+static door_t *door_near(player_t *p, map_t *m)
 {
-    d->open = open;
-    if (open)
-        m->map[d->ty][d->tx] = ' ';
-    else
-        m->map[d->ty][d->tx] = d->locked ? 'D' : 'd';
-}
+    door_t *best = NULL;
+    float best_d = DOOR_OPEN_DIST;
+    float dist = 0;
 
-static void update_one_door(map_t *m, door_t *d, player_t *p)
-{
-    float dist = door_dist(d, p);
-
-    if (d->locked) {
-        if (!d->open && dist < DOOR_OPEN_DIST && p->has_key)
-            set_open(m, d, sfTrue);
-        return;
+    for (int i = 0; i < m->door_count; i++) {
+        if (m->doors[i].open)
+            continue;
+        dist = door_dist(&m->doors[i], p);
+        if (dist < best_d) {
+            best_d = dist;
+            best = &m->doors[i];
+        }
     }
-    if (dist < DOOR_OPEN_DIST)
-        set_open(m, d, sfTrue);
-    else if (d->open)
-        set_open(m, d, sfFalse);
+    return best;
 }
 
-void update_doors(player_t *p, map_t *m)
+int try_open_door(player_t *p, map_t *m)
 {
-    for (int i = 0; i < m->door_count; i++)
-        update_one_door(m, &m->doors[i], p);
+    door_t *d = door_near(p, m);
+
+    if (!d)
+        return 0;
+    if (d->locked && !p->has_key)
+        return 1;
+    d->open = sfTrue;
+    m->map[d->ty][d->tx] = ' ';
+    return 1;
+}
+
+static void center_hint(player_t *p, sfText *t)
+{
+    sfFloatRect lb = sfText_getLocalBounds(t);
+
+    sfText_setPosition(t, (sfVector2f){
+        (p->ww - lb.width) / 2.0f - lb.left,
+        p->wh * DOOR_HINT_Y});
+}
+
+void draw_door_hint(sfRenderWindow *win, player_t *p, map_t *m)
+{
+    door_t *d = door_near(p, m);
+    sfText *t = NULL;
+    sfBool no_key = sfFalse;
+
+    if (!d)
+        return;
+    no_key = d->locked && !p->has_key;
+    t = sfText_create();
+    if (!t)
+        return;
+    sfText_setFont(t, p->hud_font);
+    sfText_setCharacterSize(t, DOOR_HINT_SZ);
+    if (no_key)
+        sfText_setString(t, "IL FAUT UNE CLE");
+    else
+        sfText_setString(t, p->use_pad ? "CARRE : OUVRIR" : "E : OUVRIR");
+    sfText_setFillColor(t, no_key ? sfColor_fromRGB(235, 70, 45) : COL_KEY);
+    center_hint(p, t);
+    sfRenderWindow_drawText(win, t, NULL);
+    sfText_destroy(t);
 }

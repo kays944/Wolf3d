@@ -83,7 +83,8 @@ static int init_hud(player_t *player)
         destroy_health_bar(player);
         return EXIT_FAIL;
     }
-    if (init_score(player) == EXIT_FAIL) {
+    if (init_score(player) == EXIT_FAIL || init_fps(player) == EXIT_FAIL) {
+        destroy_score(player);
         destroy_wall_tex(player);
         destroy_reload(player);
         destroy_ammo(player);
@@ -138,6 +139,7 @@ static void destroy_player_tools(player_t *player)
 {
     if (player->tick_clock)
         sfClock_destroy(player->tick_clock);
+    destroy_fps(player);
     destroy_score(player);
     destroy_props(player);
     destroy_pickups(player);
@@ -173,6 +175,10 @@ int game_loop(game_t *g)
     }
     init_doors(&g->map);
     init_keyexit(&g->map);
+    if (g->pending_load) {
+        g->pending_load = sfFalse;
+        apply_save(&player, &g->map);
+    }
     ret = run_game(g->window, &player, g);
     destroy_player_tools(&player);
     return ret;

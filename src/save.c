@@ -5,45 +5,56 @@
 ** save.c
 */
 
-#include <fcntl.h>
+#include <stdio.h>
 #include <unistd.h>
 #include "macros.h"
 #include "proto.h"
 
-static char get_tile(char **map, int i, int j, player_t *player)
+int save_exists(void)
 {
-    int ptx = (int)(player->x / TILE_SIZE);
-    int pty = (int)(player->y / TILE_SIZE);
-
-    if (i == pty && j == ptx)
-        return 'o';
-    if (map[i][j] == 'o')
-        return ' ';
-    return map[i][j];
+    return access(SAVE_PATH, F_OK) == 0;
 }
 
-static void write_row(int fd, char **map, int i, player_t *player)
+static void write_player(FILE *f, player_t *p)
 {
-    int j = 0;
-    char c = 0;
+    fprintf(f, "player %.2f %.2f %.4f %d %d %d %d %d %d\n",
+        p->x, p->y, p->angle, p->hp, p->ammo, p->reserve,
+        p->score, p->kills, p->has_key ? 1 : 0);
+}
 
-    for (j = 0; map[i][j]; j++) {
-        c = get_tile(map, i, j, player);
-        write(fd, &c, 1);
+static void write_enemies(FILE *f, map_t *m)
+{
+    enemy_t *e = NULL;
+
+    fprintf(f, "enemies %d\n", m->enemy_count);
+    for (int i = 0; i < m->enemy_count; i++) {
+        e = &m->enemies[i];
+        fprintf(f, "enemy %.2f %.2f %d %d %.3f\n",
+            e->x, e->y, e->hp, e->dying ? 1 : 0, e->death_t);
     }
-    c = '\n';
-    write(fd, &c, 1);
 }
 
-void saving(char **map, player_t *player)
+static void write_world(FILE *f, map_t *m)
 {
-    int fd = open(MAP_SAVE_PATH, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    fprintf(f, "packs %d\n", m->pack_count);
+    for (int i = 0; i < m->pack_count; i++)
+        fprintf(f, "pack %d\n", m->packs[i].active ? 1 : 0);
+    fprintf(f, "doors %d\n", m->door_count);
+    for (int i = 0; i < m->door_count; i++)
+        fprintf(f, "door %d\n", m->doors[i].open ? 1 : 0);
+}
 
-    if (fd == -1) {
-        write(2, "Warning: could not create map_save.wolf\n", 40);
+void save_game(map_t *m, player_t *p)
+{
+    FILE *f = fopen(SAVE_PATH, "w");
+
+    if (!f) {
+        fprintf(stderr, "Warning: could not write %s\n", SAVE_PATH);
         return;
     }
-    for (int i = 0; map[i]; i++)
-        write_row(fd, map, i, player);
-    close(fd);
+    fprintf(f, "level %s\n", m->path);
+    write_player(f, p);
+    write_enemies(f, m);
+    write_world(f, m);
+    fclose(f);
 }

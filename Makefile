@@ -19,6 +19,7 @@ SRC			= 	src/main.c 							\
 				src/pause.c 						\
 				src/pause_render.c 					\
 				src/save.c 							\
+				src/load_save.c 					\
 				src/reload.c 						\
 				src/wall_tex.c 						\
 				src/texture_floor_ceil.c 			\
@@ -29,6 +30,7 @@ SRC			= 	src/main.c 							\
 				src/end_menu.c 						\
 				src/end_render.c 					\
 				src/score.c 						\
+				src/fps.c 							\
 				src/minimap.c 						\
 				src/door.c 						\
 				src/keyexit.c 						\

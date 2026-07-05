@@ -60,6 +60,34 @@ void sort_far(enemy_t **arr, int n, player_t *p)
             swap_if_closer(arr, j, p);
 }
 
+static float body_radius(enemy_t *e)
+{
+    float r = ENEMY_RADIUS * (e->boss ? BOSS_SCALE : 1.0f);
+
+    return r + PLAYER_MARGIN;
+}
+
+int blocked_by_enemy(player_t *p, map_t *m, float nx, float ny)
+{
+    enemy_t *e = NULL;
+    float d2 = 0;
+    float od2 = 0;
+    float r = 0;
+
+    for (int i = 0; i < m->enemy_count; i++) {
+        e = &m->enemies[i];
+        if (!e->alive || e->dying)
+            continue;
+        r = body_radius(e);
+        d2 = (e->x - nx) * (e->x - nx) + (e->y - ny) * (e->y - ny);
+        od2 = (e->x - p->x) * (e->x - p->x)
+            + (e->y - p->y) * (e->y - p->y);
+        if (d2 < r * r && d2 < od2)
+            return 1;
+    }
+    return 0;
+}
+
 static int is_threat(enemy_t *e)
 {
     if (!e->alive)

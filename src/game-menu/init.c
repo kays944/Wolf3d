@@ -12,16 +12,18 @@
 int load_settings(settings_t *s)
 {
     FILE *f = NULL;
+    int read_ok = 0;
 
     f = fopen(CFG_PATH, "r");
     if (!f)
         return EXIT_FAIL;
-    fscanf(f, "music_vol %f\n", &s->music_vol);
-    fscanf(f, "sfx_vol %f\n", &s->sfx_vol);
-    fscanf(f, "res_index %d\n", &s->res_index);
-    fscanf(f, "fullscreen %d\n", (int *)&s->fullscreen);
-    fscanf(f, "gamepad %d\n", &s->gamepad);
-    fscanf(f, "sensitivity %f\n", &s->sensitivity);
+    read_ok = fscanf(f, "music_vol %f\n", &s->music_vol) == 1
+        && fscanf(f, "sfx_vol %f\n", &s->sfx_vol) == 1
+        && fscanf(f, "res_index %d\n", &s->res_index) == 1
+        && fscanf(f, "fullscreen %d\n", (int *)&s->fullscreen) == 1
+        && fscanf(f, "gamepad %d\n", &s->gamepad) == 1
+        && fscanf(f, "sensitivity %f\n", &s->sensitivity) == 1;
+    (void)read_ok;
     fclose(f);
     if (s->sensitivity < SENS_MIN || s->sensitivity > SENS_MAX)
         s->sensitivity = SENS_DEFAULT;

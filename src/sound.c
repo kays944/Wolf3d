@@ -8,6 +8,17 @@
 #include "macros.h"
 #include "proto.h"
 
+static int init_reload_sound(sound_t *s, settings_t *set)
+{
+    s->reload_buf = sfSoundBuffer_createFromFile(SND_RELOAD);
+    s->reload_snd = sfSound_create();
+    if (!s->reload_buf || !s->reload_snd)
+        return EXIT_FAIL;
+    sfSound_setBuffer(s->reload_snd, s->reload_buf);
+    sfSound_setVolume(s->reload_snd, set->sfx_vol);
+    return EXIT_SUCCESS;
+}
+
 static int init_shoot_sounds(sound_t *s, settings_t *set)
 {
     s->shoot_buf = sfSoundBuffer_createFromFile(SND_SHOOT);
@@ -20,7 +31,7 @@ static int init_shoot_sounds(sound_t *s, settings_t *set)
     sfSound_setPitch(s->enemy_snd, ENEMY_SND_PITCH);
     sfSound_setVolume(s->shoot_snd, set->sfx_vol);
     sfSound_setVolume(s->enemy_snd, set->sfx_vol * ENEMY_SND_VOL);
-    return EXIT_SUCCESS;
+    return init_reload_sound(s, set);
 }
 
 int init_sound(sound_t *s, settings_t *set)
@@ -40,6 +51,10 @@ int init_sound(sound_t *s, settings_t *set)
 
 void destroy_sound(sound_t *s)
 {
+    if (s->reload_snd)
+        sfSound_destroy(s->reload_snd);
+    if (s->reload_buf)
+        sfSoundBuffer_destroy(s->reload_buf);
     if (s->enemy_snd)
         sfSound_destroy(s->enemy_snd);
     if (s->shoot_snd)
@@ -58,6 +73,7 @@ void update_sound_vol(sound_t *s, settings_t *set)
     sfMusic_setVolume(s->game_music, set->music_vol);
     sfSound_setVolume(s->shoot_snd, set->sfx_vol);
     sfSound_setVolume(s->enemy_snd, set->sfx_vol * ENEMY_SND_VOL);
+    sfSound_setVolume(s->reload_snd, set->sfx_vol);
 }
 
 void play_shoot(sound_t *s)
@@ -68,4 +84,9 @@ void play_shoot(sound_t *s)
 void play_enemy_shot(sound_t *s)
 {
     sfSound_play(s->enemy_snd);
+}
+
+void play_reload(sound_t *s)
+{
+    sfSound_play(s->reload_snd);
 }

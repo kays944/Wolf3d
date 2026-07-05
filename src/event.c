@@ -10,6 +10,8 @@
 
 static void check_switch(player_t *player, sfEvent *e)
 {
+    if (e->type == sfEvtKeyPressed && e->key.code == sfKeyF3)
+        player->show_fps = !player->show_fps;
     if (player->use_pad || e->type != sfEvtKeyPressed)
         return;
     if (e->key.code != sfKeyP)
@@ -17,13 +19,22 @@ static void check_switch(player_t *player, sfEvent *e)
     toggle_flashlight(player);
 }
 
-static void check_reload(player_t *player, sfEvent *e)
+static void check_reload(player_t *player, sfEvent *e, sound_t *s)
 {
     if (player->use_pad || e->type != sfEvtKeyPressed)
         return;
     if (e->key.code != sfKeyR)
         return;
-    start_reload(player);
+    start_reload(player, s);
+}
+
+static void check_open(player_t *player, sfEvent *e, map_t *m)
+{
+    if (player->use_pad || e->type != sfEvtKeyPressed)
+        return;
+    if (e->key.code != sfKeyE)
+        return;
+    try_open_door(player, m);
 }
 
 static void do_fire(player_t *player, sound_t *s)
@@ -47,7 +58,8 @@ static void check_fire(player_t *player, sfEvent *e, sound_t *s)
     do_fire(player, s);
 }
 
-static void check_pad_buttons(player_t *player, sfEvent *e, sound_t *s)
+static void check_pad_buttons(player_t *player, sfEvent *e, sound_t *s,
+    map_t *m)
 {
     unsigned int btn = 0;
 
@@ -56,8 +68,8 @@ static void check_pad_buttons(player_t *player, sfEvent *e, sound_t *s)
     btn = e->joystickButton.button;
     if (btn == PAD_BTN_FIRE)
         do_fire(player, s);
-    if (btn == PAD_BTN_RELOAD)
-        start_reload(player);
+    if (btn == PAD_BTN_RELOAD && !try_open_door(player, m))
+        start_reload(player, s);
     if (btn == PAD_BTN_FLASH)
         toggle_flashlight(player);
 }
@@ -75,9 +87,10 @@ int event(sfRenderWindow *window, player_t *player, map_t *m, sound_t *s)
             && ev.joystickButton.button == PAD_BTN_PAUSE)
             return EVENT_PAUSE;
         check_fire(player, &ev, s);
-        check_pad_buttons(player, &ev, s);
+        check_pad_buttons(player, &ev, s, m);
         check_switch(player, &ev);
-        check_reload(player, &ev);
+        check_reload(player, &ev, s);
+        check_open(player, &ev, m);
     }
     if (player->shot_event) {
         shoot_enemies(player, m);
@@ -88,6 +101,5 @@ int event(sfRenderWindow *window, player_t *player, map_t *m, sound_t *s)
     update_projs(player, m);
     update_pickups(player, m);
     update_keyexit(player, m);
-    update_doors(player, m);
     return EXIT_SUCCESS;
 }

@@ -118,7 +118,7 @@ static void handle_click(pause_t *p, sfVector2f *pos)
         return;
     }
     if (button_is_clicked(&p->btns[PBTN_SAVE], pos)) {
-        saving(p->map->map, p->player);
+        save_game(p->map, p->player);
         return;
     }
     if (button_is_clicked(&p->btns[PBTN_BACK], pos)) {

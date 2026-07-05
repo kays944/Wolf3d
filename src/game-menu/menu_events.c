@@ -20,6 +20,11 @@ static void confirm_menu_selection(menu_t *m)
         m->screen = SCR_MAP_SELECT;
         return;
     }
+    if (m->selected == BTN_CONTINUE && save_exists()) {
+        m->action = MENU_CONTINUE;
+        m->running = sfFalse;
+        return;
+    }
     if (m->selected == BTN_SETTINGS) {
         cleanup_settings_menu(m);
         init_settings_menu(m);

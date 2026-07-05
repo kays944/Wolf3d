@@ -30,7 +30,7 @@
 
     #define TILE_SIZE 64
 
-    #define MAP_SAVE_PATH "./assets/maps/map_save.wolf"
+    #define SAVE_PATH "./savegame.sav"
 
     #define M_PI 3.14159265358979323846
 
@@ -99,6 +99,7 @@
 
     #define MENU_QUIT -1
     #define MENU_PLAY 0
+    #define MENU_CONTINUE 2
 
     #define SCR_COUNT 3
     #define BITS_PER_PIXEL 32
@@ -106,6 +107,7 @@
     #define SND_MENU "assets/sounds/song_game-menu.wav"
     #define SND_GAME "assets/sounds/song-game.wav"
     #define SND_SHOOT "assets/sounds/spas12-sound.wav"
+    #define SND_RELOAD "assets/sounds/reload-sound.wav"
 
     #define FL_FEATHER 100.0f
     #define FL_R_BIG 1500.0f
@@ -127,6 +129,9 @@
 
     #define MAX_DOORS 24
     #define DOOR_OPEN_DIST (TILE_SIZE * 1.35f)
+    #define DOOR_HINT_SZ 26
+    #define DOOR_HINT_Y 0.60f
+    #define KEY_TEX_PATH "./assets/key.png"
     #define KEY_PICK_DIST (TILE_SIZE * 0.75f)
     #define EXIT_DIST (TILE_SIZE * 0.7f)
     #define MARK_WORLD_SIZE 30.0f
@@ -147,6 +152,9 @@
     #define COL_MINI_RUNNER sfColor_fromRGB(150, 230, 255)
     #define COL_MINI_BOSS sfColor_fromRGB(255, 160, 30)
 
+    #define FPS_FONT_SZ 22
+    #define FPS_REFRESH 0.5f
+
     #define SCORE_ENEMY 100
     #define SCORE_BOSS 500
     #define SCORE_HEADSHOT 50
@@ -160,6 +168,16 @@
     #define AMMO_TEX_PATH "./assets/props/ammo_box.png"
 
     #define WALL_TEX_PATH "./assets/texture_wall_wolf.png"
+    #define BRICK_TEX_PATH "./assets/texture_wall_brick.png"
+    #define COLD_TEX_PATH "./assets/texture_wall_cold.png"
+    #define DOOR_TEX_PATH "./assets/texture_door.png"
+    #define DOOR_LOCKED_TEX_PATH "./assets/texture_door_locked.png"
+    #define WALL_KINDS 5
+    #define WALL_STONE 0
+    #define WALL_BRICK 1
+    #define WALL_COLD 2
+    #define WALL_DOOR 3
+    #define WALL_DOOR_LOCKED 4
     #define SKY_TEX_PATH "./assets/texture_sky.png"
     #define RELOAD_TEX_PATH "./assets/sprite_sheet_reload.png"
     #define RELOAD_COLS 3
@@ -171,6 +189,7 @@
 
     #define ENEMY_TEX_PATH "./assets/enemy.png"
     #define BOSS_TEX_PATH "./assets/boss.png"
+    #define RUNNER_TEX_PATH "./assets/runner.png"
     #define MAX_ENEMIES 16
     #define ENEMY_HP 100
     #define ENEMY_HP_PER_LEVEL 25
@@ -292,6 +311,7 @@ typedef enum e_menu_screen {
 
 typedef enum e_main_btn {
     BTN_PLAY = 0,
+    BTN_CONTINUE,
     BTN_SETTINGS,
     BTN_QUIT,
     MAIN_BTN_COUNT

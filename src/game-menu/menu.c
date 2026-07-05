@@ -110,6 +110,7 @@ static void create_buttons(menu_t *m)
     float x = 0;
 
     labels[BTN_PLAY] = "JOUER";
+    labels[BTN_CONTINUE] = "CONTINUER";
     labels[BTN_SETTINGS] = "PARAMETRES";
     labels[BTN_QUIT] = "QUITTER";
     x = (m->ww - BTN_W) / 2.0f;
