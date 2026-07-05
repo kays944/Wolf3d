@@ -7,11 +7,35 @@
 
 #include "proto.h"
 
+static int keep_map(const char *name, size_t elen)
+{
+    size_t nlen = strlen(name);
+
+    if (nlen <= elen || strcmp(name + nlen - elen, MAP_EXT) != 0)
+        return 0;
+    if (strcmp(name, "map_save.wolf") == 0)
+        return 0;
+    return 1;
+}
+
+static void sort_maps(menu_t *m)
+{
+    char tmp[MAP_NAME_LEN] = {0};
+
+    for (int i = 0; i < m->map_count - 1; i++)
+        for (int j = 0; j < m->map_count - 1 - i; j++)
+            if (strcmp(m->map_names[j], m->map_names[j + 1]) > 0) {
+                snprintf(tmp, MAP_NAME_LEN, "%s", m->map_names[j]);
+                snprintf(m->map_names[j], MAP_NAME_LEN, "%s",
+                    m->map_names[j + 1]);
+                snprintf(m->map_names[j + 1], MAP_NAME_LEN, "%s", tmp);
+            }
+}
+
 static void scan_maps(menu_t *m)
 {
     DIR *dir = NULL;
     struct dirent *entry = NULL;
-    size_t nlen = 0;
     size_t elen = strlen(MAP_EXT);
 
     m->map_count = 0;
@@ -21,14 +45,14 @@ static void scan_maps(menu_t *m)
     for (entry = readdir(dir);
         entry && m->map_count < MAX_MAPS;
         entry = readdir(dir)) {
-        nlen = strlen(entry->d_name);
-        if (nlen > elen && strcmp(entry->d_name + nlen - elen, MAP_EXT) == 0) {
+        if (keep_map(entry->d_name, elen)) {
             snprintf(m->map_names[m->map_count], MAP_NAME_LEN, "%s",
                 entry->d_name);
             m->map_count++;
         }
     }
     closedir(dir);
+    sort_maps(m);
 }
 
 int init_map_select(menu_t *m)

@@ -55,6 +55,41 @@ static int load_chosen_map(game_t *g, menu_t *m)
     return parsing_map(&g->map, path);
 }
 
+static int load_next_map(game_t *g)
+{
+    char path[MAP_NAME_LEN + 32] = {0};
+
+    if (next_level_path(&g->map, path, sizeof(path)) == EXIT_FAIL)
+        return EXIT_FAIL;
+    free_map(&g->map);
+    return parsing_map(&g->map, path);
+}
+
+static int load_current_map(game_t *g)
+{
+    char path[MAP_NAME_LEN + 32] = {0};
+
+    if (!g->map.path)
+        return EXIT_FAIL;
+    strncpy(path, g->map.path, sizeof(path) - 1);
+    free_map(&g->map);
+    return parsing_map(&g->map, path);
+}
+
+static int play_maps(game_t *g)
+{
+    int r = game_loop(g);
+
+    while (r == END_RESTART || r == END_NEXT) {
+        if (r == END_NEXT && load_next_map(g) == EXIT_FAIL)
+            return PAUSE_MENU;
+        if (r == END_RESTART && load_current_map(g) == EXIT_FAIL)
+            return PAUSE_MENU;
+        r = game_loop(g);
+    }
+    return r;
+}
+
 static int run_cycle(game_t *g)
 {
     menu_t m = {0};
@@ -69,7 +104,7 @@ static int run_cycle(game_t *g)
     cleanup_menu(&m);
     if (action != MENU_PLAY)
         return EXIT_SUCCESS;
-    return game_loop(g);
+    return play_maps(g);
 }
 
 int wolf(void)

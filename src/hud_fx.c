@@ -5,6 +5,7 @@
 ** hud_fx.c
 */
 
+#include <unistd.h>
 #include "macros.h"
 #include "proto.h"
 
@@ -43,63 +44,25 @@ void draw_crosshair(sfRenderWindow *win, player_t *p)
     sfRectangleShape_destroy(r);
 }
 
-static sfText *make_end_text(player_t *p, const char *msg)
+static int level_won(player_t *p, map_t *m)
 {
-    sfText *t = sfText_create();
-    sfFloatRect b = {0};
-
-    if (!t)
-        return NULL;
-    sfText_setFont(t, p->hud_font);
-    sfText_setString(t, msg);
-    sfText_setCharacterSize(t, END_FONT_SZ);
-    sfText_setFillColor(t, COL_TITLE);
-    b = sfText_getGlobalBounds(t);
-    sfText_setPosition(t, (sfVector2f){(p->ww - b.width) / 2.0f,
-            (p->wh - b.height) / 2.0f - b.top});
-    return t;
-}
-
-static void end_screen_frame(sfRenderWindow *win, sfText *t)
-{
-    sfEvent ev = {0};
-
-    while (sfRenderWindow_pollEvent(win, &ev))
-        if (ev.type == sfEvtClosed)
-            sfRenderWindow_close(win);
-    sfRenderWindow_clear(win, sfBlack);
-    sfRenderWindow_drawText(win, t, NULL);
-    sfRenderWindow_display(win);
-}
-
-void show_end_screen(sfRenderWindow *win, player_t *p, const char *msg)
-{
-    sfText *t = make_end_text(p, msg);
-    sfClock *ck = sfClock_create();
-
-    if (!t || !ck) {
-        if (t)
-            sfText_destroy(t);
-        if (ck)
-            sfClock_destroy(ck);
-        return;
-    }
-    while (sfRenderWindow_isOpen(win) && sfTime_asMilliseconds(
-            sfClock_getElapsedTime(ck)) < END_SCREEN_MS)
-        end_screen_frame(win, t);
-    sfText_destroy(t);
-    sfClock_destroy(ck);
+    if (m->has_exit)
+        return p->reached_exit;
+    return m->enemy_count > 0 && enemies_alive(m) == 0;
 }
 
 int check_game_end(sfRenderWindow *win, player_t *p, map_t *m)
 {
-    if (p->hp <= 0) {
-        show_end_screen(win, p, END_MSG_LOSE);
-        return 1;
-    }
-    if (m->enemy_count > 0 && enemies_alive(m) == 0) {
-        show_end_screen(win, p, END_MSG_WIN);
-        return 1;
+    char path[MAP_NAME_LEN + 32] = {0};
+    int mode = END_MODE_WIN_LAST;
+
+    if (p->hp <= 0)
+        return run_end_menu(win, p, END_MSG_LOSE, END_MODE_LOSE);
+    if (level_won(p, m)) {
+        if (next_level_path(m, path, sizeof(path)) == EXIT_SUCCESS
+            && access(path, F_OK) == 0)
+            mode = END_MODE_WIN_NEXT;
+        return run_end_menu(win, p, END_MSG_WIN, mode);
     }
     return 0;
 }

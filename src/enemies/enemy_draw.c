@@ -9,14 +9,25 @@
 #include "macros.h"
 #include "proto.h"
 
+static sfColor enemy_tint(enemy_t *e)
+{
+    if (e->boss)
+        return sfWhite;
+    if (e->type == ENEMY_TYPE_BRUTE)
+        return sfColor_fromRGB(255, 140, 140);
+    if (e->type == ENEMY_TYPE_RUNNER)
+        return sfColor_fromRGB(150, 230, 255);
+    return sfWhite;
+}
+
 static void append_vert(sfVertexArray *va, const sfVector2f *pos,
-    const sfVector2f *tex)
+    const sfVector2f *tex, sfColor col)
 {
     sfVertex v = {0};
 
     v.position = *pos;
     v.texCoords = *tex;
-    v.color = sfWhite;
+    v.color = col;
     sfVertexArray_append(va, v);
 }
 
@@ -57,13 +68,14 @@ static void append_quad(spr_ctx_t *c, int i)
     float yt = c->ybot - c->size;
     float yb = c->ybot;
 
-    append_vert(c->va, &(sfVector2f){x, yt}, &(sfVector2f){u, c->v0});
+    append_vert(c->va, &(sfVector2f){x, yt}, &(sfVector2f){u, c->v0},
+        c->tint);
     append_vert(c->va, &(sfVector2f){x + c->col_w, yt},
-        &(sfVector2f){u + du, c->v0});
+        &(sfVector2f){u + du, c->v0}, c->tint);
     append_vert(c->va, &(sfVector2f){x + c->col_w, yb},
-        &(sfVector2f){u + du, c->v0 + c->ch});
+        &(sfVector2f){u + du, c->v0 + c->ch}, c->tint);
     append_vert(c->va, &(sfVector2f){x, yb},
-        &(sfVector2f){u, c->v0 + c->ch});
+        &(sfVector2f){u, c->v0 + c->ch}, c->tint);
 }
 
 static void render_strips(sfRenderWindow *win, spr_ctx_t *c,
@@ -98,7 +110,7 @@ static void fill_bar(sfRenderWindow *win, sfRectangleShape *r,
 static void draw_hp_bar(sfRenderWindow *win, spr_ctx_t *c,
     enemy_t *e, player_t *p)
 {
-    float ratio = (float)e->hp / (e->boss ? BOSS_HP : ENEMY_HP);
+    float ratio = e->max_hp > 0 ? (float)e->hp / e->max_hp : 0.0f;
     float bh = c->size * HPBAR_H_RATIO;
     float bw = c->width * HPBAR_W_RATIO;
     sfFloatRect box = {0};
@@ -133,6 +145,7 @@ static void draw_one(sfRenderWindow *win, enemy_t *e, player_t *p)
 
     if (fabsf(rel) > FOV / 2 + 0.5f)
         return;
+    c.tint = enemy_tint(e);
     c.dist = sqrtf(dx * dx + dy * dy) * cosf(rel);
     if (c.dist < DISTANCE_LIMIT * 8)
         return;

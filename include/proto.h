@@ -105,11 +105,29 @@ int enemies_alive(map_t *m);
 
 void draw_hurt_flash(sfRenderWindow *win, player_t *p);
 void draw_crosshair(sfRenderWindow *win, player_t *p);
-void show_end_screen(sfRenderWindow *win, player_t *p, const char *msg);
 int check_game_end(sfRenderWindow *win, player_t *p, map_t *m);
+int run_end_menu(sfRenderWindow *win, player_t *p,
+    const char *title, int mode);
+int next_level_path(map_t *m, char *buf, int size);
+sfVertexArray *make_end_bg(player_t *p, int mode);
+void draw_end_scene(sfRenderWindow *win, player_t *p, sfText *t, float el);
 
 int init_ammo(player_t *p);
 void destroy_ammo(player_t *p);
+
+int init_score(player_t *p);
+void destroy_score(player_t *p);
+void add_kill(player_t *p, enemy_t *e, int headshot);
+void refresh_score_text(player_t *p);
+void draw_score(sfRenderWindow *win, player_t *p);
+void draw_minimap(sfRenderWindow *win, player_t *p, map_t *m);
+
+void init_doors(map_t *m);
+void update_doors(player_t *p, map_t *m);
+void init_keyexit(map_t *m);
+void update_keyexit(player_t *p, map_t *m);
+void draw_key_hint(sfRenderWindow *win, player_t *p);
+void draw_markers(sfRenderWindow *win, player_t *p, map_t *m);
 void decrement_ammo(player_t *p);
 void reload_ammo(player_t *p);
 void refresh_ammo_text(player_t *p);

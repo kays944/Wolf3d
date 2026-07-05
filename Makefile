@@ -26,6 +26,13 @@ SRC			= 	src/main.c 							\
 				src/pickup.c 						\
 				src/props.c 						\
 				src/gamepad.c 						\
+				src/end_menu.c 						\
+				src/end_render.c 					\
+				src/score.c 						\
+				src/minimap.c 						\
+				src/door.c 						\
+				src/keyexit.c 						\
+				src/marker.c 						\
 				src/enemies/enemy.c 				\
 				src/enemies/enemy_utils.c 			\
 				src/enemies/enemy_ai.c 				\
@@ -55,6 +62,8 @@ OBJ_DIR		=	obj
 
 OBJ			=	$(SRC:src/%.c=$(OBJ_DIR)/%.o)
 
+HEADERS		=	$(wildcard include/*.h)
+
 CC 			:= 	gcc
 
 NAME		= 	wolf3d
@@ -75,7 +84,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)/tools
 	mkdir -p $(OBJ_DIR)/enemies
 
-$(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: src/%.c $(HEADERS) | $(OBJ_DIR)
 	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 $(NAME):	$(OBJ)

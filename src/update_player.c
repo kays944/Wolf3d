@@ -48,9 +48,9 @@ static void look_input(player_t *p)
 
     if (!p->use_pad) {
         if (sfKeyboard_isKeyPressed(sfKeyLeft))
-            p->angle -= ROTATION_SPEED * p->dt;
+            p->angle -= ROTATION_SPEED * p->sens * p->dt;
         if (sfKeyboard_isKeyPressed(sfKeyRight))
-            p->angle += ROTATION_SPEED * p->dt;
+            p->angle += ROTATION_SPEED * p->sens * p->dt;
         if (sfKeyboard_isKeyPressed(sfKeyUp))
             p->pitch += PITCH_SPEED * p->dt;
         if (sfKeyboard_isKeyPressed(sfKeyDown))

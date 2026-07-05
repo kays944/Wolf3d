@@ -17,10 +17,32 @@ static float dist_to_player(enemy_t *e, player_t *p)
     return sqrtf(dx * dx + dy * dy);
 }
 
+static int lit_by_flash(enemy_t *e, player_t *p)
+{
+    float dx = e->x - p->x;
+    float dy = e->y - p->y;
+    float dist = sqrtf(dx * dx + dy * dy);
+    float rel = 0;
+
+    if (!p->flashlight || dist > FL_BEAM_RANGE)
+        return 0;
+    rel = norm_angle(atan2f(dy, dx) - p->angle);
+    return fabsf(rel) < FL_BEAM_HALF;
+}
+
+static float enemy_speed(enemy_t *e)
+{
+    if (e->type == ENEMY_TYPE_BRUTE)
+        return BRUTE_SPEED;
+    if (e->type == ENEMY_TYPE_RUNNER)
+        return RUNNER_SPEED;
+    return ENEMY_SPEED;
+}
+
 static void chase(enemy_t *e, player_t *p, map_t *m)
 {
     float dist = dist_to_player(e, p);
-    float step = ENEMY_SPEED * p->dt;
+    float step = enemy_speed(e) * p->dt * (e->blind > 0 ? FL_BLIND_SLOW : 1.0f);
     float nx = 0;
     float ny = 0;
 
@@ -56,7 +78,7 @@ static void try_shoot(enemy_t *e, map_t *m, player_t *p, sound_t *s)
 {
     float dist = dist_to_player(e, p);
 
-    if (dist > ENEMY_SHOOT_RANGE || e->cooldown > 0)
+    if (e->blind > 0 || dist > ENEMY_SHOOT_RANGE || e->cooldown > 0)
         return;
     e->cooldown = ENEMY_SHOOT_CD;
     e->atk_anim = ATK_ANIM_LEN;
@@ -84,8 +106,12 @@ void update_enemies(player_t *p, map_t *m, sound_t *s)
             e->cooldown -= p->dt;
         if (e->atk_anim > 0)
             e->atk_anim -= p->dt;
+        if (e->blind > 0)
+            e->blind -= p->dt;
         if (!has_los(e->x, e->y, p, m))
             continue;
+        if (lit_by_flash(e, p))
+            e->blind = FL_BLIND_TIME;
         chase(e, p, m);
         try_shoot(e, m, p, s);
     }

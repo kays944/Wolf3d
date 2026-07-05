@@ -83,6 +83,13 @@ static int init_hud(player_t *player)
         destroy_health_bar(player);
         return EXIT_FAIL;
     }
+    if (init_score(player) == EXIT_FAIL) {
+        destroy_wall_tex(player);
+        destroy_reload(player);
+        destroy_ammo(player);
+        destroy_health_bar(player);
+        return EXIT_FAIL;
+    }
     return EXIT_SUCCESS;
 }
 
@@ -102,17 +109,11 @@ static int init_player_tools(player_t *player)
     return EXIT_SUCCESS;
 }
 
-static int end_ret(sfRenderWindow *w)
-{
-    if (sfRenderWindow_isOpen(w))
-        return PAUSE_MENU;
-    return PAUSE_RESUME;
-}
-
 static int run_game(sfRenderWindow *w, player_t *p, game_t *g)
 {
     int ev = 0;
     int ret = PAUSE_RESUME;
+    int end = 0;
 
     sfMusic_stop(g->sound.menu_music);
     sfMusic_play(g->sound.game_music);
@@ -122,8 +123,10 @@ static int run_game(sfRenderWindow *w, player_t *p, game_t *g)
             break;
         if (ev == EVENT_PAUSE)
             ret = run_pause(g, &g->map, p);
-        if (ret == PAUSE_RESUME && check_game_end(w, p, &g->map))
-            ret = end_ret(w);
+        if (ret == PAUSE_RESUME)
+            end = check_game_end(w, p, &g->map);
+        if (end != 0)
+            ret = end;
         if (ret == PAUSE_RESUME)
             draw(w, p, &g->map);
     }
@@ -135,6 +138,7 @@ static void destroy_player_tools(player_t *player)
 {
     if (player->tick_clock)
         sfClock_destroy(player->tick_clock);
+    destroy_score(player);
     destroy_props(player);
     destroy_pickups(player);
     destroy_enemies(player);
@@ -156,6 +160,7 @@ int game_loop(game_t *g)
     player.wh = (int)sz.y;
     player.hud_font = g->font_med;
     player.use_pad = g->settings.gamepad ? sfTrue : sfFalse;
+    player.sens = g->settings.sensitivity;
     if (init_player(&g->map, &player) == EXIT_FAIL)
         return EXIT_FAIL;
     if (init_player_tools(&player) == EXIT_FAIL)
@@ -166,6 +171,8 @@ int game_loop(game_t *g)
         destroy_player_tools(&player);
         return EXIT_FAIL;
     }
+    init_doors(&g->map);
+    init_keyexit(&g->map);
     ret = run_game(g->window, &player, g);
     destroy_player_tools(&player);
     return ret;

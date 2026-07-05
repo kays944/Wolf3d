@@ -36,8 +36,10 @@ static void pad_look(player_t *p)
     float rx = pad_axis(sfJoystickU);
     float ry = pad_axis(sfJoystickV);
 
-    p->angle += rx * ROTATION_SPEED * p->dt;
-    p->pitch -= ry * PITCH_SPEED * p->dt;
+    rx = rx * fabsf(rx);
+    ry = ry * fabsf(ry);
+    p->angle += rx * PAD_LOOK_SPEED * p->sens * p->dt;
+    p->pitch -= ry * PAD_PITCH_SPEED * p->sens * p->dt;
 }
 
 void update_gamepad(player_t *p, map_t *m)

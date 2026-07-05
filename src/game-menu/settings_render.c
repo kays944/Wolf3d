@@ -113,6 +113,8 @@ static void render_settings_inner(menu_t *m)
         draw_option(m, "Controles :", "< MANETTE >", SET_INPUT);
     else
         draw_option(m, "Controles :", "< CLAVIER >", SET_INPUT);
+    snprintf(buf, sizeof(buf), "< %.1f >", m->settings->sensitivity);
+    draw_option(m, "Sensibilite :", buf, SET_SENS);
 }
 
 void render_settings(menu_t *m)

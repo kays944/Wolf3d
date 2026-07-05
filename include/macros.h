@@ -89,8 +89,13 @@
     #define SET_RES 2
     #define SET_FULLSCR 3
     #define SET_INPUT 4
-    #define SET_BACK 5
-    #define SET_ITEM_COUNT 6
+    #define SET_SENS 5
+    #define SET_BACK 6
+    #define SET_ITEM_COUNT 7
+    #define SENS_DEFAULT 1.0f
+    #define SENS_STEP 0.1f
+    #define SENS_MIN 0.3f
+    #define SENS_MAX 2.5f
 
     #define MENU_QUIT -1
     #define MENU_PLAY 0
@@ -105,12 +110,47 @@
     #define FL_FEATHER 100.0f
     #define FL_R_BIG 1500.0f
     #define FL_N 64
+    #define FL_LIT_ON 0.52f
+    #define FL_LIT_OFF 0.17f
+    #define FL_ALPHA_ON 140
+    #define FL_ALPHA_OFF 232
+    #define FL_BEAM_HALF 0.40f
+    #define FL_BEAM_RANGE 680.0f
+    #define FL_BLIND_TIME 0.5f
+    #define FL_BLIND_SLOW 0.35f
 
     #define HEALTH_BAR_PATH "./assets/health_bar.png"
     #define HEALTH_FRAME_W 353
     #define HEALTH_FRAME_H 87
     #define HEALTH_COLS 2
     #define HEALTH_FRAMES 6
+
+    #define MAX_DOORS 24
+    #define DOOR_OPEN_DIST (TILE_SIZE * 1.35f)
+    #define KEY_PICK_DIST (TILE_SIZE * 0.75f)
+    #define EXIT_DIST (TILE_SIZE * 0.7f)
+    #define MARK_WORLD_SIZE 30.0f
+    #define COL_KEY sfColor_fromRGB(255, 210, 40)
+    #define COL_EXIT sfColor_fromRGB(60, 230, 120)
+
+    #define MINI_CELL 7.0f
+    #define MINI_MARGIN 14.0f
+    #define MINI_DOT 2.4f
+    #define MINI_PLAYER_DOT 3.4f
+    #define MINI_BOSS_DOT 4.2f
+    #define MINI_DIR_LEN 9.0f
+    #define COL_MINI_BG sfColor_fromRGBA(0, 0, 0, 150)
+    #define COL_MINI_WALL sfColor_fromRGBA(205, 120, 45, 205)
+    #define COL_MINI_PLAYER sfColor_fromRGB(90, 225, 100)
+    #define COL_MINI_GRUNT sfColor_fromRGB(235, 70, 45)
+    #define COL_MINI_BRUTE sfColor_fromRGB(255, 140, 140)
+    #define COL_MINI_RUNNER sfColor_fromRGB(150, 230, 255)
+    #define COL_MINI_BOSS sfColor_fromRGB(255, 160, 30)
+
+    #define SCORE_ENEMY 100
+    #define SCORE_BOSS 500
+    #define SCORE_HEADSHOT 50
+    #define SCORE_FONT_SZ 26
 
     #define AMMO_DEFAULT 30
     #define AMMO_FONT_SZ 30
@@ -133,7 +173,16 @@
     #define BOSS_TEX_PATH "./assets/boss.png"
     #define MAX_ENEMIES 16
     #define ENEMY_HP 100
+    #define ENEMY_HP_PER_LEVEL 25
     #define BOSS_HP (ENEMY_HP * 2)
+    #define ENEMY_TYPE_GRUNT 0
+    #define ENEMY_TYPE_BRUTE 1
+    #define ENEMY_TYPE_RUNNER 2
+    #define ENEMY_TYPE_BOSS 3
+    #define BRUTE_HP (ENEMY_HP * 2)
+    #define BRUTE_SPEED 55.0f
+    #define RUNNER_HP 60
+    #define RUNNER_SPEED 155.0f
     #define BOSS_SCALE 1.6f
     #define ENEMY_SPEED 95.0f
     #define ENEMY_SIGHT 700.0f
@@ -159,6 +208,8 @@
 
     #define PAD_ID 0
     #define PAD_DEADZONE 18.0f
+    #define PAD_LOOK_SPEED 2.4f
+    #define PAD_PITCH_SPEED 430.0f
     #define PAD_BTN_JUMP 0
     #define PAD_BTN_FLASH 2
     #define PAD_BTN_RELOAD 3
@@ -210,10 +261,22 @@
     #define CROSS_SIZE 16.0f
     #define CROSS_THICK 3.0f
 
-    #define END_MSG_WIN "LEVEL CLEAR"
-    #define END_MSG_LOSE "YOU DIED"
-    #define END_SCREEN_MS 2500.0f
+    #define END_MSG_WIN "VICTOIRE !"
+    #define END_MSG_LOSE "T'ES MORT"
     #define END_FONT_SZ 80
+    #define END_NEXT 10
+    #define END_RESTART 11
+    #define END_MODE_LOSE 0
+    #define END_MODE_WIN_NEXT 1
+    #define END_MODE_WIN_LAST 2
+    #define END_BG_TOP sfColor_fromRGB(8, 6, 6)
+    #define END_BG_WIN sfColor_fromRGB(95, 58, 14)
+    #define END_BG_LOSE sfColor_fromRGB(88, 12, 10)
+    #define END_BAR_W 340.0f
+    #define END_BAR_H 4.0f
+    #define END_TITLE_Y 0.22f
+    #define END_BAR_Y 0.33f
+    #define END_BTN_Y 0.44f
 
 typedef enum e_game_state {
     STATE_MENU,

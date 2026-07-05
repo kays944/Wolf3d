@@ -87,5 +87,7 @@ int event(sfRenderWindow *window, player_t *player, map_t *m, sound_t *s)
     update_enemies(player, m, s);
     update_projs(player, m);
     update_pickups(player, m);
+    update_keyexit(player, m);
+    update_doors(player, m);
     return EXIT_SUCCESS;
 }

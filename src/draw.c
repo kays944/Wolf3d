@@ -16,7 +16,9 @@ int is_wall(int x, int y, map_t *m)
 
     if (tile_x < 0 || tile_x >= m->size_x
         || tile_y < 0 || tile_y >= m->size_y
-        || m->map[tile_y][tile_x] == 'x')
+        || m->map[tile_y][tile_x] == 'x'
+        || m->map[tile_y][tile_x] == 'd'
+        || m->map[tile_y][tile_x] == 'D')
         return IS_WALL;
     return EXIT_SUCCESS;
 }
@@ -111,11 +113,12 @@ void draw(sfRenderWindow *window, player_t *player, map_t *m)
     cast_all_rays(window, player, m);
     draw_props(window, player, m);
     draw_pickups(window, player, m);
+    draw_markers(window, player, m);
     draw_enemies(window, player, m);
     draw_projs(window, player, m);
-    if (player->weapon_spr && !player->flashlight)
-        sfRenderWindow_drawSprite(window, player->weapon_spr, NULL);
     draw_flashlight(window, player);
+    if (player->weapon_spr)
+        sfRenderWindow_drawSprite(window, player->weapon_spr, NULL);
     draw_crosshair(window, player);
     draw_hurt_flash(window, player);
     if (player->health_spr)
@@ -124,5 +127,8 @@ void draw(sfRenderWindow *window, player_t *player, map_t *m)
         sfRenderWindow_drawText(window, player->hp_txt, NULL);
     if (player->ammo_txt)
         sfRenderWindow_drawText(window, player->ammo_txt, NULL);
+    draw_score(window, player);
+    draw_key_hint(window, player);
+    draw_minimap(window, player, m);
     sfRenderWindow_display(window);
 }

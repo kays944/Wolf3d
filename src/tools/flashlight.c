@@ -19,47 +19,58 @@ static void add_vertex(sfVertexArray *va, float x, float y, const sfColor *c)
     sfVertexArray_append(va, v);
 }
 
-static void build_feather_ring(sfVertexArray *va, float cx, float cy,
-    float fl_r)
+static void build_feather_ring(sfVertexArray *va, player_t *p, float lit_r,
+    sfUint8 al)
 {
-    sfColor dark = sfColor_fromRGBA(0, 0, 0, 210);
+    float cx = p->ww / 2.0f;
+    float cy = p->wh / 2.0f;
+    sfColor dark = sfColor_fromRGBA(0, 0, 0, al);
     sfColor trans = sfColor_fromRGBA(0, 0, 0, 0);
     float a = 0;
 
     for (int i = 0; i <= FL_N; i++) {
         a = 2.0f * M_PI * i / FL_N;
-        add_vertex(va, cx + fl_r * cosf(a), cy + fl_r * sinf(a), &trans);
-        add_vertex(va, cx + (fl_r + FL_FEATHER) * cosf(a),
-            cy + (fl_r + FL_FEATHER) * sinf(a), &dark);
+        add_vertex(va, cx + lit_r * cosf(a), cy + lit_r * sinf(a), &trans);
+        add_vertex(va, cx + (lit_r + FL_FEATHER) * cosf(a),
+            cy + (lit_r + FL_FEATHER) * sinf(a), &dark);
     }
 }
 
-static void build_dark_ring(sfVertexArray *va, float cx, float cy, float fl_r)
+static void build_dark_ring(sfVertexArray *va, player_t *p, float lit_r,
+    sfUint8 al)
 {
-    sfColor dark = sfColor_fromRGBA(0, 0, 0, 210);
+    float cx = p->ww / 2.0f;
+    float cy = p->wh / 2.0f;
+    sfColor dark = sfColor_fromRGBA(0, 0, 0, al);
     float a = 0;
 
     for (int i = 0; i <= FL_N; i++) {
         a = 2.0f * M_PI * i / FL_N;
-        add_vertex(va, cx + (fl_r + FL_FEATHER) * cosf(a),
-            cy + (fl_r + FL_FEATHER) * sinf(a), &dark);
+        add_vertex(va, cx + (lit_r + FL_FEATHER) * cosf(a),
+            cy + (lit_r + FL_FEATHER) * sinf(a), &dark);
         add_vertex(va, cx + FL_R_BIG * cosf(a),
             cy + FL_R_BIG * sinf(a), &dark);
     }
 }
 
+static void refresh_vignette(player_t *p, float lit_r, sfUint8 al)
+{
+    sfVertexArray_clear(p->fl_feather);
+    sfVertexArray_clear(p->fl_dark);
+    build_feather_ring(p->fl_feather, p, lit_r, al);
+    build_dark_ring(p->fl_dark, p, lit_r, al);
+}
+
 static int setup_rings(player_t *p, float cx, float cy)
 {
-    float fl_r = p->wh / 4.0f;
-
+    (void)cx;
+    (void)cy;
     p->fl_feather = sfVertexArray_create();
     p->fl_dark = sfVertexArray_create();
     if (!p->fl_feather || !p->fl_dark)
         return EXIT_FAIL;
     sfVertexArray_setPrimitiveType(p->fl_feather, sfTriangleStrip);
     sfVertexArray_setPrimitiveType(p->fl_dark, sfTriangleStrip);
-    build_feather_ring(p->fl_feather, cx, cy, fl_r);
-    build_dark_ring(p->fl_dark, cx, cy, fl_r);
     return EXIT_SUCCESS;
 }
 
@@ -97,7 +108,7 @@ int init_flashlight(player_t *p)
         return EXIT_FAIL;
     if (load_fl_sprite(p) == EXIT_FAIL)
         return EXIT_FAIL;
-    p->flashlight = sfFalse;
+    p->flashlight = sfTrue;
     return EXIT_SUCCESS;
 }
 
@@ -115,10 +126,12 @@ void destroy_flashlight(player_t *p)
 
 void draw_flashlight(sfRenderWindow *win, player_t *p)
 {
-    if (!p->flashlight)
+    float lit = p->wh * (p->flashlight ? FL_LIT_ON : FL_LIT_OFF);
+    sfUint8 al = p->flashlight ? FL_ALPHA_ON : FL_ALPHA_OFF;
+
+    if (!p->fl_feather || !p->fl_dark)
         return;
-    if (p->fl_spr)
-        sfRenderWindow_drawSprite(win, p->fl_spr, NULL);
+    refresh_vignette(p, lit, al);
     sfRenderWindow_drawVertexArray(win, p->fl_feather, NULL);
     sfRenderWindow_drawVertexArray(win, p->fl_dark, NULL);
 }

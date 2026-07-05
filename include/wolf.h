@@ -35,6 +35,7 @@ typedef struct player_s {
     sfBool use_pad;
     float *zbuf;
     float dt;
+    float sens;
     sfClock *tick_clock;
     sfTexture *enemy_tex;
     sfTexture *boss_tex;
@@ -46,6 +47,11 @@ typedef struct player_s {
     sfSprite *prop_spr;
     int ammo;
     int reserve;
+    int kills;
+    int score;
+    sfBool has_key;
+    sfBool reached_exit;
+    sfText *score_txt;
     int reload_frame;
     sfTexture *weapon_idle;
     sfTexture *weapon_fire;
@@ -112,6 +118,7 @@ typedef struct settings_s {
     int res_index;
     sfBool fullscreen;
     int gamepad;
+    float sensitivity;
     int win_w;
     int win_h;
 } settings_t;
@@ -137,10 +144,13 @@ typedef struct enemy_s {
     float x;
     float y;
     int hp;
+    int max_hp;
+    int type;
     float cooldown;
     float anim_t;
     float atk_anim;
     float death_t;
+    float blind;
     sfBool dying;
     sfBool moving;
     sfBool alive;
@@ -160,6 +170,13 @@ typedef struct prop_s {
     int type;
 } prop_t;
 
+typedef struct door_s {
+    int tx;
+    int ty;
+    sfBool locked;
+    sfBool open;
+} door_t;
+
 typedef struct proj_s {
     float x;
     float y;
@@ -172,6 +189,7 @@ typedef struct proj_s {
 typedef struct map_s {
     char **map;
     char *path;
+    int level;
     int size_x;
     int size_y;
     enemy_t enemies[MAX_ENEMIES];
@@ -181,10 +199,14 @@ typedef struct map_s {
     int pack_count;
     prop_t props[MAX_PROPS];
     int prop_count;
+    door_t doors[MAX_DOORS];
+    int door_count;
+    sfBool has_exit;
 } map_t;
 
 typedef struct spr_ctx_s {
     sfVertexArray *va;
+    sfColor tint;
     sfVector2u tsz;
     float col_w;
     float dist;
@@ -199,6 +221,15 @@ typedef struct spr_ctx_s {
     int i0;
     int i1;
 } spr_ctx_t;
+
+typedef struct end_ctx_s {
+    button_t *btns;
+    sfText *title;
+    sfVertexArray *bg;
+    sfClock *clock;
+    int n;
+    int sel;
+} end_ctx_t;
 
 typedef struct pause_s {
     sfRenderWindow *window;

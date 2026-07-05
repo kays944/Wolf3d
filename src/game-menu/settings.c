@@ -74,6 +74,15 @@ static void toggle_fullscr(settings_t *s)
         s->fullscreen = sfTrue;
 }
 
+static void adjust_sens(settings_t *s, int dir)
+{
+    s->sensitivity += dir * SENS_STEP;
+    if (s->sensitivity < SENS_MIN)
+        s->sensitivity = SENS_MIN;
+    if (s->sensitivity > SENS_MAX)
+        s->sensitivity = SENS_MAX;
+}
+
 static void adjust_vol_or_setting(menu_t *m, int dir)
 {
     float *vol = NULL;
@@ -93,6 +102,8 @@ static void adjust_vol_or_setting(menu_t *m, int dir)
         toggle_fullscr(m->settings);
     if (m->settings_sel == SET_INPUT)
         m->settings->gamepad = m->settings->gamepad ? 0 : 1;
+    if (m->settings_sel == SET_SENS)
+        adjust_sens(m->settings, dir);
 }
 
 static void on_set_adjust(menu_t *m, sfEvent *e)
@@ -144,5 +155,6 @@ void save_settings(settings_t *s)
     fprintf(f, "res_index %d\n", s->res_index);
     fprintf(f, "fullscreen %d\n", s->fullscreen);
     fprintf(f, "gamepad %d\n", s->gamepad);
+    fprintf(f, "sensitivity %f\n", s->sensitivity);
     fclose(f);
 }

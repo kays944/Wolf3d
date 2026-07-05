@@ -25,13 +25,15 @@ static void damage_enemy(enemy_t *e, player_t *p)
 {
     float scale = e->boss ? BOSS_SCALE : 1.0f;
     int dmg = SHOT_DMG;
+    int head = aim_hit(e, p, HEAD_RADIUS * scale);
 
-    if (aim_hit(e, p, HEAD_RADIUS * scale))
+    if (head)
         dmg = HEADSHOT_DMG;
     e->hp -= dmg;
     if (e->hp <= 0) {
         e->dying = sfTrue;
         e->death_t = 0;
+        add_kill(p, e, head);
     }
 }
 
