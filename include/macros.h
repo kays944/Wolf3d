@@ -113,12 +113,12 @@
     #define FL_R_BIG 1500.0f
     #define FL_N 64
     #define FL_LIT_ON 0.52f
-    #define FL_ALPHA_ON 150
+    #define FL_ALPHA_ON 235
 
     #define NIGHT_DELAY 5.0f
     #define NIGHT_MSG_TIME 2.0f
-    #define NIGHT_LIT_OFF 0.12f
-    #define NIGHT_ALPHA_OFF 250
+    #define NIGHT_LIT_OFF 0.10f
+    #define NIGHT_ALPHA_OFF 252
     #define NIGHT_SIGHT 260.0f
     #define NIGHT_FONT_SZ 44
     #define COL_NIGHT sfColor_fromRGB(150, 60, 220)

@@ -108,7 +108,7 @@ int init_flashlight(player_t *p)
         return EXIT_FAIL;
     if (load_fl_sprite(p) == EXIT_FAIL)
         return EXIT_FAIL;
-    p->flashlight = sfTrue;
+    p->flashlight = sfFalse;
     return EXIT_SUCCESS;
 }
 
