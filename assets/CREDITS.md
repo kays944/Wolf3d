@@ -23,3 +23,11 @@
 ## Sounds
 
 - `sounds/reload-sound.wav` (shotgun pump) is synthesized, no license needed.
+
+## Generated art
+
+- `health_bar.png` (pixel heart + 5-segment bar, 6 frames), `key.png`,
+  `texture_wall_brick.png`, `texture_wall_cold.png`, `texture_door.png`
+  and `texture_door_locked.png` are generated for this project (scripts),
+  no license needed. The previous health bar was a watermarked stock
+  preview and was replaced.
