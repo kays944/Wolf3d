@@ -217,6 +217,7 @@ typedef struct map_s {
     sfBool has_exit;
     sfBool night;
     float night_cd;
+    int nights;
 } map_t;
 
 typedef struct spr_ctx_s {

@@ -13,7 +13,8 @@
 void init_night(map_t *m)
 {
     m->night = sfFalse;
-    m->night_cd = NIGHT_DELAY;
+    m->night_cd = DAY_LEN;
+    m->nights = 0;
 }
 
 static void find_free_spot(map_t *m, float *x, float *y)
@@ -34,14 +35,26 @@ static void find_free_spot(map_t *m, float *x, float *y)
     }
 }
 
+static int living_foes(map_t *m)
+{
+    int n = 0;
+
+    for (int i = 0; i < m->enemy_count; i++)
+        if (m->enemies[i].alive && !m->enemies[i].dying
+            && !m->enemies[i].boss)
+            n++;
+    return n;
+}
+
 static void spawn_night_wave(map_t *m)
 {
     int base = m->enemy_count;
+    int alive = living_foes(m);
     enemy_t *e = NULL;
     float x = 0;
     float y = 0;
 
-    for (int i = 0; i < base; i++) {
+    for (int i = 0; i < base && alive < NIGHT_WAVE_CAP; i++) {
         e = &m->enemies[i];
         if (!e->alive || e->dying || e->boss)
             continue;
@@ -49,21 +62,24 @@ static void spawn_night_wave(map_t *m)
         y = e->y;
         find_free_spot(m, &x, &y);
         spawn_enemy(m, x, y, e->type);
+        alive++;
     }
 }
 
 void update_night(player_t *p, map_t *m)
 {
+    m->night_cd -= p->dt;
+    if (m->night_cd > 0)
+        return;
     if (m->night) {
-        if (m->night_cd > -NIGHT_MSG_TIME)
-            m->night_cd -= p->dt;
+        m->night = sfFalse;
+        m->night_cd = DAY_LEN;
         return;
     }
-    m->night_cd -= p->dt;
-    if (m->night_cd <= 0) {
-        m->night = sfTrue;
-        spawn_night_wave(m);
-    }
+    m->night = sfTrue;
+    m->night_cd = NIGHT_LEN;
+    m->nights++;
+    spawn_night_wave(m);
 }
 
 static void draw_center_text(sfRenderWindow *win, player_t *p,
@@ -85,17 +101,27 @@ static void draw_center_text(sfRenderWindow *win, player_t *p,
     sfText_destroy(t);
 }
 
-void draw_night_hud(sfRenderWindow *win, player_t *p, map_t *m)
+static void draw_day_hud(sfRenderWindow *win, player_t *p, map_t *m)
 {
     char buf[48] = {0};
 
-    if (!m->night) {
+    if (m->nights > 0 && DAY_LEN - m->night_cd < NIGHT_MSG_TIME) {
+        draw_center_text(win, p, "LE JOUR SE LEVE", COL_DAWN);
+        return;
+    }
+    if (m->night_cd <= NIGHT_WARN_TIME) {
         snprintf(buf, sizeof(buf), "LA NUIT TOMBE DANS %d",
             (int)ceilf(m->night_cd));
         draw_center_text(win, p, buf, COL_NIGHT);
+    }
+}
+
+void draw_night_hud(sfRenderWindow *win, player_t *p, map_t *m)
+{
+    if (!m->night) {
+        draw_day_hud(win, p, m);
         return;
     }
-    if (m->night_cd > -NIGHT_MSG_TIME)
-        draw_center_text(win, p, "LA NUIT EST TOMBEE !",
-            sfColor_fromRGB(235, 70, 45));
+    if (NIGHT_LEN - m->night_cd < NIGHT_MSG_TIME)
+        draw_center_text(win, p, "LA NUIT EST TOMBEE !", COL_NIGHTFALL);
 }

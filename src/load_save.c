@@ -62,9 +62,13 @@ static int read_enemies(FILE *f, map_t *m)
     int n = 0;
     int night = 0;
 
-    if (fscanf(f, "night %d %f\n", &night, &m->night_cd) != 2)
+    n = fscanf(f, "night %d %f %d\n", &night, &m->night_cd, &m->nights);
+    if (n < 2)
         return EXIT_FAIL;
+    if (n == 2)
+        m->nights = night;
     m->night = night ? sfTrue : sfFalse;
+    n = 0;
     if (fscanf(f, "enemies %d\n", &n) != 1 || n > MAX_ENEMIES || n < 0)
         return EXIT_FAIL;
     m->enemy_count = 0;

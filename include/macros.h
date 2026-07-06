@@ -115,13 +115,18 @@
     #define FL_LIT_ON 0.52f
     #define FL_ALPHA_ON 235
 
-    #define NIGHT_DELAY 5.0f
+    #define DAY_LEN 45.0f
+    #define NIGHT_LEN 25.0f
+    #define NIGHT_WARN_TIME 5.0f
+    #define NIGHT_WAVE_CAP 12
     #define NIGHT_MSG_TIME 2.0f
     #define NIGHT_LIT_OFF 0.10f
     #define NIGHT_ALPHA_OFF 252
     #define NIGHT_SIGHT 260.0f
     #define NIGHT_FONT_SZ 44
     #define COL_NIGHT sfColor_fromRGB(150, 60, 220)
+    #define COL_NIGHTFALL sfColor_fromRGB(235, 70, 45)
+    #define COL_DAWN sfColor_fromRGB(250, 200, 90)
 
     #define HEALTH_BAR_PATH "./assets/health_bar.png"
     #define HEALTH_FRAME_W 353
