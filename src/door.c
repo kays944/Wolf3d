@@ -58,7 +58,7 @@ static door_t *door_near(player_t *p, map_t *m)
     return best;
 }
 
-int try_open_door(player_t *p, map_t *m)
+int try_open_door(player_t *p, map_t *m, sound_t *s)
 {
     door_t *d = door_near(p, m);
 
@@ -68,6 +68,7 @@ int try_open_door(player_t *p, map_t *m)
         return 1;
     d->open = sfTrue;
     m->map[d->ty][d->tx] = ' ';
+    play_fx(s, FX_DOOR);
     return 1;
 }
 

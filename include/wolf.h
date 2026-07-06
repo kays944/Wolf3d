@@ -144,11 +144,26 @@ typedef struct settings_s {
 typedef struct sound_s {
     sfMusic *menu_music;
     sfMusic *game_music;
+    sfMusic *night_amb;
     sfSoundBuffer *shoot_buf;
     sfSound *shoot_snd;
-    sfSound *enemy_snd;
     sfSoundBuffer *reload_buf;
     sfSound *reload_snd;
+    sfSoundBuffer *fx_bufs[FX_KINDS];
+    float fx_vol[FX_KINDS];
+    float fx_pitch[FX_KINDS];
+    float fx_jit[FX_KINDS];
+    sfSound *pool[SND_POOL];
+    int pool_i;
+    float sfx_vol;
+    float music_vol;
+    float amb_vol;
+    float step_acc;
+    float last_px;
+    float last_py;
+    int last_hp;
+    int last_res;
+    int last_nights;
 } sound_t;
 
 typedef struct button_s {
@@ -174,6 +189,8 @@ typedef struct enemy_s {
     sfBool moving;
     sfBool alive;
     sfBool boss;
+    sfBool aware;
+    float growl_cd;
 } enemy_t;
 
 typedef struct pickup_s {

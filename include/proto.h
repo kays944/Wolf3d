@@ -81,7 +81,12 @@ int init_sound(sound_t *s, settings_t *set);
 void destroy_sound(sound_t *s);
 void update_sound_vol(sound_t *s, settings_t *set);
 void play_shoot(sound_t *s);
-void play_enemy_shot(sound_t *s);
+int init_fx(sound_t *s);
+void destroy_fx(sound_t *s);
+void play_fx(sound_t *s, int id);
+sfSound *play_fx_at(sound_t *s, int id, float x, float y);
+void update_ambience(player_t *p, map_t *m, sound_t *s);
+void reset_ambience(sound_t *s);
 void play_reload(sound_t *s);
 
 int init_health_bar(player_t *p);
@@ -141,7 +146,7 @@ void draw_score(sfRenderWindow *win, player_t *p);
 void draw_minimap(sfRenderWindow *win, player_t *p, map_t *m);
 
 void init_doors(map_t *m);
-int try_open_door(player_t *p, map_t *m);
+int try_open_door(player_t *p, map_t *m, sound_t *s);
 void draw_door_hint(sfRenderWindow *win, player_t *p, map_t *m);
 void init_keyexit(map_t *m);
 void update_keyexit(player_t *p, map_t *m);

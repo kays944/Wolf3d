@@ -52,6 +52,8 @@ void spawn_enemy(map_t *m, float x, float y, int type)
     e->dying = sfFalse;
     e->moving = sfFalse;
     e->alive = sfTrue;
+    e->aware = sfFalse;
+    e->growl_cd = 0;
     m->enemy_count++;
 }
 

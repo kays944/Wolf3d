@@ -15,6 +15,8 @@ SRC			= 	src/main.c 							\
 				src/parsing_map.c 					\
 				src/update_player.c 				\
 				src/sound.c 						\
+				src/sound_fx.c 						\
+				src/sound_amb.c 					\
 				src/game.c 							\
 				src/pause.c 						\
 				src/pause_render.c 					\

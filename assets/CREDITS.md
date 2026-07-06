@@ -23,6 +23,10 @@
 ## Sounds
 
 - `sounds/reload-sound.wav` (shotgun pump) is synthesized, no license needed.
+- `sounds/footstep.wav`, `growl.wav`, `howl.wav`, `hurt.wav`,
+  `pickup.wav`, `door-open.wav`, `fireball-shot.wav` and
+  `night-ambience.wav` (wind + dark pad loop) are all synthesized
+  (numpy/scipy DSP scripts), no license needed.
 
 ## Generated art
 

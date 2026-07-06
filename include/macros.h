@@ -107,6 +107,31 @@
     #define SND_GAME "assets/sounds/song-game.wav"
     #define SND_SHOOT "assets/sounds/spas12-sound.wav"
     #define SND_RELOAD "assets/sounds/reload-sound.wav"
+    #define SND_STEP "assets/sounds/footstep.wav"
+    #define SND_GROWL "assets/sounds/growl.wav"
+    #define SND_HOWL "assets/sounds/howl.wav"
+    #define SND_HURT "assets/sounds/hurt.wav"
+    #define SND_PICKUP "assets/sounds/pickup.wav"
+    #define SND_DOOR "assets/sounds/door-open.wav"
+    #define SND_ESHOT "assets/sounds/fireball-shot.wav"
+    #define SND_NIGHT_AMB "assets/sounds/night-ambience.wav"
+
+    #define FX_STEP 0
+    #define FX_GROWL 1
+    #define FX_HOWL 2
+    #define FX_HURT 3
+    #define FX_PICKUP 4
+    #define FX_DOOR 5
+    #define FX_ESHOT 6
+    #define FX_KINDS 7
+    #define SND_POOL 10
+    #define SND_MIN_DIST 110.0f
+    #define SND_ATTENUATION 1.1f
+    #define STEP_DIST 52.0f
+    #define GROWL_CD 4.0f
+    #define BOSS_GROWL_PITCH 0.55f
+    #define NIGHT_AMB_VOL 0.9f
+    #define AMB_FADE_RATE 35.0f
 
     #define FL_FEATHER 100.0f
     #define FL_R_BIG 1500.0f

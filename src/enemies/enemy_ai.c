@@ -83,8 +83,46 @@ static void try_shoot(enemy_t *e, map_t *m, player_t *p, sound_t *s)
         return;
     e->cooldown = ENEMY_SHOOT_CD;
     e->atk_anim = ATK_ANIM_LEN;
-    play_enemy_shot(s);
+    play_fx_at(s, FX_ESHOT, e->x, e->y);
     spawn_proj(m, e, p);
+}
+
+static void update_growl(enemy_t *e, player_t *p, map_t *m, sound_t *s)
+{
+    sfSound *snd = NULL;
+
+    if (dist_to_player(e, p) > sight_range(p, m)) {
+        e->aware = sfFalse;
+        return;
+    }
+    if (e->aware || e->growl_cd > 0) {
+        e->aware = sfTrue;
+        return;
+    }
+    e->aware = sfTrue;
+    e->growl_cd = GROWL_CD;
+    snd = play_fx_at(s, FX_GROWL, e->x, e->y);
+    if (snd && e->boss)
+        sfSound_setPitch(snd, BOSS_GROWL_PITCH);
+}
+
+static void tick_enemy(enemy_t *e, player_t *p, map_t *m, sound_t *s)
+{
+    e->anim_t += p->dt;
+    e->moving = sfFalse;
+    if (e->cooldown > 0)
+        e->cooldown -= p->dt;
+    if (e->atk_anim > 0)
+        e->atk_anim -= p->dt;
+    if (e->growl_cd > 0)
+        e->growl_cd -= p->dt;
+    if (!has_los(e->x, e->y, p, m)) {
+        e->aware = sfFalse;
+        return;
+    }
+    update_growl(e, p, m, s);
+    chase(e, p, m);
+    try_shoot(e, m, p, s);
 }
 
 void update_enemies(player_t *p, map_t *m, sound_t *s)
@@ -101,15 +139,6 @@ void update_enemies(player_t *p, map_t *m, sound_t *s)
             e->death_t += p->dt;
             continue;
         }
-        e->anim_t += p->dt;
-        e->moving = sfFalse;
-        if (e->cooldown > 0)
-            e->cooldown -= p->dt;
-        if (e->atk_anim > 0)
-            e->atk_anim -= p->dt;
-        if (!has_los(e->x, e->y, p, m))
-            continue;
-        chase(e, p, m);
-        try_shoot(e, m, p, s);
+        tick_enemy(e, p, m, s);
     }
 }

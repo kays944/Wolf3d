@@ -28,13 +28,13 @@ static void check_reload(player_t *player, sfEvent *e, sound_t *s)
     start_reload(player, s);
 }
 
-static void check_open(player_t *player, sfEvent *e, map_t *m)
+static void check_open(player_t *player, sfEvent *e, map_t *m, sound_t *s)
 {
     if (player->use_pad || e->type != sfEvtKeyPressed)
         return;
     if (e->key.code != sfKeyE)
         return;
-    try_open_door(player, m);
+    try_open_door(player, m, s);
 }
 
 static void do_fire(player_t *player, sound_t *s)
@@ -68,10 +68,26 @@ static void check_pad_buttons(player_t *player, sfEvent *e, sound_t *s,
     btn = e->joystickButton.button;
     if (btn == PAD_BTN_FIRE)
         do_fire(player, s);
-    if (btn == PAD_BTN_RELOAD && !try_open_door(player, m))
+    if (btn == PAD_BTN_RELOAD && !try_open_door(player, m, s))
         start_reload(player, s);
     if (btn == PAD_BTN_FLASH)
         toggle_flashlight(player);
+}
+
+static void run_updates(sfRenderWindow *window, player_t *player,
+    map_t *m, sound_t *s)
+{
+    if (player->shot_event) {
+        shoot_enemies(player, m);
+        player->shot_event = sfFalse;
+    }
+    update_player(window, player, m);
+    update_enemies(player, m, s);
+    update_projs(player, m);
+    update_pickups(player, m);
+    update_keyexit(player, m);
+    update_night(player, m);
+    update_ambience(player, m, s);
 }
 
 int event(sfRenderWindow *window, player_t *player, map_t *m, sound_t *s)
@@ -90,17 +106,8 @@ int event(sfRenderWindow *window, player_t *player, map_t *m, sound_t *s)
         check_pad_buttons(player, &ev, s, m);
         check_switch(player, &ev);
         check_reload(player, &ev, s);
-        check_open(player, &ev, m);
+        check_open(player, &ev, m, s);
     }
-    if (player->shot_event) {
-        shoot_enemies(player, m);
-        player->shot_event = sfFalse;
-    }
-    update_player(window, player, m);
-    update_enemies(player, m, s);
-    update_projs(player, m);
-    update_pickups(player, m);
-    update_keyexit(player, m);
-    update_night(player, m);
+    run_updates(window, player, m, s);
     return EXIT_SUCCESS;
 }
