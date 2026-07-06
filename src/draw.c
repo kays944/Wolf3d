@@ -36,40 +36,6 @@ int is_wall(int x, int y, map_t *m)
     return EXIT_SUCCESS;
 }
 
-static int hit_wall_kind(float x, float y, map_t *m)
-{
-    int tx = (int)x / TILE_SIZE;
-    int ty = (int)y / TILE_SIZE;
-    int kind = 0;
-
-    if (tx < 0 || tx >= m->size_x || ty < 0 || ty >= m->size_y)
-        return WALL_STONE;
-    kind = wall_kind(m->map[ty][tx]);
-    return kind < 0 ? WALL_STONE : kind;
-}
-
-static float cast_single_ray(player_t *player, float angle, map_t *m,
-    wall_hit_t *hit)
-{
-    float x = player->x;
-    float y = player->y;
-    float fx = 0;
-
-    while (is_wall(x, y, m) != IS_WALL) {
-        x += cosf(angle) * STEP;
-        y += sinf(angle) * STEP;
-    }
-    hit->kind = hit_wall_kind(x, y, m);
-    fx = fmodf(x, (float)TILE_SIZE);
-    if (fx < 1.0f || fx > TILE_SIZE - 1.0f)
-        hit->tex_x = fmodf(y, (float)TILE_SIZE) / (float)TILE_SIZE;
-    else
-        hit->tex_x = fx / (float)TILE_SIZE;
-    return sqrtf((x - player->x) * (x - player->x)
-        + (y - player->y) * (y - player->y))
-        * cosf(player->angle - angle);
-}
-
 static int init_wall_ctx(wall_ctx_t *ctx, player_t *p)
 {
     ctx->col_w = p->ww / (float)NUM_RAYS;
@@ -143,7 +109,7 @@ static void cast_all_rays(sfRenderWindow *win, player_t *player, map_t *m)
     for (size_t i = 0; i < NUM_RAYS; i++) {
         angle = fmodf(player->angle - (FOV / 2) + (FOV * i / NUM_RAYS) + 2 *
             M_PI, 2 * M_PI);
-        dist = cast_single_ray(player, angle, m, &hit);
+        dist = cast_wall_ray(player, angle, m, &hit);
         if (dist < DISTANCE_LIMIT)
             dist = DISTANCE_LIMIT;
         player->zbuf[i] = dist;

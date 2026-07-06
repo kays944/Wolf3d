@@ -67,19 +67,28 @@ static int init_wall_texs(player_t *p)
     return EXIT_SUCCESS;
 }
 
+static int pow2_size(sfImage *img)
+{
+    sfVector2u sz = sfImage_getSize(img);
+
+    return sz.x > 0 && sz.y > 0
+        && (sz.x & (sz.x - 1)) == 0 && (sz.y & (sz.y - 1)) == 0;
+}
+
 static int init_wall_images(player_t *p)
 {
-    p->wall_img = sfImage_createFromFile(WALL_TEX_PATH);
-    if (!p->wall_img) {
+    p->floor_img = sfImage_createFromFile(FLOOR_TEX_PATH);
+    if (!p->floor_img || !pow2_size(p->floor_img)) {
         destroy_wall_texs(p);
         return EXIT_FAIL;
     }
-    p->sky_img = sfImage_createFromFile(SKY_TEX_PATH);
-    if (!p->sky_img) {
-        sfImage_destroy(p->wall_img);
+    p->sky_tex = sfTexture_createFromFile(SKY_TEX_PATH, NULL);
+    if (!p->sky_tex) {
+        sfImage_destroy(p->floor_img);
         destroy_wall_texs(p);
         return EXIT_FAIL;
     }
+    sfTexture_setRepeated(p->sky_tex, sfTrue);
     return EXIT_SUCCESS;
 }
 
@@ -90,8 +99,8 @@ int init_wall_tex(player_t *p)
     if (init_wall_images(p) == EXIT_FAIL)
         return EXIT_FAIL;
     if (init_ceil_resources(p) == EXIT_FAIL) {
-        sfImage_destroy(p->sky_img);
-        sfImage_destroy(p->wall_img);
+        sfTexture_destroy(p->sky_tex);
+        sfImage_destroy(p->floor_img);
         destroy_wall_texs(p);
         return EXIT_FAIL;
     }
@@ -100,12 +109,6 @@ int init_wall_tex(player_t *p)
 
 static void destroy_floor_ceil(player_t *p)
 {
-    if (p->floor_spr)
-        sfSprite_destroy(p->floor_spr);
-    p->floor_spr = NULL;
-    if (p->floor_tex)
-        sfTexture_destroy(p->floor_tex);
-    p->floor_tex = NULL;
     if (p->ceil_spr)
         sfSprite_destroy(p->ceil_spr);
     p->ceil_spr = NULL;
@@ -120,11 +123,11 @@ static void destroy_floor_ceil(player_t *p)
 void destroy_wall_tex(player_t *p)
 {
     destroy_floor_ceil(p);
-    if (p->sky_img)
-        sfImage_destroy(p->sky_img);
-    p->sky_img = NULL;
-    if (p->wall_img)
-        sfImage_destroy(p->wall_img);
-    p->wall_img = NULL;
+    if (p->sky_tex)
+        sfTexture_destroy(p->sky_tex);
+    p->sky_tex = NULL;
+    if (p->floor_img)
+        sfImage_destroy(p->floor_img);
+    p->floor_img = NULL;
     destroy_wall_texs(p);
 }

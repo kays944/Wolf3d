@@ -36,7 +36,6 @@
 
     #define FOV (M_PI / 3)
     #define NUM_RAYS 800
-    #define STEP 1.0
     #define DISTANCE_LIMIT 1.0f
     #define PLAYER_MARGIN 10.0f
 
@@ -188,6 +187,7 @@
     #define WALL_DOOR 3
     #define WALL_DOOR_LOCKED 4
     #define SKY_TEX_PATH "./assets/texture_sky.png"
+    #define FLOOR_TEX_PATH "./assets/texture_floor.png"
     #define RELOAD_TEX_PATH "./assets/sprite_sheet_reload.png"
     #define RELOAD_COLS 3
     #define RELOAD_ROWS 2

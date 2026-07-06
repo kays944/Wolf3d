@@ -159,5 +159,6 @@ void update_reload(player_t *p);
 int init_wall_tex(player_t *p);
 void destroy_wall_tex(player_t *p);
 void draw_background(sfRenderWindow *win, player_t *p);
+float cast_wall_ray(player_t *p, float angle, map_t *m, wall_hit_t *hit);
 
 #endif

@@ -78,13 +78,11 @@ typedef struct player_s {
     sfBool reloading;
     sfClock *reload_clock;
     sfTexture *wall_texs[WALL_KINDS];
-    sfImage *wall_img;
-    sfImage *sky_img;
+    sfImage *floor_img;
+    sfTexture *sky_tex;
     sfUint8 *ceil_pixels;
     sfTexture *ceil_tex;
     sfSprite *ceil_spr;
-    sfTexture *floor_tex;
-    sfSprite *floor_spr;
 } player_t;
 
 typedef struct wall_ctx_s {
@@ -101,8 +99,24 @@ typedef struct wall_hit_s {
     int kind;
 } wall_hit_t;
 
+typedef struct dda_s {
+    float px;
+    float py;
+    float rdx;
+    float rdy;
+    float ddx;
+    float ddy;
+    float sdx;
+    float sdy;
+    int mx;
+    int my;
+    int stx;
+    int sty;
+    int side;
+} dda_t;
+
 typedef struct ceil_ctx_s {
-    const sfUint8 *wpx;
+    const sfUint32 *fpx;
     sfUint8 *cpx;
     int tw;
     int th;
@@ -115,14 +129,6 @@ typedef struct ceil_ctx_s {
     float px;
     float py;
 } ceil_ctx_t;
-
-typedef struct sky_row_s {
-    const sfUint8 *spx;
-    int tw;
-    float u_base;
-    float u_step;
-    int ww;
-} sky_row_t;
 
 typedef struct settings_s {
     float music_vol;

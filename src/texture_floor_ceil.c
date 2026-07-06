@@ -2,27 +2,20 @@
 ** EPITECH PROJECT, 2025
 ** wolf3d
 ** File description:
-** tex_floor_ceil.c
+** tex_floor_ceil.c — sky as one GPU quad, floor in fixed-point
 */
 
 #include "macros.h"
 #include "proto.h"
 #include <math.h>
+#include <stdint.h>
 #include <string.h>
-
-static void copy_texel(ceil_ctx_t *c, int wi, int pi)
-{
-    c->cpx[pi] = c->wpx[wi];
-    c->cpx[pi + 1] = c->wpx[wi + 1];
-    c->cpx[pi + 2] = c->wpx[wi + 2];
-    c->cpx[pi + 3] = c->wpx[wi + 3];
-}
 
 static void init_ceil_ctx(ceil_ctx_t *c, player_t *p, sfImage *img)
 {
     sfVector2u tsz = sfImage_getSize(img);
 
-    c->wpx = sfImage_getPixelsPtr(img);
+    c->fpx = (const sfUint32 *)sfImage_getPixelsPtr(img);
     c->cpx = p->ceil_pixels;
     c->tw = (int)tsz.x;
     c->th = (int)tsz.y;
@@ -38,67 +31,69 @@ static void init_ceil_ctx(ceil_ctx_t *c, player_t *p, sfImage *img)
 
 static void fill_floor_row(ceil_ctx_t *c, int y, int by)
 {
-    float rd = c->posZ / (float)by;
-    float fx = c->px + rd * c->ldx;
-    float fy = c->py + rd * c->ldy;
-    float sx = rd * (c->rdx - c->ldx) / c->ww;
-    float sy = rd * (c->rdy - c->ldy) / c->ww;
-    int tx = 0;
-    int ty = 0;
+    double rd = c->posZ / (double)by;
+    int64_t fx = (int64_t)((c->px + rd * c->ldx) * c->tw * 65536.0);
+    int64_t fy = (int64_t)((c->py + rd * c->ldy) * c->th * 65536.0);
+    int64_t sx = (int64_t)(rd * (c->rdx - c->ldx) * c->tw * 65536.0 / c->ww);
+    int64_t sy = (int64_t)(rd * (c->rdy - c->ldy) * c->th * 65536.0 / c->ww);
+    sfUint32 *dst = (sfUint32 *)(c->cpx + (size_t)y * c->ww * 4);
 
     for (int x = 0; x < c->ww; x++) {
-        tx = ((int)(fx * c->tw) % c->tw + c->tw) % c->tw;
-        ty = ((int)(fy * c->th) % c->th + c->th) % c->th;
-        copy_texel(c, (ty * c->tw + tx) * 4, (y * c->ww + x) * 4);
+        dst[x] = c->fpx[((fy >> 16) & (c->th - 1)) * c->tw
+            + ((fx >> 16) & (c->tw - 1))];
         fx += sx;
         fy += sy;
     }
 }
 
-static void fill_sky_row(sfUint8 *dst, const sky_row_t *sr, int ty)
+static void append_vert(sfVertexArray *va, float x, float y,
+    const sfVector2f *tex)
 {
-    int row_base = ty * sr->tw;
-    float u = 0;
-    int tx = 0;
+    sfVertex v = {0};
 
-    for (int x = 0; x < sr->ww; x++) {
-        u = fmodf(sr->u_base + x * sr->u_step, 1.0f);
-        if (u < 0)
-            u += 1.0f;
-        tx = (int)(u * sr->tw) % sr->tw;
-        memcpy(&dst[x * 4], &sr->spx[(row_base + tx) * 4], 4);
-    }
+    v.position = (sfVector2f){x, y};
+    v.texCoords = *tex;
+    v.color = sfWhite;
+    sfVertexArray_append(va, v);
 }
 
-static void draw_sky_part(player_t *p, int horizon)
+static void draw_sky_quad(sfRenderWindow *win, player_t *p, int horizon)
 {
+    sfVector2u tsz = sfTexture_getSize(p->sky_tex);
     float span = p->wh / 2.0f + p->wh / (float)PITCH_MAX_DIV;
-    sfVector2u tsz = sfImage_getSize(p->sky_img);
-    float fov_ratio = FOV / (2.0f * M_PI);
-    sky_row_t sr = {sfImage_getPixelsPtr(p->sky_img), (int)tsz.x,
-        p->angle / (2.0f * M_PI) - fov_ratio * 0.5f,
-        fov_ratio / p->ww, p->ww};
-    float tyf = 0;
-    int ty = 0;
+    float u0 = (p->angle / (2.0f * M_PI) - FOV / (4.0f * M_PI)) * tsz.x;
+    float u1 = u0 + FOV / (2.0f * M_PI) * tsz.x;
+    float v0 = (span - horizon) / span * (tsz.y - 1);
+    sfVertexArray *va = sfVertexArray_create();
+    sfRenderStates rs = sfRenderStates_default();
 
-    for (int y = 0; y < horizon && y < p->wh; y++) {
-        tyf = (y - horizon + span) / span;
-        if (tyf < 0)
-            tyf = 0;
-        ty = (int)(tyf * (tsz.y - 1)) % tsz.y;
-        fill_sky_row(&p->ceil_pixels[y * p->ww * 4], &sr, ty);
-    }
+    if (!va)
+        return;
+    sfVertexArray_setPrimitiveType(va, sfQuads);
+    append_vert(va, 0, 0, &(sfVector2f){u0, v0});
+    append_vert(va, p->ww, 0, &(sfVector2f){u1, v0});
+    append_vert(va, p->ww, horizon, &(sfVector2f){u1, (float)tsz.y - 1});
+    append_vert(va, 0, horizon, &(sfVector2f){u0, (float)tsz.y - 1});
+    rs.texture = p->sky_tex;
+    sfRenderWindow_drawVertexArray(win, va, &rs);
+    sfVertexArray_destroy(va);
 }
 
-static void draw_floor_part(player_t *p, int horizon)
+static void draw_floor_part(sfRenderWindow *win, player_t *p, int horizon)
 {
     ceil_ctx_t c = {0};
 
-    init_ceil_ctx(&c, p, p->wall_img);
+    init_ceil_ctx(&c, p, p->floor_img);
+    memset(&p->ceil_pixels[(size_t)horizon * p->ww * 4], 20, p->ww * 4);
     for (int y = horizon + 1; y < p->wh; y++)
         fill_floor_row(&c, y, y - horizon);
-    if (horizon >= 0 && horizon < p->wh)
-        memset(&p->ceil_pixels[horizon * p->ww * 4], 20, p->ww * 4);
+    sfTexture_updateFromPixels(p->ceil_tex,
+        &p->ceil_pixels[(size_t)horizon * p->ww * 4],
+        p->ww, p->wh - horizon, 0, horizon);
+    sfSprite_setTextureRect(p->ceil_spr,
+        (sfIntRect){0, horizon, p->ww, p->wh - horizon});
+    sfSprite_setPosition(p->ceil_spr, (sfVector2f){0, (float)horizon});
+    sfRenderWindow_drawSprite(win, p->ceil_spr, NULL);
 }
 
 void draw_background(sfRenderWindow *win, player_t *p)
@@ -109,9 +104,6 @@ void draw_background(sfRenderWindow *win, player_t *p)
         horizon = 1;
     if (horizon > p->wh - 1)
         horizon = p->wh - 1;
-    draw_sky_part(p, horizon);
-    draw_floor_part(p, horizon);
-    sfTexture_updateFromPixels(p->ceil_tex, p->ceil_pixels, p->ww,
-        p->wh, 0, 0);
-    sfRenderWindow_drawSprite(win, p->ceil_spr, NULL);
+    draw_sky_quad(win, p, horizon);
+    draw_floor_part(win, p, horizon);
 }
