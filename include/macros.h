@@ -35,7 +35,7 @@
     #define M_PI 3.14159265358979323846
 
     #define FOV (M_PI / 3)
-    #define NUM_RAYS 800
+    #define NUM_RAYS 1920
     #define DISTANCE_LIMIT 1.0f
     #define PLAYER_MARGIN 10.0f
 
