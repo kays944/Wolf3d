@@ -146,6 +146,8 @@ void draw(sfRenderWindow *window, player_t *player, map_t *m)
     if (player->ammo_txt)
         sfRenderWindow_drawText(window, player->ammo_txt, NULL);
     draw_score(window, player);
+    draw_pickup_hint(window, player, m);
+    draw_popups(window, player);
     draw_fps(window, player);
     draw_night_hud(window, player, m);
     draw_key_hint(window, player);

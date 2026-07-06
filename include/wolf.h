@@ -18,6 +18,15 @@
     #include <dirent.h>
     #include "macros.h"
 
+typedef struct popup_s {
+    float x;
+    float y;
+    float t;
+    int amount;
+    int kind;
+    sfBool active;
+} popup_t;
+
 typedef struct player_s {
     float x;
     float y;
@@ -54,6 +63,10 @@ typedef struct player_s {
     int score;
     sfBool has_key;
     sfBool reached_exit;
+    sfBool pickup_event;
+    sfBool aiming;
+    sfBool r2_down;
+    popup_t popups[MAX_POPUPS];
     sfText *score_txt;
     sfText *fps_txt;
     float fps_acc;
@@ -146,6 +159,7 @@ typedef struct settings_s {
 typedef struct sound_s {
     sfMusic *menu_music;
     sfMusic *night_amb;
+    sfMusic *day_amb;
     sfSoundBuffer *shoot_buf;
     sfSound *shoot_snd;
     sfSoundBuffer *reload_buf;
@@ -159,6 +173,7 @@ typedef struct sound_s {
     float sfx_vol;
     float music_vol;
     float amb_vol;
+    float day_vol;
     float step_acc;
     float last_px;
     float last_py;

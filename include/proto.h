@@ -155,6 +155,12 @@ void draw_markers(sfRenderWindow *win, player_t *p, map_t *m);
 
 float world_shade(float dist, map_t *m, player_t *p);
 sfColor shade_color(sfColor c, float b);
+
+void spawn_popup(player_t *p, float x, float y, popup_t data);
+void update_popups(player_t *p);
+void draw_popups(sfRenderWindow *win, player_t *p);
+int pickup_in_range(player_t *p, map_t *m);
+void draw_pickup_hint(sfRenderWindow *win, player_t *p, map_t *m);
 void decrement_ammo(player_t *p);
 void reload_ammo(player_t *p);
 void refresh_ammo_text(player_t *p);

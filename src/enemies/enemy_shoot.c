@@ -25,7 +25,8 @@ static void damage_enemy(enemy_t *e, player_t *p)
 {
     float scale = e->boss ? BOSS_SCALE : 1.0f;
     int dmg = SHOT_DMG;
-    int head = aim_hit(e, p, HEAD_RADIUS * scale);
+    int head = aim_hit(e, p, HEAD_RADIUS * scale
+        * (p->aiming ? AIM_HEAD_MULT : 1.0f));
 
     if (head)
         dmg = HEADSHOT_DMG;

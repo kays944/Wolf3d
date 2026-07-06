@@ -14,7 +14,7 @@ void place_weapon_sprite(player_t *p)
     sfVector2f sc = {0};
     sfVector2f pos = {0};
 
-    sc.x = (float)p->ww / 2.0f / sz.x;
+    sc.x = (float)p->ww / 2.0f / sz.x * (p->aiming ? AIM_ZOOM : 1.0f);
     sc.y = sc.x;
     sfSprite_setScale(p->weapon_spr, sc);
     pos.x = (p->ww - sz.x * sc.x) / 2.0f + p->ww * WEAPON_X_RATIO;

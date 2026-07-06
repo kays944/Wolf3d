@@ -73,20 +73,53 @@ void destroy_pickups(player_t *p)
 
 static int try_collect(player_t *p, pickup_t *pk)
 {
+    int add = 0;
+
     if (pk->type == PACK_MEDKIT) {
         if (p->hp >= PLAYER_HP)
             return 0;
-        p->hp = p->hp + PACK_HP > PLAYER_HP ? PLAYER_HP : p->hp + PACK_HP;
+        add = p->hp + PACK_HP > PLAYER_HP ? PLAYER_HP - p->hp : PACK_HP;
+        p->hp += add;
         set_health_frame(p);
-        return 1;
+        return add;
     }
     if (p->reserve >= AMMO_RESERVE_MAX)
         return 0;
-    p->reserve += AMMO_BOX_VALUE;
-    if (p->reserve > AMMO_RESERVE_MAX)
-        p->reserve = AMMO_RESERVE_MAX;
+    add = p->reserve + AMMO_BOX_VALUE > AMMO_RESERVE_MAX
+        ? AMMO_RESERVE_MAX - p->reserve : AMMO_BOX_VALUE;
+    p->reserve += add;
     refresh_ammo_text(p);
-    return 1;
+    return add;
+}
+
+static void collect_at(player_t *p, pickup_t *pk)
+{
+    float rel = norm_angle(atan2f(pk->y - p->y, pk->x - p->x) - p->angle);
+    int add = try_collect(p, pk);
+    popup_t data = {0};
+
+    if (add <= 0)
+        return;
+    data.kind = pk->type;
+    data.amount = add;
+    spawn_popup(p, (rel / FOV + 0.5f) * p->ww, p->wh / 2.0f + p->pitch, data);
+    pk->active = sfFalse;
+}
+
+int pickup_in_range(player_t *p, map_t *m)
+{
+    float dx = 0;
+    float dy = 0;
+
+    for (int i = 0; i < m->pack_count; i++) {
+        if (!m->packs[i].active)
+            continue;
+        dx = m->packs[i].x - p->x;
+        dy = m->packs[i].y - p->y;
+        if (dx * dx + dy * dy <= PACK_RADIUS * PACK_RADIUS)
+            return 1;
+    }
+    return 0;
 }
 
 void update_pickups(player_t *p, map_t *m)
@@ -95,16 +128,16 @@ void update_pickups(player_t *p, map_t *m)
     float dx = 0;
     float dy = 0;
 
+    if (!p->pickup_event)
+        return;
+    p->pickup_event = sfFalse;
     for (int i = 0; i < m->pack_count; i++) {
         pk = &m->packs[i];
-        if (!pk->active)
-            continue;
         dx = pk->x - p->x;
         dy = pk->y - p->y;
-        if (dx * dx + dy * dy > PACK_RADIUS * PACK_RADIUS)
+        if (!pk->active || dx * dx + dy * dy > PACK_RADIUS * PACK_RADIUS)
             continue;
-        if (try_collect(p, pk))
-            pk->active = sfFalse;
+        collect_at(p, pk);
     }
 }
 
@@ -147,4 +180,25 @@ void draw_pickups(sfRenderWindow *win, player_t *p, map_t *m)
     for (int i = 0; i < m->pack_count; i++)
         if (m->packs[i].active)
             draw_one_pack(win, &m->packs[i], p, m);
+}
+
+void draw_pickup_hint(sfRenderWindow *win, player_t *p, map_t *m)
+{
+    sfText *t = NULL;
+    sfFloatRect b = {0};
+
+    if (!pickup_in_range(p, m))
+        return;
+    t = sfText_create();
+    if (!t)
+        return;
+    sfText_setFont(t, p->hud_font);
+    sfText_setString(t, p->use_pad ? "ROND : ramasser" : "F : ramasser");
+    sfText_setCharacterSize(t, 26);
+    sfText_setFillColor(t, sfColor_fromRGB(235, 235, 210));
+    b = sfText_getLocalBounds(t);
+    sfText_setPosition(t, (sfVector2f){(p->ww - b.width) / 2.0f - b.left,
+            p->wh * 0.60f});
+    sfRenderWindow_drawText(win, t, NULL);
+    sfText_destroy(t);
 }

@@ -29,17 +29,20 @@ void draw_crosshair(sfRenderWindow *win, player_t *p)
 {
     sfRectangleShape *r = sfRectangleShape_create();
     sfVector2f mid = {p->ww / 2.0f, p->wh / 2.0f};
+    float len = p->aiming ? CROSS_SIZE_AIM : CROSS_SIZE;
+    sfColor col = p->aiming ? sfColor_fromRGBA(90, 255, 120, 230)
+        : sfColor_fromRGBA(255, 255, 255, 200);
 
     if (!r)
         return;
-    sfRectangleShape_setFillColor(r, sfColor_fromRGBA(255, 255, 255, 200));
-    sfRectangleShape_setSize(r, (sfVector2f){CROSS_SIZE, CROSS_THICK});
-    sfRectangleShape_setPosition(r, (sfVector2f){mid.x - CROSS_SIZE / 2,
+    sfRectangleShape_setFillColor(r, col);
+    sfRectangleShape_setSize(r, (sfVector2f){len, CROSS_THICK});
+    sfRectangleShape_setPosition(r, (sfVector2f){mid.x - len / 2,
             mid.y - CROSS_THICK / 2});
     sfRenderWindow_drawRectangleShape(win, r, NULL);
-    sfRectangleShape_setSize(r, (sfVector2f){CROSS_THICK, CROSS_SIZE});
+    sfRectangleShape_setSize(r, (sfVector2f){CROSS_THICK, len});
     sfRectangleShape_setPosition(r, (sfVector2f){mid.x - CROSS_THICK / 2,
-            mid.y - CROSS_SIZE / 2});
+            mid.y - len / 2});
     sfRenderWindow_drawRectangleShape(win, r, NULL);
     sfRectangleShape_destroy(r);
 }

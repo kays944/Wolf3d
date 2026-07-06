@@ -104,8 +104,8 @@
     #define BITS_PER_PIXEL 32
 
     #define SND_MENU "assets/sounds/song_game-menu.wav"
-    #define SND_SHOOT "assets/sounds/spas12-sound.wav"
-    #define SND_RELOAD "assets/sounds/reload-sound.wav"
+    #define SND_SHOOT "assets/sounds/gun-fire.wav"
+    #define SND_RELOAD "assets/sounds/gun-reload.wav"
     #define SND_STEP "assets/sounds/footstep.wav"
     #define SND_STEP2 "assets/sounds/footstep2.wav"
     #define SND_STEP3 "assets/sounds/footstep3.wav"
@@ -117,6 +117,7 @@
     #define SND_DOOR "assets/sounds/door-open.wav"
     #define SND_ESHOT "assets/sounds/fireball-shot.wav"
     #define SND_NIGHT_AMB "assets/sounds/night-ambience.wav"
+    #define SND_DAY_AMB "assets/sounds/day-ambience.wav"
 
     #define FX_STEP 0
     #define FX_STEP2 1
@@ -134,7 +135,8 @@
     #define SND_ATTENUATION 1.1f
     #define STEP_DIST 58.0f
     #define GROWL_CD 4.0f
-    #define NIGHT_AMB_VOL 0.9f
+    #define NIGHT_AMB_VOL 1.0f
+    #define DAY_AMB_VOL 0.5f
     #define AMB_FADE_RATE 35.0f
 
     #define FL_FEATHER 100.0f
@@ -201,9 +203,9 @@
 
     #define AMMO_DEFAULT 30
     #define AMMO_FONT_SZ 30
-    #define AMMO_RESERVE_START 60
-    #define AMMO_RESERVE_MAX 90
-    #define AMMO_BOX_VALUE 20
+    #define AMMO_RESERVE_START 30
+    #define AMMO_RESERVE_MAX 60
+    #define AMMO_BOX_VALUE 12
     #define AMMO_TEX_PATH "./assets/props/ammo_box.png"
 
     #define WALL_TEX_PATH "./assets/texture_wall_wolf.png"
@@ -249,8 +251,8 @@
     #define ENEMY_SHOOT_RANGE 800.0f
     #define ENEMY_SHOOT_CD 1.8f
     #define ENEMY_FIRST_CD_MIN 1.0f
-    #define ENEMY_DMG 10
-    #define BOSS_DMG 25
+    #define ENEMY_DMG 14
+    #define BOSS_DMG 32
 
     #define PROJ_TEX_PATH "./assets/fireball.png"
     #define MAX_PROJS 64
@@ -263,7 +265,10 @@
     #define GRAVITY 800.0f
     #define PITCH_SPEED 550.0f
     #define PITCH_MAX_DIV 3
-    #define WEAPON_X_RATIO 0.034f
+    #define WEAPON_X_RATIO 0.055f
+    #define AIM_ZOOM 1.10f
+    #define AIM_SENS_MULT 0.45f
+    #define AIM_HEAD_MULT 1.35f
 
     #define PM_NONE 0
     #define PM_UP 1
@@ -286,6 +291,11 @@
     #define PAD_BTN_RELOAD 3
     #define PAD_BTN_FIRE 7
     #define PAD_BTN_PAUSE 9
+    #define PAD_BTN_PICKUP 1
+    #define PAD_AIM_AXIS sfJoystickZ
+    #define PAD_FIRE_AXIS sfJoystickR
+    #define TRIG_ON 40.0f
+    #define TRIG_OFF 5.0f
     #define ENEMY_RADIUS 24.0f
     #define HEAD_RADIUS 9.0f
     #define LOS_STEP 4.0f
@@ -302,8 +312,14 @@
 
     #define PACK_TEX_PATH "./assets/medkit.png"
     #define MAX_PACKS 16
-    #define PACK_HP 25
-    #define PACK_RADIUS 30.0f
+    #define PACK_HP 20
+    #define PACK_RADIUS 48.0f
+    #define MAX_POPUPS 8
+    #define POPUP_LIFE 0.9f
+    #define POPUP_RISE 70.0f
+    #define POPUP_FONT 32
+    #define COL_POP_AMMO sfColor_fromRGB(255, 210, 60)
+    #define COL_POP_HP sfColor_fromRGB(90, 230, 120)
     #define PACK_WORLD_SIZE 22.0f
     #define PACK_KINDS 2
     #define PACK_MEDKIT 0
@@ -317,8 +333,8 @@
     #define PROP_GORE 3
 
     #define SHOT_RANGE 700.0f
-    #define SHOT_DMG 50
-    #define HEADSHOT_DMG 100
+    #define SHOT_DMG 30
+    #define HEADSHOT_DMG 65
     #define HPBAR_W_RATIO 0.7f
     #define HPBAR_H_RATIO 0.045f
     #define HPBAR_MIN_H 3.0f
@@ -328,6 +344,7 @@
     #define HURT_FLASH_FRAMES 12
     #define HP_FONT_SZ 30
     #define CROSS_SIZE 16.0f
+    #define CROSS_SIZE_AIM 9.0f
     #define CROSS_THICK 3.0f
 
     #define END_MSG_WIN "VICTOIRE !"

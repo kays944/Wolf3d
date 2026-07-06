@@ -36,11 +36,14 @@ static int init_musics(sound_t *s)
 {
     s->menu_music = sfMusic_createFromFile(SND_MENU);
     s->night_amb = sfMusic_createFromFile(SND_NIGHT_AMB);
-    if (!s->menu_music || !s->night_amb)
+    s->day_amb = sfMusic_createFromFile(SND_DAY_AMB);
+    if (!s->menu_music || !s->night_amb || !s->day_amb)
         return EXIT_FAIL;
     sfMusic_setLoop(s->menu_music, sfTrue);
     sfMusic_setLoop(s->night_amb, sfTrue);
+    sfMusic_setLoop(s->day_amb, sfTrue);
     sfMusic_setVolume(s->night_amb, 0);
+    sfMusic_setVolume(s->day_amb, 0);
     return EXIT_SUCCESS;
 }
 
@@ -73,6 +76,8 @@ void destroy_sound(sound_t *s)
         sfMusic_destroy(s->menu_music);
     if (s->night_amb)
         sfMusic_destroy(s->night_amb);
+    if (s->day_amb)
+        sfMusic_destroy(s->day_amb);
 }
 
 void update_sound_vol(sound_t *s, settings_t *set)

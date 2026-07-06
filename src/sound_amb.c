@@ -62,26 +62,38 @@ static void watch_player(player_t *p, sound_t *s)
     s->last_res = p->reserve;
 }
 
+static float approach(float v, float target, float dt)
+{
+    if (v < target)
+        v += AMB_FADE_RATE * dt;
+    if (v > target)
+        v -= AMB_FADE_RATE * dt;
+    return v < 0 ? 0 : v;
+}
+
+static void set_amb_track(sfMusic *mus, float vol)
+{
+    if (!mus)
+        return;
+    sfMusic_setVolume(mus, vol);
+    if (vol > 0.5f && sfMusic_getStatus(mus) != sfPlaying)
+        sfMusic_play(mus);
+    if (vol <= 0.5f && sfMusic_getStatus(mus) == sfPlaying)
+        sfMusic_pause(mus);
+}
+
 static void update_night_amb(map_t *m, sound_t *s, float dt)
 {
-    float target = m->night ? s->music_vol * NIGHT_AMB_VOL : 0;
+    float night_t = m->night ? s->music_vol * NIGHT_AMB_VOL : 0;
+    float day_t = m->night ? 0 : s->music_vol * DAY_AMB_VOL;
 
     if (s->last_nights >= 0 && m->nights > s->last_nights)
         play_fx(s, FX_HOWL);
     s->last_nights = m->nights;
-    if (s->amb_vol < target)
-        s->amb_vol += AMB_FADE_RATE * dt;
-    if (s->amb_vol > target)
-        s->amb_vol -= AMB_FADE_RATE * dt;
-    if (s->amb_vol < 0)
-        s->amb_vol = 0;
-    if (!s->night_amb)
-        return;
-    sfMusic_setVolume(s->night_amb, s->amb_vol);
-    if (s->amb_vol > 0.5f && sfMusic_getStatus(s->night_amb) != sfPlaying)
-        sfMusic_play(s->night_amb);
-    if (s->amb_vol <= 0.5f && sfMusic_getStatus(s->night_amb) == sfPlaying)
-        sfMusic_pause(s->night_amb);
+    s->amb_vol = approach(s->amb_vol, night_t, dt);
+    s->day_vol = approach(s->day_vol, day_t, dt);
+    set_amb_track(s->night_amb, s->amb_vol);
+    set_amb_track(s->day_amb, s->day_vol);
 }
 
 void reset_ambience(sound_t *s)
@@ -90,9 +102,14 @@ void reset_ambience(sound_t *s)
     s->last_nights = -1;
     s->step_acc = 0;
     s->amb_vol = 0;
+    s->day_vol = 0;
     if (s->night_amb) {
         sfMusic_stop(s->night_amb);
         sfMusic_setVolume(s->night_amb, 0);
+    }
+    if (s->day_amb) {
+        sfMusic_stop(s->day_amb);
+        sfMusic_setVolume(s->day_amb, 0);
     }
 }
 

@@ -117,4 +117,6 @@ void update_player(sfRenderWindow *window, player_t *player, map_t *m)
     update_jump(player);
     update_weapon(player);
     update_reload(player);
+    if (!player->reloading)
+        place_weapon_sprite(player);
 }

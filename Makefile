@@ -39,6 +39,7 @@ SRC			= 	src/main.c 							\
 				src/night.c 						\
 				src/marker.c 						\
 				src/shade.c 						\
+				src/popup.c 						\
 				src/raycast.c 						\
 				src/enemies/enemy.c 				\
 				src/enemies/enemy_utils.c 			\
