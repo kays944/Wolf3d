@@ -89,8 +89,6 @@ static void try_shoot(enemy_t *e, map_t *m, player_t *p, sound_t *s)
 
 static void update_growl(enemy_t *e, player_t *p, map_t *m, sound_t *s)
 {
-    sfSound *snd = NULL;
-
     if (dist_to_player(e, p) > sight_range(p, m)) {
         e->aware = sfFalse;
         return;
@@ -101,9 +99,7 @@ static void update_growl(enemy_t *e, player_t *p, map_t *m, sound_t *s)
     }
     e->aware = sfTrue;
     e->growl_cd = GROWL_CD;
-    snd = play_fx_at(s, FX_GROWL, e->x, e->y);
-    if (snd && e->boss)
-        sfSound_setPitch(snd, BOSS_GROWL_PITCH);
+    play_fx_at(s, e->boss ? FX_BOSS : FX_GROWL, e->x, e->y);
 }
 
 static void tick_enemy(enemy_t *e, player_t *p, map_t *m, sound_t *s)

@@ -7,8 +7,19 @@
 */
 
 #include <math.h>
+#include <stdlib.h>
 #include "macros.h"
 #include "proto.h"
+
+static int next_step(sound_t *s)
+{
+    int id = FX_STEP + rand() % 3;
+
+    if (id == s->last_step)
+        id = FX_STEP + (id - FX_STEP + 1) % 3;
+    s->last_step = id;
+    return id;
+}
 
 static void update_listener(player_t *p)
 {
@@ -33,7 +44,7 @@ static void update_steps(player_t *p, sound_t *s)
     s->step_acc += d;
     if (s->step_acc >= STEP_DIST) {
         s->step_acc = 0;
-        play_fx(s, FX_STEP);
+        play_fx(s, next_step(s));
     }
 }
 

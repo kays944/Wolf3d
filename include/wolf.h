@@ -164,6 +164,7 @@ typedef struct sound_s {
     int last_hp;
     int last_res;
     int last_nights;
+    int last_step;
 } sound_t;
 
 typedef struct button_s {

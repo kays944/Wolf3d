@@ -108,7 +108,10 @@
     #define SND_SHOOT "assets/sounds/spas12-sound.wav"
     #define SND_RELOAD "assets/sounds/reload-sound.wav"
     #define SND_STEP "assets/sounds/footstep.wav"
+    #define SND_STEP2 "assets/sounds/footstep2.wav"
+    #define SND_STEP3 "assets/sounds/footstep3.wav"
     #define SND_GROWL "assets/sounds/growl.wav"
+    #define SND_BOSS "assets/sounds/boss-roar.wav"
     #define SND_HOWL "assets/sounds/howl.wav"
     #define SND_HURT "assets/sounds/hurt.wav"
     #define SND_PICKUP "assets/sounds/pickup.wav"
@@ -117,19 +120,21 @@
     #define SND_NIGHT_AMB "assets/sounds/night-ambience.wav"
 
     #define FX_STEP 0
-    #define FX_GROWL 1
-    #define FX_HOWL 2
-    #define FX_HURT 3
-    #define FX_PICKUP 4
-    #define FX_DOOR 5
-    #define FX_ESHOT 6
-    #define FX_KINDS 7
+    #define FX_STEP2 1
+    #define FX_STEP3 2
+    #define FX_GROWL 3
+    #define FX_BOSS 4
+    #define FX_HOWL 5
+    #define FX_HURT 6
+    #define FX_PICKUP 7
+    #define FX_DOOR 8
+    #define FX_ESHOT 9
+    #define FX_KINDS 10
     #define SND_POOL 10
     #define SND_MIN_DIST 110.0f
     #define SND_ATTENUATION 1.1f
-    #define STEP_DIST 52.0f
+    #define STEP_DIST 58.0f
     #define GROWL_CD 4.0f
-    #define BOSS_GROWL_PITCH 0.55f
     #define NIGHT_AMB_VOL 0.9f
     #define AMB_FADE_RATE 35.0f
 
@@ -283,8 +288,6 @@
     #define ENEMY_RADIUS 24.0f
     #define HEAD_RADIUS 9.0f
     #define LOS_STEP 4.0f
-    #define ENEMY_SND_PITCH 0.6f
-    #define ENEMY_SND_VOL 0.5f
 
     #define ANIM_COLS 5
     #define ANIM_ROWS 3
