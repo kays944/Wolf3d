@@ -43,6 +43,7 @@ SRC			= 	src/main.c 							\
 				src/raycast.c 						\
 				src/enemies/enemy.c 				\
 				src/enemies/enemy_utils.c 			\
+				src/enemies/enemy_melee.c 			\
 				src/enemies/enemy_ai.c 				\
 				src/enemies/enemy_draw.c 			\
 				src/enemies/enemy_shoot.c 			\

@@ -17,18 +17,11 @@ static float dist_to_player(enemy_t *e, player_t *p)
     return sqrtf(dx * dx + dy * dy);
 }
 
-static float sight_range(player_t *p, map_t *m)
+static float vision_range(player_t *p, map_t *m, float day_range)
 {
     if (m->night && !p->flashlight)
         return NIGHT_SIGHT;
-    return ENEMY_SIGHT;
-}
-
-static float fire_range(player_t *p, map_t *m)
-{
-    if (m->night && !p->flashlight)
-        return NIGHT_SIGHT;
-    return ENEMY_SHOOT_RANGE;
+    return day_range;
 }
 
 static float enemy_speed(enemy_t *e)
@@ -40,46 +33,45 @@ static float enemy_speed(enemy_t *e)
     return ENEMY_SPEED;
 }
 
+static int can_move(enemy_t *e, map_t *m, float x, float y)
+{
+    return is_blocked(x, y, m) != IS_WALL && !foe_overlap(m, e, x, y);
+}
+
+static void step_to(enemy_t *e, map_t *m, float nx, float ny)
+{
+    if (can_move(e, m, nx, ny)) {
+        e->x = nx;
+        e->y = ny;
+        return;
+    }
+    if (can_move(e, m, nx, e->y)) {
+        e->x = nx;
+        return;
+    }
+    if (can_move(e, m, e->x, ny))
+        e->y = ny;
+}
+
 static void chase(enemy_t *e, player_t *p, map_t *m)
 {
     float dist = dist_to_player(e, p);
     float step = enemy_speed(e) * p->dt;
-    float nx = 0;
-    float ny = 0;
+    float stop = e->type == ENEMY_TYPE_RUNNER
+        ? RUNNER_STOP_DIST : ENEMY_STOP_DIST;
 
-    if (dist <= ENEMY_STOP_DIST || dist > sight_range(p, m))
+    if (dist <= stop || dist > vision_range(p, m, ENEMY_SIGHT))
         return;
-    nx = e->x + (p->x - e->x) / dist * step;
-    ny = e->y + (p->y - e->y) / dist * step;
     e->moving = sfTrue;
-    if (is_blocked(nx, ny, m) != IS_WALL) {
-        e->x = nx;
-        e->y = ny;
-        return;
-    }
-    if (is_blocked(nx, e->y, m) != IS_WALL) {
-        e->x = nx;
-        return;
-    }
-    if (is_blocked(e->x, ny, m) != IS_WALL)
-        e->y = ny;
-}
-
-void hurt_player(player_t *p, int dmg)
-{
-    if (p->hurt_cd > 0)
-        return;
-    p->hurt_cd = HURT_COOLDOWN;
-    p->hp -= dmg;
-    p->hurt_flash = HURT_FLASH_FRAMES;
-    set_health_frame(p);
+    step_to(e, m, e->x + (p->x - e->x) / dist * step,
+        e->y + (p->y - e->y) / dist * step);
 }
 
 static void try_shoot(enemy_t *e, map_t *m, player_t *p, sound_t *s)
 {
     float dist = dist_to_player(e, p);
 
-    if (dist > fire_range(p, m) || e->cooldown > 0)
+    if (dist > vision_range(p, m, ENEMY_SHOOT_RANGE) || e->cooldown > 0)
         return;
     e->cooldown = ENEMY_SHOOT_CD;
     e->atk_anim = ATK_ANIM_LEN;
@@ -89,7 +81,7 @@ static void try_shoot(enemy_t *e, map_t *m, player_t *p, sound_t *s)
 
 static void update_growl(enemy_t *e, player_t *p, map_t *m, sound_t *s)
 {
-    if (dist_to_player(e, p) > sight_range(p, m)) {
+    if (dist_to_player(e, p) > vision_range(p, m, ENEMY_SIGHT)) {
         e->aware = sfFalse;
         return;
     }
@@ -118,7 +110,10 @@ static void tick_enemy(enemy_t *e, player_t *p, map_t *m, sound_t *s)
     }
     update_growl(e, p, m, s);
     chase(e, p, m);
-    try_shoot(e, m, p, s);
+    if (e->type == ENEMY_TYPE_RUNNER)
+        try_bite(e, p, s);
+    else
+        try_shoot(e, m, p, s);
 }
 
 void update_enemies(player_t *p, map_t *m, sound_t *s)

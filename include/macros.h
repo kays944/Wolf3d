@@ -116,6 +116,7 @@
     #define SND_PICKUP "assets/sounds/pickup.wav"
     #define SND_DOOR "assets/sounds/door-open.wav"
     #define SND_ESHOT "assets/sounds/fireball-shot.wav"
+    #define SND_BITE "assets/sounds/bite.wav"
     #define SND_NIGHT_AMB "assets/sounds/night-ambience.wav"
     #define SND_DAY_AMB "assets/sounds/day-ambience.wav"
 
@@ -129,7 +130,8 @@
     #define FX_PICKUP 7
     #define FX_DOOR 8
     #define FX_ESHOT 9
-    #define FX_KINDS 10
+    #define FX_BITE 10
+    #define FX_KINDS 11
     #define SND_POOL 10
     #define SND_MIN_DIST 110.0f
     #define SND_ATTENUATION 1.1f
@@ -244,6 +246,10 @@
     #define BRUTE_SPEED 55.0f
     #define RUNNER_HP 60
     #define RUNNER_SPEED 155.0f
+    #define RUNNER_STOP_DIST 30.0f
+    #define RUNNER_MELEE_RANGE 52.0f
+    #define RUNNER_MELEE_DMG 16
+    #define RUNNER_MELEE_CD 1.0f
     #define BOSS_SCALE 1.6f
     #define ENEMY_SPEED 95.0f
     #define ENEMY_SIGHT 950.0f
