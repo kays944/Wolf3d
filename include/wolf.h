@@ -143,7 +143,6 @@ typedef struct settings_s {
 
 typedef struct sound_s {
     sfMusic *menu_music;
-    sfMusic *game_music;
     sfMusic *night_amb;
     sfSoundBuffer *shoot_buf;
     sfSound *shoot_snd;

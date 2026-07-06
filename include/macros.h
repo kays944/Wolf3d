@@ -104,7 +104,6 @@
     #define BITS_PER_PIXEL 32
 
     #define SND_MENU "assets/sounds/song_game-menu.wav"
-    #define SND_GAME "assets/sounds/song-game.wav"
     #define SND_SHOOT "assets/sounds/spas12-sound.wav"
     #define SND_RELOAD "assets/sounds/reload-sound.wav"
     #define SND_STEP "assets/sounds/footstep.wav"

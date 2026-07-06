@@ -117,7 +117,6 @@ static int run_game(sfRenderWindow *w, player_t *p, game_t *g)
     int end = 0;
 
     sfMusic_stop(g->sound.menu_music);
-    sfMusic_play(g->sound.game_music);
     reset_ambience(&g->sound);
     while (sfRenderWindow_isOpen(w) && ret == PAUSE_RESUME) {
         ev = event(w, p, &g->map, &g->sound);
@@ -132,7 +131,6 @@ static int run_game(sfRenderWindow *w, player_t *p, game_t *g)
         if (ret == PAUSE_RESUME)
             draw(w, p, &g->map);
     }
-    sfMusic_stop(g->sound.game_music);
     sfMusic_stop(g->sound.night_amb);
     return ret;
 }
