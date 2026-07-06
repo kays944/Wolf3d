@@ -152,6 +152,9 @@ void init_keyexit(map_t *m);
 void update_keyexit(player_t *p, map_t *m);
 void draw_key_hint(sfRenderWindow *win, player_t *p);
 void draw_markers(sfRenderWindow *win, player_t *p, map_t *m);
+
+float world_shade(float dist, map_t *m, player_t *p);
+sfColor shade_color(sfColor c, float b);
 void decrement_ammo(player_t *p);
 void reload_ammo(player_t *p);
 void refresh_ammo_text(player_t *p);

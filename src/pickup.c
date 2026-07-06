@@ -108,7 +108,8 @@ void update_pickups(player_t *p, map_t *m)
     }
 }
 
-static void draw_one_pack(sfRenderWindow *win, pickup_t *pk, player_t *p)
+static void draw_one_pack(sfRenderWindow *win, pickup_t *pk, player_t *p,
+    map_t *m)
 {
     float dx = pk->x - p->x;
     float dy = pk->y - p->y;
@@ -129,6 +130,8 @@ static void draw_one_pack(sfRenderWindow *win, pickup_t *pk, player_t *p)
     ybot = p->wh / 2.0f + p->pitch + base / 2.0f
         + base * (p->z / TILE_SIZE);
     sfSprite_setTexture(p->pack_spr, p->pack_tex[pk->type], sfTrue);
+    sfSprite_setColor(p->pack_spr, shade_color(sfWhite,
+            world_shade(dist, m, p)));
     tsz = sfTexture_getSize(p->pack_tex[pk->type]);
     sfSprite_setScale(p->pack_spr, (sfVector2f){size / tsz.x,
             size / tsz.y});
@@ -143,5 +146,5 @@ void draw_pickups(sfRenderWindow *win, player_t *p, map_t *m)
         return;
     for (int i = 0; i < m->pack_count; i++)
         if (m->packs[i].active)
-            draw_one_pack(win, &m->packs[i], p);
+            draw_one_pack(win, &m->packs[i], p, m);
 }

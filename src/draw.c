@@ -42,6 +42,7 @@ static int init_wall_ctx(wall_ctx_t *ctx, player_t *p)
     ctx->wh = p->wh;
     ctx->jr = p->z / (float)TILE_SIZE;
     ctx->hy = p->wh / 2.0f + p->pitch;
+    ctx->p = p;
     for (int k = 0; k < WALL_KINDS; k++) {
         ctx->tex_sz[k] = sfTexture_getSize(p->wall_texs[k]);
         ctx->vas[k] = sfVertexArray_create();
@@ -52,32 +53,35 @@ static int init_wall_ctx(wall_ctx_t *ctx, player_t *p)
     return EXIT_SUCCESS;
 }
 
-static void append_vert(sfVertexArray *va, float x, float y, sfVector2f tex)
+static void append_vert(sfVertexArray *va, float x, float y, sfVector2f tex,
+    sfColor col)
 {
     sfVertex v = {0};
 
     v.position = (sfVector2f){x, y};
     v.texCoords = tex;
-    v.color = sfWhite;
+    v.color = col;
     sfVertexArray_append(va, v);
 }
 
-static void fill_wall_quad(wall_ctx_t *ctx, size_t i, float wall_h,
+static void fill_wall_quad(wall_ctx_t *ctx, size_t i, float dist,
     wall_hit_t *hit)
 {
     sfVertexArray *va = ctx->vas[hit->kind];
     sfVector2u tsz = ctx->tex_sz[hit->kind];
+    float wall_h = (TILE_SIZE * ctx->wh) / dist;
     float x0 = i * ctx->col_w;
     float shift = wall_h * ctx->jr;
     float y_top = ctx->hy - wall_h / 2.0f + shift;
     float y_bot = ctx->hy + wall_h / 2.0f + shift;
     float txi = hit->tex_x * (tsz.x - 1);
+    sfColor col = shade_color(sfWhite, world_shade(dist, ctx->m, ctx->p));
 
-    append_vert(va, x0, y_top, (sfVector2f){txi, 0});
-    append_vert(va, x0 + ctx->col_w, y_top, (sfVector2f){txi + 1, 0});
+    append_vert(va, x0, y_top, (sfVector2f){txi, 0}, col);
+    append_vert(va, x0 + ctx->col_w, y_top, (sfVector2f){txi + 1, 0}, col);
     append_vert(va, x0 + ctx->col_w, y_bot,
-        (sfVector2f){txi + 1, (float)tsz.y});
-    append_vert(va, x0, y_bot, (sfVector2f){txi, (float)tsz.y});
+        (sfVector2f){txi + 1, (float)tsz.y}, col);
+    append_vert(va, x0, y_bot, (sfVector2f){txi, (float)tsz.y}, col);
 }
 
 static void draw_wall_layers(sfRenderWindow *win, player_t *p,
@@ -106,6 +110,7 @@ static void cast_all_rays(sfRenderWindow *win, player_t *player, map_t *m)
         draw_wall_layers(win, player, &ctx);
         return;
     }
+    ctx.m = m;
     for (size_t i = 0; i < NUM_RAYS; i++) {
         angle = fmodf(player->angle - (FOV / 2) + (FOV * i / NUM_RAYS) + 2 *
             M_PI, 2 * M_PI);
@@ -113,7 +118,7 @@ static void cast_all_rays(sfRenderWindow *win, player_t *player, map_t *m)
         if (dist < DISTANCE_LIMIT)
             dist = DISTANCE_LIMIT;
         player->zbuf[i] = dist;
-        fill_wall_quad(&ctx, i, (TILE_SIZE * player->wh) / dist, &hit);
+        fill_wall_quad(&ctx, i, dist, &hit);
     }
     draw_wall_layers(win, player, &ctx);
 }

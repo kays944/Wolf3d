@@ -76,7 +76,8 @@ void destroy_props(player_t *p)
     }
 }
 
-static void draw_one_prop(sfRenderWindow *win, prop_t *pr, player_t *p)
+static void draw_one_prop(sfRenderWindow *win, prop_t *pr, player_t *p,
+    map_t *m)
 {
     float dx = pr->x - p->x;
     float dy = pr->y - p->y;
@@ -97,6 +98,8 @@ static void draw_one_prop(sfRenderWindow *win, prop_t *pr, player_t *p)
     ybot = p->wh / 2.0f + p->pitch + base / 2.0f
         + base * (p->z / TILE_SIZE);
     sfSprite_setTexture(p->prop_spr, p->prop_tex[pr->type], sfTrue);
+    sfSprite_setColor(p->prop_spr, shade_color(sfWhite,
+            world_shade(dist, m, p)));
     tsz = sfTexture_getSize(p->prop_tex[pr->type]);
     sfSprite_setScale(p->prop_spr, (sfVector2f){size / tsz.x,
             size / tsz.y});
@@ -110,5 +113,5 @@ void draw_props(sfRenderWindow *win, player_t *p, map_t *m)
     if (!p->prop_spr || !p->zbuf)
         return;
     for (int i = 0; i < m->prop_count; i++)
-        draw_one_prop(win, &m->props[i], p);
+        draw_one_prop(win, &m->props[i], p, m);
 }

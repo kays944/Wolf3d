@@ -151,6 +151,8 @@
     #define NIGHT_LIT_OFF 0.10f
     #define NIGHT_ALPHA_OFF 252
     #define NIGHT_SIGHT 260.0f
+    #define FL_SIGHT_MULT 3.0f
+    #define NIGHT_DARK_FLOOR 0.05f
     #define NIGHT_FONT_SZ 44
     #define COL_NIGHT sfColor_fromRGB(150, 60, 220)
     #define COL_NIGHTFALL sfColor_fromRGB(235, 70, 45)

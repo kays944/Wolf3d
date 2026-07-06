@@ -139,7 +139,7 @@ static void draw_hp_bar(sfRenderWindow *win, spr_ctx_t *c,
     sfRectangleShape_destroy(r);
 }
 
-static void draw_one(sfRenderWindow *win, enemy_t *e, player_t *p)
+static void draw_one(sfRenderWindow *win, enemy_t *e, player_t *p, map_t *m)
 {
     spr_ctx_t c = {0};
     float dx = e->x - p->x;
@@ -150,8 +150,8 @@ static void draw_one(sfRenderWindow *win, enemy_t *e, player_t *p)
 
     if (fabsf(rel) > FOV / 2 + 0.5f)
         return;
-    c.tint = enemy_tint(e);
     c.dist = sqrtf(dx * dx + dy * dy) * cosf(rel);
+    c.tint = shade_color(enemy_tint(e), world_shade(c.dist, m, p));
     if (c.dist < DISTANCE_LIMIT * 8)
         return;
     base = (TILE_SIZE * p->wh) / c.dist;
@@ -192,5 +192,5 @@ void draw_enemies(sfRenderWindow *win, player_t *p, map_t *m)
         return;
     sort_far(arr, n, p);
     for (int i = 0; i < n; i++)
-        draw_one(win, arr[i], p);
+        draw_one(win, arr[i], p, m);
 }

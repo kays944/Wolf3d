@@ -92,6 +92,8 @@ typedef struct wall_ctx_s {
     int wh;
     float jr;
     float hy;
+    struct map_s *m;
+    player_t *p;
 } wall_ctx_t;
 
 typedef struct wall_hit_s {
