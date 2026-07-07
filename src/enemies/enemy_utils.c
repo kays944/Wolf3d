@@ -20,21 +20,14 @@ float norm_angle(float a)
 
 int has_los(float ex, float ey, player_t *p, map_t *m)
 {
-    float dx = p->x - ex;
-    float dy = p->y - ey;
+    wall_hit_t hit = {0};
+    float dx = ex - p->x;
+    float dy = ey - p->y;
     float dist = sqrtf(dx * dx + dy * dy);
 
     if (dist < 1.0f)
         return 1;
-    dx = dx / dist * LOS_STEP;
-    dy = dy / dist * LOS_STEP;
-    for (float t = 0; t < dist; t += LOS_STEP) {
-        if (is_wall(ex, ey, m) == IS_WALL)
-            return 0;
-        ex += dx;
-        ey += dy;
-    }
-    return 1;
+    return cast_ray_raw(p, atan2f(dy, dx), m, &hit) >= dist;
 }
 
 static float dist_sq(enemy_t *e, player_t *p)

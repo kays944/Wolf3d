@@ -58,7 +58,7 @@ static float wall_frac(dda_t *d, float t)
     return wx - floorf(wx);
 }
 
-float cast_wall_ray(player_t *p, float angle, map_t *m, wall_hit_t *hit)
+float cast_ray_raw(player_t *p, float angle, map_t *m, wall_hit_t *hit)
 {
     dda_t d;
     int kind = 0;
@@ -72,5 +72,10 @@ float cast_wall_ray(player_t *p, float angle, map_t *m, wall_hit_t *hit)
     }
     hit->kind = kind;
     hit->tex_x = wall_frac(&d, t);
-    return t * TILE_SIZE * cosf(p->angle - angle);
+    return t * TILE_SIZE;
+}
+
+float cast_wall_ray(player_t *p, float angle, map_t *m, wall_hit_t *hit)
+{
+    return cast_ray_raw(p, angle, m, hit) * cosf(p->angle - angle);
 }
