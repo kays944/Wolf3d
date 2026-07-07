@@ -95,6 +95,7 @@ typedef struct player_s {
     sfTexture *wall_texs[WALL_KINDS];
     sfImage *floor_img;
     sfTexture *sky_tex;
+    sfTexture *sky_night_tex;
     sfUint8 *ceil_pixels;
     sfTexture *ceil_tex;
     sfSprite *ceil_spr;

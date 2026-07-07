@@ -75,6 +75,21 @@ static int pow2_size(sfImage *img)
         && (sz.x & (sz.x - 1)) == 0 && (sz.y & (sz.y - 1)) == 0;
 }
 
+static int load_skies(player_t *p)
+{
+    p->sky_tex = sfTexture_createFromFile(SKY_TEX_PATH, NULL);
+    p->sky_night_tex = sfTexture_createFromFile(SKY_NIGHT_TEX_PATH, NULL);
+    if (!p->sky_tex || !p->sky_night_tex) {
+        if (p->sky_tex)
+            sfTexture_destroy(p->sky_tex);
+        p->sky_tex = NULL;
+        return EXIT_FAIL;
+    }
+    sfTexture_setRepeated(p->sky_tex, sfTrue);
+    sfTexture_setRepeated(p->sky_night_tex, sfTrue);
+    return EXIT_SUCCESS;
+}
+
 static int init_wall_images(player_t *p)
 {
     p->floor_img = sfImage_createFromFile(FLOOR_TEX_PATH);
@@ -82,13 +97,11 @@ static int init_wall_images(player_t *p)
         destroy_wall_texs(p);
         return EXIT_FAIL;
     }
-    p->sky_tex = sfTexture_createFromFile(SKY_TEX_PATH, NULL);
-    if (!p->sky_tex) {
+    if (load_skies(p) == EXIT_FAIL) {
         sfImage_destroy(p->floor_img);
         destroy_wall_texs(p);
         return EXIT_FAIL;
     }
-    sfTexture_setRepeated(p->sky_tex, sfTrue);
     return EXIT_SUCCESS;
 }
 
@@ -100,6 +113,7 @@ int init_wall_tex(player_t *p)
         return EXIT_FAIL;
     if (init_ceil_resources(p) == EXIT_FAIL) {
         sfTexture_destroy(p->sky_tex);
+        sfTexture_destroy(p->sky_night_tex);
         sfImage_destroy(p->floor_img);
         destroy_wall_texs(p);
         return EXIT_FAIL;
@@ -126,6 +140,9 @@ void destroy_wall_tex(player_t *p)
     if (p->sky_tex)
         sfTexture_destroy(p->sky_tex);
     p->sky_tex = NULL;
+    if (p->sky_night_tex)
+        sfTexture_destroy(p->sky_night_tex);
+    p->sky_night_tex = NULL;
     if (p->floor_img)
         sfImage_destroy(p->floor_img);
     p->floor_img = NULL;

@@ -126,7 +126,7 @@ static void cast_all_rays(sfRenderWindow *win, player_t *player, map_t *m)
 void draw(sfRenderWindow *window, player_t *player, map_t *m)
 {
     sfRenderWindow_clear(window, sfBlack);
-    draw_background(window, player);
+    draw_background(window, player, m);
     cast_all_rays(window, player, m);
     draw_props(window, player, m);
     draw_pickups(window, player, m);

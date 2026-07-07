@@ -57,9 +57,10 @@ static void append_vert(sfVertexArray *va, float x, float y,
     sfVertexArray_append(va, v);
 }
 
-static void draw_sky_quad(sfRenderWindow *win, player_t *p, int horizon)
+static void draw_sky_quad(sfRenderWindow *win, player_t *p, int horizon,
+    sfTexture *sky)
 {
-    sfVector2u tsz = sfTexture_getSize(p->sky_tex);
+    sfVector2u tsz = sfTexture_getSize(sky);
     float span = p->wh / 2.0f + p->wh / (float)PITCH_MAX_DIV;
     float u0 = (p->angle / (2.0f * M_PI) - FOV / (4.0f * M_PI)) * tsz.x;
     float u1 = u0 + FOV / (2.0f * M_PI) * tsz.x;
@@ -74,7 +75,7 @@ static void draw_sky_quad(sfRenderWindow *win, player_t *p, int horizon)
     append_vert(va, p->ww, 0, &(sfVector2f){u1, v0});
     append_vert(va, p->ww, horizon, &(sfVector2f){u1, (float)tsz.y - 1});
     append_vert(va, 0, horizon, &(sfVector2f){u0, (float)tsz.y - 1});
-    rs.texture = p->sky_tex;
+    rs.texture = sky;
     sfRenderWindow_drawVertexArray(win, va, &rs);
     sfVertexArray_destroy(va);
 }
@@ -96,7 +97,7 @@ static void draw_floor_part(sfRenderWindow *win, player_t *p, int horizon)
     sfRenderWindow_drawSprite(win, p->ceil_spr, NULL);
 }
 
-void draw_background(sfRenderWindow *win, player_t *p)
+void draw_background(sfRenderWindow *win, player_t *p, map_t *m)
 {
     int horizon = p->wh / 2 + (int)p->pitch;
 
@@ -104,6 +105,7 @@ void draw_background(sfRenderWindow *win, player_t *p)
         horizon = 1;
     if (horizon > p->wh - 1)
         horizon = p->wh - 1;
-    draw_sky_quad(win, p, horizon);
+    draw_sky_quad(win, p, horizon,
+        m->night ? p->sky_night_tex : p->sky_tex);
     draw_floor_part(win, p, horizon);
 }
