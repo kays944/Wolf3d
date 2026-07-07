@@ -117,6 +117,7 @@
     #define SND_DOOR "assets/sounds/door-open.wav"
     #define SND_ESHOT "assets/sounds/fireball-shot.wav"
     #define SND_BITE "assets/sounds/bite.wav"
+    #define SND_BOOM "assets/sounds/explosion.wav"
     #define SND_NIGHT_AMB "assets/sounds/night-ambience.wav"
     #define SND_DAY_AMB "assets/sounds/day-ambience.wav"
 
@@ -131,7 +132,8 @@
     #define FX_DOOR 8
     #define FX_ESHOT 9
     #define FX_BITE 10
-    #define FX_KINDS 11
+    #define FX_BOOM 11
+    #define FX_KINDS 12
     #define SND_POOL 10
     #define SND_MIN_DIST 110.0f
     #define SND_ATTENUATION 1.1f
@@ -337,6 +339,20 @@
     #define PROP_CANDLE 1
     #define PROP_SKELETON 2
     #define PROP_GORE 3
+
+    #define BOOM_TEX_PATH "./assets/explosion.png"
+    #define MAX_BOOMS 16
+    #define BOOM_FRAMES 6
+    #define BOOM_FRAME_W 96
+    #define BOOM_FRAME_H 96
+    #define BOOM_FRAME_LEN 0.09f
+    #define BOOM_WORLD_SIZE 130.0f
+    #define BOOM_RADIUS 150.0f
+    #define BOOM_DMG 120
+    #define BOOM_PLAYER_DMG 40
+    #define BOOM_CHAIN_MIN 0.15f
+    #define BOOM_CHAIN_VAR 0.20f
+    #define BARREL_RADIUS 20.0f
 
     #define SHOT_RANGE 700.0f
     #define SHOT_DMG 30

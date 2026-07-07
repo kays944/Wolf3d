@@ -44,6 +44,9 @@ static void write_world(FILE *f, map_t *m)
     fprintf(f, "doors %d\n", m->door_count);
     for (int i = 0; i < m->door_count; i++)
         fprintf(f, "door %d\n", m->doors[i].open ? 1 : 0);
+    fprintf(f, "props %d\n", m->prop_count);
+    for (int i = 0; i < m->prop_count; i++)
+        fprintf(f, "prop %d\n", m->props[i].dead ? 0 : 1);
 }
 
 void save_game(map_t *m, player_t *p)

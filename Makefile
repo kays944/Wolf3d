@@ -40,6 +40,8 @@ SRC			= 	src/main.c 							\
 				src/marker.c 						\
 				src/shade.c 						\
 				src/popup.c 						\
+				src/explosion.c 					\
+				src/explosion_draw.c 				\
 				src/raycast.c 						\
 				src/enemies/enemy.c 				\
 				src/enemies/enemy_utils.c 			\

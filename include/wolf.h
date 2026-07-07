@@ -57,6 +57,8 @@ typedef struct player_s {
     sfSprite *key_spr;
     sfTexture *prop_tex[PROP_TYPES];
     sfSprite *prop_spr;
+    sfTexture *boom_tex;
+    sfSprite *boom_spr;
     int ammo;
     int reserve;
     int kills;
@@ -221,7 +223,16 @@ typedef struct prop_s {
     float x;
     float y;
     int type;
+    sfBool dead;
+    float fuse;
 } prop_t;
+
+typedef struct boom_s {
+    float x;
+    float y;
+    float t;
+    sfBool active;
+} boom_t;
 
 typedef struct door_s {
     int tx;
@@ -252,6 +263,7 @@ typedef struct map_s {
     int pack_count;
     prop_t props[MAX_PROPS];
     int prop_count;
+    boom_t booms[MAX_BOOMS];
     door_t doors[MAX_DOORS];
     int door_count;
     sfBool has_exit;

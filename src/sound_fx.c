@@ -13,7 +13,7 @@ static int load_fx_bufs(sound_t *s)
 {
     static const char *const paths[FX_KINDS] = {SND_STEP, SND_STEP2,
         SND_STEP3, SND_GROWL, SND_BOSS, SND_HOWL, SND_HURT, SND_PICKUP,
-        SND_DOOR, SND_ESHOT, SND_BITE};
+        SND_DOOR, SND_ESHOT, SND_BITE, SND_BOOM};
 
     for (int i = 0; i < FX_KINDS; i++) {
         s->fx_bufs[i] = sfSoundBuffer_createFromFile(paths[i]);
@@ -27,10 +27,10 @@ static void set_fx_params(sound_t *s)
 {
     static const float vol[FX_KINDS] = {
         0.75f, 0.75f, 0.75f, 1.0f, 1.0f, 0.9f, 1.0f, 0.8f, 0.9f, 1.0f,
-        1.0f};
+        1.0f, 1.0f};
     static const float jit[FX_KINDS] = {
         0.08f, 0.08f, 0.08f, 0.10f, 0.05f, 0.03f, 0.08f, 0.0f, 0.04f,
-        0.06f, 0.12f};
+        0.06f, 0.12f, 0.06f};
 
     for (int i = 0; i < FX_KINDS; i++) {
         s->fx_vol[i] = vol[i];

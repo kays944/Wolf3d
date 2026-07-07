@@ -133,6 +133,7 @@ void draw(sfRenderWindow *window, player_t *player, map_t *m)
     draw_markers(window, player, m);
     draw_enemies(window, player, m);
     draw_projs(window, player, m);
+    draw_booms(window, player, m);
     draw_flashlight(window, player, m);
     if (player->weapon_spr)
         sfRenderWindow_drawSprite(window, player->weapon_spr, NULL);

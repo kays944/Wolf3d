@@ -108,11 +108,13 @@ static void run_updates(sfRenderWindow *window, player_t *player,
     check_triggers(player, s);
     if (player->shot_event) {
         shoot_enemies(player, m);
+        shoot_barrels(player, m, s);
         player->shot_event = sfFalse;
     }
     update_player(window, player, m);
     update_enemies(player, m, s);
     update_projs(player, m);
+    update_booms(player, m, s);
     update_pickups(player, m);
     update_popups(player);
     update_keyexit(player, m);

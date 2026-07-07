@@ -20,6 +20,17 @@ static const char *PROP_PATHS[PROP_TYPES] = {
 
 static const float PROP_SIZES[PROP_TYPES] = {44.0f, 58.0f, 62.0f, 48.0f};
 
+void kill_prop(map_t *m, prop_t *pr)
+{
+    int tx = (int)pr->x / TILE_SIZE;
+    int ty = (int)pr->y / TILE_SIZE;
+
+    pr->dead = sfTrue;
+    pr->fuse = 0;
+    if (m->map[ty][tx] == 'p')
+        m->map[ty][tx] = ' ';
+}
+
 int is_blocked(float x, float y, map_t *m)
 {
     int tx = (int)x / TILE_SIZE;
@@ -42,6 +53,8 @@ static void scan_prop_row(map_t *m, int row)
             m->props[m->prop_count].x = j * TILE_SIZE + TILE_SIZE / 2;
             m->props[m->prop_count].y = row * TILE_SIZE + TILE_SIZE / 2;
             m->props[m->prop_count].type = t;
+            m->props[m->prop_count].dead = sfFalse;
+            m->props[m->prop_count].fuse = 0;
             m->prop_count++;
         }
 }
@@ -113,5 +126,6 @@ void draw_props(sfRenderWindow *win, player_t *p, map_t *m)
     if (!p->prop_spr || !p->zbuf)
         return;
     for (int i = 0; i < m->prop_count; i++)
-        draw_one_prop(win, &m->props[i], p, m);
+        if (!m->props[i].dead)
+            draw_one_prop(win, &m->props[i], p, m);
 }

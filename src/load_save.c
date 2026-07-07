@@ -102,6 +102,22 @@ static int read_world(FILE *f, map_t *m)
     return EXIT_SUCCESS;
 }
 
+static int read_props(FILE *f, map_t *m)
+{
+    int n = 0;
+    int v = 0;
+
+    if (fscanf(f, "props %d\n", &n) != 1 || n != m->prop_count)
+        return EXIT_SUCCESS;
+    for (int i = 0; i < n; i++) {
+        if (fscanf(f, "prop %d\n", &v) != 1)
+            return EXIT_FAIL;
+        if (!v)
+            kill_prop(m, &m->props[i]);
+    }
+    return EXIT_SUCCESS;
+}
+
 static void strip_key(player_t *p, map_t *m)
 {
     if (!p->has_key)
@@ -123,7 +139,8 @@ int apply_save(player_t *p, map_t *m)
     ok = fscanf(f, "level %95s\n", skip) == 1
         && read_player(f, p) == EXIT_SUCCESS
         && read_enemies(f, m) == EXIT_SUCCESS
-        && read_world(f, m) == EXIT_SUCCESS;
+        && read_world(f, m) == EXIT_SUCCESS
+        && read_props(f, m) == EXIT_SUCCESS;
     fclose(f);
     if (!ok)
         return EXIT_FAIL;
