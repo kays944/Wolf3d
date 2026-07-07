@@ -248,13 +248,10 @@
     #define SKY_TEX_PATH "./assets/texture_sky.png"
     #define SKY_NIGHT_TEX_PATH "./assets/texture_sky_night.png"
     #define FLOOR_TEX_PATH "./assets/texture_floor.png"
-    #define RELOAD_TEX_PATH "./assets/sprite_sheet_reload.png"
-    #define RELOAD_COLS 3
-    #define RELOAD_ROWS 2
-    #define RELOAD_FRAME_COUNT 6
-    #define RELOAD_FRAME_W 426
-    #define RELOAD_FRAME_H 339
-    #define RELOAD_FRAME_MS 120
+    #define RELOAD_TIME 1.40f
+    #define RELOAD_DIP_T 0.30f
+    #define RELOAD_DIP_FRAC 0.85f
+    #define RELOAD_TILT 10.0f
 
     #define ENEMY_TEX_PATH "./assets/enemy.png"
     #define BOSS_TEX_PATH "./assets/boss.png"

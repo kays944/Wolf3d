@@ -75,7 +75,6 @@ typedef struct player_s {
     float fps_acc;
     int fps_frames;
     sfBool show_fps;
-    int reload_frame;
     sfTexture *weapon_idle;
     sfTexture *weapon_fire;
     sfSprite *weapon_spr;
@@ -90,7 +89,6 @@ typedef struct player_s {
     sfSprite *health_spr;
     sfText *ammo_txt;
     sfFont *hud_font;
-    sfTexture *reload_tex;
     sfBool reloading;
     sfClock *reload_clock;
     sfTexture *wall_texs[WALL_KINDS];

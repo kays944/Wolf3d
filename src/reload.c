@@ -2,43 +2,18 @@
 ** EPITECH PROJECT, 2025
 ** wolf3d
 ** File description:
-** reload.c
+** reload.c — procedural reload animation (weapon dips while mag swaps)
 */
 
 #include "macros.h"
 #include "proto.h"
 
-static void set_reload_frame(player_t *p)
-{
-    sfIntRect rect = {0};
-    sfVector2f sc = {0};
-    sfVector2f pos = {0};
-    int col = p->reload_frame % RELOAD_COLS;
-    int row = p->reload_frame / RELOAD_COLS;
-
-    rect.left = col * RELOAD_FRAME_W;
-    rect.top = row * RELOAD_FRAME_H;
-    rect.width = RELOAD_FRAME_W;
-    rect.height = RELOAD_FRAME_H;
-    sfSprite_setTextureRect(p->weapon_spr, rect);
-    sc.x = (float)p->ww * 0.7f / (float)RELOAD_FRAME_W;
-    sc.y = sc.x;
-    sfSprite_setScale(p->weapon_spr, sc);
-    pos.x = (p->ww - RELOAD_FRAME_W * sc.x) / 2.0f;
-    pos.y = p->wh - RELOAD_FRAME_H * sc.y * 0.88f;
-    sfSprite_setPosition(p->weapon_spr, pos);
-}
-
 int init_reload(player_t *p)
 {
-    p->reload_tex = sfTexture_createFromFile(RELOAD_TEX_PATH, NULL);
-    if (!p->reload_tex)
-        return EXIT_FAIL;
     p->reload_clock = sfClock_create();
     if (!p->reload_clock)
         return EXIT_FAIL;
     p->reloading = sfFalse;
-    p->reload_frame = 0;
     return EXIT_SUCCESS;
 }
 
@@ -46,10 +21,7 @@ void destroy_reload(player_t *p)
 {
     if (p->reload_clock)
         sfClock_destroy(p->reload_clock);
-    if (p->reload_tex)
-        sfTexture_destroy(p->reload_tex);
     p->reload_clock = NULL;
-    p->reload_tex = NULL;
 }
 
 void start_reload(player_t *p, sound_t *s)
@@ -60,32 +32,50 @@ void start_reload(player_t *p, sound_t *s)
         return;
     play_reload(s);
     p->reloading = sfTrue;
-    p->reload_frame = 0;
-    sfSprite_setTexture(p->weapon_spr, p->reload_tex, sfFalse);
-    set_reload_frame(p);
     sfClock_restart(p->reload_clock);
+}
+
+static float dip_amount(float t)
+{
+    float d = 1.0f;
+
+    if (t < RELOAD_DIP_T)
+        d = t / RELOAD_DIP_T;
+    if (t > RELOAD_TIME - RELOAD_DIP_T)
+        d = (RELOAD_TIME - t) / RELOAD_DIP_T;
+    return d * d * (3.0f - 2.0f * d);
+}
+
+static void place_reload_sprite(player_t *p, float t)
+{
+    float d = dip_amount(t);
+    sfVector2f pos = {0};
+
+    place_weapon_sprite(p);
+    pos = sfSprite_getPosition(p->weapon_spr);
+    pos.y += d * ((float)p->wh - pos.y) * RELOAD_DIP_FRAC;
+    sfSprite_setPosition(p->weapon_spr, pos);
+    sfSprite_setRotation(p->weapon_spr, d * RELOAD_TILT);
+}
+
+static void finish_reload(player_t *p)
+{
+    p->reloading = sfFalse;
+    sfSprite_setRotation(p->weapon_spr, 0);
+    place_weapon_sprite(p);
+    reload_ammo(p);
 }
 
 void update_reload(player_t *p)
 {
-    sfTime t = {0};
-    float ms = 0;
+    float t = 0;
 
     if (!p->reloading)
         return;
-    t = sfClock_getElapsedTime(p->reload_clock);
-    ms = (float)sfTime_asMilliseconds(t);
-    if (ms < RELOAD_FRAME_MS)
-        return;
-    sfClock_restart(p->reload_clock);
-    p->reload_frame++;
-    if (p->reload_frame >= RELOAD_FRAME_COUNT) {
-        p->reloading = sfFalse;
-        p->reload_frame = 0;
-        sfSprite_setTexture(p->weapon_spr, p->weapon_idle, sfTrue);
-        place_weapon_sprite(p);
-        reload_ammo(p);
+    t = sfTime_asSeconds(sfClock_getElapsedTime(p->reload_clock));
+    if (t >= RELOAD_TIME) {
+        finish_reload(p);
         return;
     }
-    set_reload_frame(p);
+    place_reload_sprite(p, t);
 }
