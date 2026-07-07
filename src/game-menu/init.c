@@ -22,11 +22,14 @@ int load_settings(settings_t *s)
         && fscanf(f, "res_index %d\n", &s->res_index) == 1
         && fscanf(f, "fullscreen %d\n", (int *)&s->fullscreen) == 1
         && fscanf(f, "gamepad %d\n", &s->gamepad) == 1
-        && fscanf(f, "sensitivity %f\n", &s->sensitivity) == 1;
+        && fscanf(f, "sensitivity %f\n", &s->sensitivity) == 1
+        && fscanf(f, "difficulty %d\n", &s->difficulty) == 1;
     (void)read_ok;
     fclose(f);
     if (s->sensitivity < SENS_MIN || s->sensitivity > SENS_MAX)
         s->sensitivity = SENS_DEFAULT;
+    if (s->difficulty < 0 || s->difficulty >= DIFF_COUNT)
+        s->difficulty = DIFF_DEFAULT;
     if (s->res_index < 0 || s->res_index >= NUM_RES)
         s->res_index = RES_DEFAULT;
     s->win_w = RES_W[s->res_index];
@@ -98,6 +101,7 @@ int game_init(game_t *g)
     g->settings.res_index = RES_DEFAULT;
     g->settings.fullscreen = sfFalse;
     g->settings.sensitivity = SENS_DEFAULT;
+    g->settings.difficulty = DIFF_DEFAULT;
     g->settings.win_w = RES_W[RES_DEFAULT];
     g->settings.win_h = RES_H[RES_DEFAULT];
     load_settings(&g->settings);

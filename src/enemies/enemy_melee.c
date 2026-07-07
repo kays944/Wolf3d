@@ -44,7 +44,7 @@ void hurt_player(player_t *p, int dmg)
     if (p->hurt_cd > 0)
         return;
     p->hurt_cd = HURT_COOLDOWN;
-    p->hp -= dmg;
+    p->hp -= (int)(dmg * diff_dmg_mult(p->difficulty) + 0.5f);
     p->hurt_flash = HURT_FLASH_FRAMES;
     set_health_frame(p);
 }

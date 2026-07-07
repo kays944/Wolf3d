@@ -164,6 +164,8 @@ int game_loop(game_t *g)
     player.hud_font = g->font_med;
     player.use_pad = g->settings.gamepad ? sfTrue : sfFalse;
     player.sens = g->settings.sensitivity;
+    player.difficulty = g->settings.difficulty;
+    g->map.difficulty = g->settings.difficulty;
     if (init_player(&g->map, &player) == EXIT_FAIL)
         return EXIT_FAIL;
     if (init_player_tools(&player) == EXIT_FAIL)

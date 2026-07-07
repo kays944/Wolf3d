@@ -42,6 +42,7 @@ typedef struct player_s {
     sfText *hp_txt;
     sfBool shot_event;
     sfBool use_pad;
+    int difficulty;
     float *zbuf;
     float dt;
     float sens;
@@ -155,6 +156,7 @@ typedef struct settings_s {
     sfBool fullscreen;
     int gamepad;
     float sensitivity;
+    int difficulty;
     int win_w;
     int win_h;
 } settings_t;
@@ -272,6 +274,7 @@ typedef struct map_s {
     sfBool night;
     float night_cd;
     int nights;
+    int difficulty;
 } map_t;
 
 typedef struct spr_ctx_s {

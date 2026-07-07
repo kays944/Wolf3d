@@ -50,11 +50,12 @@ static void spawn_night_wave(map_t *m)
 {
     int base = m->enemy_count;
     int alive = living_foes(m);
+    int cap = (int)(NIGHT_WAVE_CAP * diff_night_mult(m->difficulty));
     enemy_t *e = NULL;
     float x = 0;
     float y = 0;
 
-    for (int i = 0; i < base && alive < NIGHT_WAVE_CAP; i++) {
+    for (int i = 0; i < base && alive < cap; i++) {
         e = &m->enemies[i];
         if (!e->alive || e->dying || e->boss)
             continue;

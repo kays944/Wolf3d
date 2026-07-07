@@ -21,15 +21,17 @@ static int map_level(map_t *m)
     return n;
 }
 
-static int hp_for(int type, int level)
+static int hp_for(map_t *m, int type)
 {
+    int hp = ENEMY_HP + (m->level - 1) * ENEMY_HP_PER_LEVEL;
+
     if (type == ENEMY_TYPE_BOSS)
-        return BOSS_HP * level;
+        hp = BOSS_HP * m->level;
     if (type == ENEMY_TYPE_BRUTE)
-        return BRUTE_HP + (level - 1) * ENEMY_HP_PER_LEVEL * 2;
+        hp = BRUTE_HP + (m->level - 1) * ENEMY_HP_PER_LEVEL * 2;
     if (type == ENEMY_TYPE_RUNNER)
-        return RUNNER_HP + (level - 1) * 10;
-    return ENEMY_HP + (level - 1) * ENEMY_HP_PER_LEVEL;
+        hp = RUNNER_HP + (m->level - 1) * 10;
+    return (int)(hp * diff_hp_mult(m->difficulty) + 0.5f);
 }
 
 void spawn_enemy(map_t *m, float x, float y, int type)
@@ -43,7 +45,7 @@ void spawn_enemy(map_t *m, float x, float y, int type)
     e->y = y;
     e->type = type;
     e->boss = (type == ENEMY_TYPE_BOSS);
-    e->hp = hp_for(type, m->level);
+    e->hp = hp_for(m, type);
     e->max_hp = e->hp;
     e->cooldown = ENEMY_FIRST_CD_MIN + (rand() % 150) / 100.0f;
     e->anim_t = (rand() % 100) / 100.0f;

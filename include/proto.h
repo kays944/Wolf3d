@@ -162,6 +162,11 @@ void update_keyexit(player_t *p, map_t *m);
 void draw_key_hint(sfRenderWindow *win, player_t *p);
 void draw_markers(sfRenderWindow *win, player_t *p, map_t *m);
 
+float diff_hp_mult(int d);
+float diff_dmg_mult(int d);
+float diff_night_mult(int d);
+const char *diff_label(int d);
+
 float world_shade(float dist, map_t *m, player_t *p);
 sfColor shade_color(sfColor c, float b);
 

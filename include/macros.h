@@ -89,8 +89,14 @@
     #define SET_FULLSCR 3
     #define SET_INPUT 4
     #define SET_SENS 5
-    #define SET_BACK 6
-    #define SET_ITEM_COUNT 7
+    #define SET_DIFF 6
+    #define SET_BACK 7
+    #define SET_ITEM_COUNT 8
+    #define DIFF_EASY 0
+    #define DIFF_NORMAL 1
+    #define DIFF_HARD 2
+    #define DIFF_COUNT 3
+    #define DIFF_DEFAULT DIFF_NORMAL
     #define SENS_DEFAULT 1.0f
     #define SENS_STEP 0.1f
     #define SENS_MIN 0.3f

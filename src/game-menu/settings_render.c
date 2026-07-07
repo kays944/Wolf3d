@@ -69,7 +69,7 @@ static sfText *draw_option_begin(menu_t *m, const char *lbl, float y)
 static void draw_option_end(menu_t *m, sfText *txt,
     const char *val, int idx)
 {
-    float y = 200.0f + idx * 70.0f;
+    float y = 190.0f + idx * 60.0f;
     sfVector2f pos = {0};
 
     if (m->settings_sel == idx)
@@ -85,7 +85,7 @@ static void draw_option_end(menu_t *m, sfText *txt,
 
 static void draw_option(menu_t *m, const char *lbl, const char *val, int idx)
 {
-    float y = 200.0f + idx * 70.0f;
+    float y = 190.0f + idx * 60.0f;
     sfText *txt = draw_option_begin(m, lbl, y);
 
     if (!txt)
@@ -101,8 +101,8 @@ static void render_settings_inner(menu_t *m)
     int h = 0;
     const char *fs = "OFF";
 
-    render_volume_bar(m, "Musique :", m->settings->music_vol, 200.0f);
-    render_volume_bar(m, "Sons :", m->settings->sfx_vol, 270.0f);
+    render_volume_bar(m, "Musique :", m->settings->music_vol, 190.0f);
+    render_volume_bar(m, "Sons :", m->settings->sfx_vol, 250.0f);
     get_resolution(m->settings->res_index, &w, &h);
     snprintf(buf, sizeof(buf), "< %d x %d >", w, h);
     draw_option(m, "Resolution :", buf, SET_RES);
@@ -115,6 +115,8 @@ static void render_settings_inner(menu_t *m)
         draw_option(m, "Controles :", "< CLAVIER >", SET_INPUT);
     snprintf(buf, sizeof(buf), "< %.1f >", m->settings->sensitivity);
     draw_option(m, "Sensibilite :", buf, SET_SENS);
+    draw_option(m, "Difficulte :",
+        diff_label(m->settings->difficulty), SET_DIFF);
 }
 
 void render_settings(menu_t *m)
