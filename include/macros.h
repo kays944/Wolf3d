@@ -379,6 +379,7 @@
     #define BOOM_PLAYER_DMG 40
     #define BOOM_CHAIN_MIN 0.15f
     #define BOOM_CHAIN_VAR 0.20f
+    #define BOOM_SND_DIST 450.0f
     #define BARREL_RADIUS 20.0f
 
     #define SHOT_RANGE 700.0f

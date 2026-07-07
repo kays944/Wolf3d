@@ -81,6 +81,7 @@ static sfSound *grab(sound_t *s, int id)
         return NULL;
     s->pool_i = (s->pool_i + 1) % SND_POOL;
     sfSound_setBuffer(snd, s->fx_bufs[id]);
+    sfSound_setMinDistance(snd, SND_MIN_DIST);
     sfSound_setVolume(snd, s->sfx_vol * s->fx_vol[id]);
     sfSound_setPitch(snd, s->fx_pitch[id] * jit);
     return snd;

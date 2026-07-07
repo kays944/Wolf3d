@@ -88,9 +88,13 @@ static void light_chain(map_t *m, prop_t *from)
 
 static void explode_barrel(player_t *p, map_t *m, sound_t *s, prop_t *pr)
 {
+    sfSound *snd = NULL;
+
     kill_prop(m, pr);
     spawn_boom(m, pr->x, pr->y);
-    play_fx_at(s, FX_BOOM, pr->x, pr->y);
+    snd = play_fx_at(s, FX_BOOM, pr->x, pr->y);
+    if (snd)
+        sfSound_setMinDistance(snd, BOOM_SND_DIST);
     hurt_foes(p, m, pr);
     light_chain(m, pr);
 }
