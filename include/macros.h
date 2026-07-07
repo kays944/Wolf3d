@@ -118,6 +118,12 @@
     #define SND_ESHOT "assets/sounds/fireball-shot.wav"
     #define SND_BITE "assets/sounds/bite.wav"
     #define SND_BOOM "assets/sounds/explosion.wav"
+    #define SND_DIE_GRUNT "assets/sounds/die-grunt.wav"
+    #define SND_DIE_RUNNER "assets/sounds/die-runner.wav"
+    #define SND_DIE_BOSS "assets/sounds/die-boss.wav"
+    #define SND_NIGHT1 "assets/sounds/night-breath.wav"
+    #define SND_NIGHT2 "assets/sounds/night-weird.wav"
+    #define SND_NIGHT3 "assets/sounds/night-creature.wav"
     #define SND_NIGHT_AMB "assets/sounds/night-ambience.wav"
     #define SND_DAY_AMB "assets/sounds/day-ambience.wav"
 
@@ -133,7 +139,17 @@
     #define FX_ESHOT 9
     #define FX_BITE 10
     #define FX_BOOM 11
-    #define FX_KINDS 12
+    #define FX_DIE_GRUNT 12
+    #define FX_DIE_RUNNER 13
+    #define FX_DIE_BOSS 14
+    #define FX_NIGHT1 15
+    #define FX_NIGHT2 16
+    #define FX_NIGHT3 17
+    #define FX_KINDS 18
+    #define NIGHT_FX_MIN 5.0f
+    #define NIGHT_FX_VAR 7
+    #define NIGHT_FX_DIST_MIN 250
+    #define NIGHT_FX_DIST_VAR 350
     #define SND_POOL 10
     #define SND_MIN_DIST 110.0f
     #define SND_ATTENUATION 1.1f

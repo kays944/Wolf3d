@@ -32,7 +32,10 @@
   `door-open.wav`, `pickup.wav` come from Kenney's "RPG Audio" pack:
   https://kenney.nl/assets/rpg-audio — CC0.
 - `sounds/growl.wav` (monster_03), `boss-roar.wav` (roar_02),
-  `hurt.wav` (hurt_01), `bite.wav` (eat_03) come from
+  `hurt.wav` (hurt_01), `bite.wav` (eat_03), `die-grunt.wav` (scream_01),
+  `die-runner.wav` (scream_02), `die-boss.wav` (monster_04),
+  `night-breath.wav` (breath), `night-weird.wav` (weird_05) and
+  `night-creature.wav` (howl) come from
   "80 CC0 creature SFX" by rubberduck:
   https://opengameart.org/content/80-cc0-creature-sfx — CC0.
 - `sounds/fireball-shot.wav` (spell_fire_02) comes from

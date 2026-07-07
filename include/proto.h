@@ -155,6 +155,7 @@ void init_doors(map_t *m);
 int try_open_door(player_t *p, map_t *m, sound_t *s);
 int foe_overlap(map_t *m, enemy_t *self, float nx, float ny);
 void try_bite(enemy_t *e, player_t *p, sound_t *s);
+void play_death_cry(enemy_t *e, sound_t *s);
 void draw_door_hint(sfRenderWindow *win, player_t *p, map_t *m);
 void init_keyexit(map_t *m);
 void update_keyexit(player_t *p, map_t *m);

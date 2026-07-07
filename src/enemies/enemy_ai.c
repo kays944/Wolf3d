@@ -127,6 +127,8 @@ void update_enemies(player_t *p, map_t *m, sound_t *s)
         if (!e->alive)
             continue;
         if (e->dying) {
+            if (e->death_t == 0)
+                play_death_cry(e, s);
             e->death_t += p->dt;
             continue;
         }

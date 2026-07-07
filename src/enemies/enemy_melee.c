@@ -49,6 +49,17 @@ void hurt_player(player_t *p, int dmg)
     set_health_frame(p);
 }
 
+void play_death_cry(enemy_t *e, sound_t *s)
+{
+    int id = FX_DIE_GRUNT;
+
+    if (e->type == ENEMY_TYPE_RUNNER)
+        id = FX_DIE_RUNNER;
+    if (e->boss)
+        id = FX_DIE_BOSS;
+    play_fx_at(s, id, e->x, e->y);
+}
+
 void try_bite(enemy_t *e, player_t *p, sound_t *s)
 {
     if (dist_to(e, p) > RUNNER_MELEE_RANGE || e->cooldown > 0)
