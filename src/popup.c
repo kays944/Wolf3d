@@ -40,19 +40,39 @@ void update_popups(player_t *p)
     }
 }
 
+static sfColor pop_color(int kind)
+{
+    if (kind == PACK_MEDKIT)
+        return COL_POP_HP;
+    if (kind == POP_DMG)
+        return COL_POP_DMG;
+    if (kind == POP_HEAD)
+        return COL_POP_HEAD;
+    return COL_POP_AMMO;
+}
+
+static void fmt_popup(popup_t *pu, char *buf)
+{
+    if (pu->kind >= POP_DMG) {
+        snprintf(buf, 24, "%d", pu->amount);
+        return;
+    }
+    snprintf(buf, 24, pu->kind == PACK_MEDKIT ? "+%d PV" : "+%d",
+        pu->amount);
+}
+
 static void draw_one_popup(sfRenderWindow *win, player_t *p, popup_t *pu)
 {
     sfText *t = sfText_create();
     char buf[24] = {0};
     float k = pu->t / POPUP_LIFE;
-    sfColor col = pu->kind == PACK_MEDKIT ? COL_POP_HP : COL_POP_AMMO;
+    sfColor col = pop_color(pu->kind);
     sfFloatRect b = {0};
 
     if (!t)
         return;
     col.a = (sfUint8)(255 * (1.0f - k));
-    snprintf(buf, sizeof(buf), pu->kind == PACK_MEDKIT ? "+%d PV" : "+%d",
-        pu->amount);
+    fmt_popup(pu, buf);
     sfText_setFont(t, p->hud_font);
     sfText_setString(t, buf);
     sfText_setCharacterSize(t, POPUP_FONT);

@@ -344,6 +344,10 @@
     #define POPUP_FONT 32
     #define COL_POP_AMMO sfColor_fromRGB(255, 210, 60)
     #define COL_POP_HP sfColor_fromRGB(90, 230, 120)
+    #define POP_DMG 2
+    #define POP_HEAD 3
+    #define COL_POP_DMG sfColor_fromRGB(240, 240, 240)
+    #define COL_POP_HEAD sfColor_fromRGB(255, 80, 40)
     #define PACK_WORLD_SIZE 22.0f
     #define PACK_KINDS 2
     #define PACK_MEDKIT 0
