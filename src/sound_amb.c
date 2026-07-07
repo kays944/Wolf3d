@@ -96,11 +96,32 @@ static void update_night_amb(map_t *m, sound_t *s, float dt)
     set_amb_track(s->day_amb, s->day_vol);
 }
 
+static void update_night_fx(player_t *p, map_t *m, sound_t *s)
+{
+    float a = 0;
+    float d = 0;
+
+    if (!m->night) {
+        if (s->night_fx_cd < NIGHT_FX_MIN)
+            s->night_fx_cd = NIGHT_FX_MIN;
+        return;
+    }
+    s->night_fx_cd -= p->dt;
+    if (s->night_fx_cd > 0)
+        return;
+    s->night_fx_cd = NIGHT_FX_MIN + rand() % NIGHT_FX_VAR;
+    a = (rand() % 628) / 100.0f;
+    d = NIGHT_FX_DIST_MIN + rand() % NIGHT_FX_DIST_VAR;
+    play_fx_at(s, FX_NIGHT1 + rand() % 3,
+        p->x + cosf(a) * d, p->y + sinf(a) * d);
+}
+
 void reset_ambience(sound_t *s)
 {
     s->last_hp = -1;
     s->last_nights = -1;
     s->step_acc = 0;
+    s->night_fx_cd = NIGHT_FX_MIN;
     s->amb_vol = 0;
     s->day_vol = 0;
     if (s->night_amb) {
@@ -119,4 +140,5 @@ void update_ambience(player_t *p, map_t *m, sound_t *s)
     update_steps(p, s);
     watch_player(p, s);
     update_night_amb(m, s, p->dt);
+    update_night_fx(p, m, s);
 }

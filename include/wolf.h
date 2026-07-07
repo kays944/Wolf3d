@@ -177,6 +177,7 @@ typedef struct sound_s {
     float amb_vol;
     float day_vol;
     float step_acc;
+    float night_fx_cd;
     float last_px;
     float last_py;
     int last_hp;
