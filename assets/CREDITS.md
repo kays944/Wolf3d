@@ -48,6 +48,8 @@
 
 ## Generated art
 
+- `texture_sky_night.png` (starry night sky with moon) is generated
+  for this project (script), no license needed.
 - `health_bar.png` (pixel heart + 5-segment bar, 6 frames), `key.png`,
   `texture_wall_brick.png`, `texture_wall_cold.png`, `texture_door.png`
   and `texture_door_locked.png` are generated for this project (scripts),
