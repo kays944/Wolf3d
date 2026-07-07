@@ -248,8 +248,8 @@
     #define SKY_TEX_PATH "./assets/texture_sky.png"
     #define SKY_NIGHT_TEX_PATH "./assets/texture_sky_night.png"
     #define FLOOR_TEX_PATH "./assets/texture_floor.png"
-    #define RELOAD_TIME 1.40f
-    #define RELOAD_DIP_T 0.30f
+    #define RELOAD_TIME 1.10f
+    #define RELOAD_DIP_T 0.25f
     #define RELOAD_DIP_FRAC 0.85f
     #define RELOAD_TILT 10.0f
 

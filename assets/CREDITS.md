@@ -30,7 +30,7 @@
 - `sounds/gun-reload.wav` is "assaultriflereload1" from "Gun reload
   sounds" by springyspringo:
   https://opengameart.org/content/gun-reload-sounds — CC0
-  (converted to mono 44.1kHz WAV).
+  (time-compressed to 1.1s, mono 44.1kHz WAV).
 - `sounds/explosion.wav` is "Chunky Explosion" by Joth:
   https://opengameart.org/content/chunky-explosion — CC0
   (trimmed to 2.5s, normalized, converted to mono 44.1kHz WAV).
