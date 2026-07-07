@@ -24,8 +24,11 @@
 
 - `sounds/night-ambience.wav` (wind + dark pad loop) and
   `day-ambience.wav` (wind only) are synthesized, no license needed.
-- `sounds/gun-fire.wav` and `gun-reload.wav`: TODO document source
-  and license (added 2026-07-07).
+- `sounds/gun-fire.wav` is an AK-47 shot from "The Free Firearm
+  Sound Library": https://opengameart.org/content/the-free-firearm-sound-library
+  — CC0 (first shot of take C_28P, cut to 1s, mono 44.1kHz).
+- `sounds/gun-reload.wav`: TODO document source and license
+  (added 2026-07-07).
 - `sounds/explosion.wav` is "Chunky Explosion" by Joth:
   https://opengameart.org/content/chunky-explosion — CC0
   (trimmed to 2.5s, normalized, converted to mono 44.1kHz WAV).
