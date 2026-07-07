@@ -26,8 +26,11 @@
   `day-ambience.wav` (wind only) are synthesized, no license needed.
 - `sounds/gun-fire.wav` and `gun-reload.wav`: TODO document source
   and license (added 2026-07-07).
-- `sounds/explosion.wav` and `explosion.png` (barrel explosion):
-  TODO document source and license (added 2026-07-07).
+- `sounds/explosion.wav` is "Chunky Explosion" by Joth:
+  https://opengameart.org/content/chunky-explosion — CC0
+  (trimmed to 2.5s, normalized, converted to mono 44.1kHz WAV).
+- `explosion.png` (barrel explosion frames): TODO document source
+  and license (added 2026-07-07).
 - `sounds/footstep.wav`, `footstep2.wav`, `footstep3.wav`,
   `door-open.wav`, `pickup.wav` come from Kenney's "RPG Audio" pack:
   https://kenney.nl/assets/rpg-audio — CC0.
