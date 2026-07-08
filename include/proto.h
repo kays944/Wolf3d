@@ -162,6 +162,7 @@ void update_keyexit(player_t *p, map_t *m);
 void draw_key_hint(sfRenderWindow *win, player_t *p);
 void draw_markers(sfRenderWindow *win, player_t *p, map_t *m);
 
+void draw_secrets(sfRenderWindow *win, player_t *p);
 void init_pushwalls(map_t *m);
 int try_push_wall(player_t *p, map_t *m, sound_t *s);
 void update_pushwalls(player_t *p, map_t *m, sound_t *s);

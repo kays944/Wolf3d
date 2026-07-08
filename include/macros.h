@@ -245,12 +245,15 @@
     #define COLD_TEX_PATH "./assets/texture_wall_cold.png"
     #define DOOR_TEX_PATH "./assets/texture_door.png"
     #define DOOR_LOCKED_TEX_PATH "./assets/texture_door_locked.png"
-    #define WALL_KINDS 5
+    #define WALL_KINDS 6
     #define WALL_STONE 0
     #define WALL_BRICK 1
     #define WALL_COLD 2
     #define WALL_DOOR 3
     #define WALL_DOOR_LOCKED 4
+    #define WALL_SECRET 5
+    #define SECRET_TEX_PATH "./assets/texture_wall_secret.png"
+    #define SECRET_FONT_SZ 18
     #define SKY_TEX_PATH "./assets/texture_sky.png"
     #define SKY_NIGHT_TEX_PATH "./assets/texture_sky_night.png"
     #define FLOOR_TEX_PATH "./assets/texture_floor.png"

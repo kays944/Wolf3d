@@ -49,6 +49,27 @@ void draw_score(sfRenderWindow *win, player_t *p)
         sfRenderWindow_drawText(win, p->score_txt, NULL);
 }
 
+void draw_secrets(sfRenderWindow *win, player_t *p)
+{
+    sfText *t = NULL;
+    char buf[32] = {0};
+
+    if (p->secrets_total <= 0)
+        return;
+    t = sfText_create();
+    if (!t)
+        return;
+    snprintf(buf, sizeof(buf), "SECRETS %d/%d",
+        p->secrets, p->secrets_total);
+    sfText_setFont(t, p->hud_font);
+    sfText_setString(t, buf);
+    sfText_setCharacterSize(t, SECRET_FONT_SZ);
+    sfText_setFillColor(t, COL_POP_SECRET);
+    sfText_setPosition(t, (sfVector2f){20.0f, 48.0f});
+    sfRenderWindow_drawText(win, t, NULL);
+    sfText_destroy(t);
+}
+
 void destroy_score(player_t *p)
 {
     if (p->score_txt)

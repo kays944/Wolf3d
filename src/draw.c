@@ -11,8 +11,10 @@
 
 int wall_kind(char c)
 {
-    if (c == 'x' || c == 's')
+    if (c == 'x')
         return WALL_STONE;
+    if (c == 's')
+        return WALL_SECRET;
     if (c == 'm')
         return WALL_BRICK;
     if (c == 'n')
@@ -147,6 +149,7 @@ void draw(sfRenderWindow *window, player_t *player, map_t *m)
     if (player->ammo_txt)
         sfRenderWindow_drawText(window, player->ammo_txt, NULL);
     draw_score(window, player);
+    draw_secrets(window, player);
     draw_pickup_hint(window, player, m);
     draw_popups(window, player);
     draw_fps(window, player);

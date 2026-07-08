@@ -186,6 +186,8 @@ int game_loop(game_t *g)
         g->pending_load = sfFalse;
         apply_save(&player, &g->map);
     }
+    player.secrets = g->map.secrets_found;
+    player.secrets_total = g->map.pwall_count;
     ret = run_game(g->window, &player, g);
     destroy_player_tools(&player);
     return ret;

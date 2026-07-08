@@ -71,7 +71,12 @@ static void draw_stats(sfRenderWindow *win, player_t *p)
 
     if (!t)
         return;
-    snprintf(buf, sizeof(buf), "KILLS %d    SCORE %d", p->kills, p->score);
+    if (p->secrets_total > 0)
+        snprintf(buf, sizeof(buf), "KILLS %d    SCORE %d    SECRETS %d/%d",
+            p->kills, p->score, p->secrets, p->secrets_total);
+    else
+        snprintf(buf, sizeof(buf), "KILLS %d    SCORE %d",
+            p->kills, p->score);
     sfText_setFont(t, p->hud_font);
     sfText_setString(t, buf);
     sfText_setCharacterSize(t, 30);

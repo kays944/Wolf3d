@@ -43,6 +43,7 @@ static const char *WALL_PATHS[WALL_KINDS] = {
     COLD_TEX_PATH,
     DOOR_TEX_PATH,
     DOOR_LOCKED_TEX_PATH,
+    SECRET_TEX_PATH,
 };
 
 static void destroy_wall_texs(player_t *p)

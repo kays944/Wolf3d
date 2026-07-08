@@ -71,6 +71,8 @@ typedef struct player_s {
     sfBool r2_down;
     popup_t popups[MAX_POPUPS];
     sfText *score_txt;
+    int secrets;
+    int secrets_total;
     sfText *fps_txt;
     float fps_acc;
     int fps_frames;

@@ -102,6 +102,7 @@ static void reward_secret(player_t *p, map_t *m, pwall_t *pw)
     popup_t data = {0};
 
     m->secrets_found++;
+    p->secrets = m->secrets_found;
     p->score += PW_SCORE;
     refresh_score_text(p);
     data.amount = PW_SCORE;
