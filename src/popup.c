@@ -48,11 +48,17 @@ static sfColor pop_color(int kind)
         return COL_POP_DMG;
     if (kind == POP_HEAD)
         return COL_POP_HEAD;
+    if (kind == POP_SECRET)
+        return COL_POP_SECRET;
     return COL_POP_AMMO;
 }
 
 static void fmt_popup(popup_t *pu, char *buf)
 {
+    if (pu->kind == POP_SECRET) {
+        snprintf(buf, 24, "SECRET +%d", pu->amount);
+        return;
+    }
     if (pu->kind >= POP_DMG) {
         snprintf(buf, 24, "%d", pu->amount);
         return;

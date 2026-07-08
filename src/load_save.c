@@ -6,6 +6,7 @@
 */
 
 #include <stdio.h>
+#include <string.h>
 #include "macros.h"
 #include "proto.h"
 
@@ -118,6 +119,57 @@ static int read_props(FILE *f, map_t *m)
     return EXIT_SUCCESS;
 }
 
+static void apply_pwall(map_t *m, pwall_t *pw, int tx, int ty)
+{
+    if (ty < 0 || ty >= m->size_y || tx < 0
+        || tx >= (int)strlen(m->map[ty]))
+        return;
+    m->map[pw->ty][pw->tx] = ' ';
+    m->map[ty][tx] = 'x';
+    pw->tx = tx;
+    pw->ty = ty;
+    pw->done = sfTrue;
+}
+
+static int read_pwalls(FILE *f, map_t *m)
+{
+    int n = 0;
+    int found = 0;
+    int flag = 0;
+    int tx = 0;
+    int ty = 0;
+
+    if (fscanf(f, "pwalls %d %d\n", &n, &found) != 2
+        || n != m->pwall_count)
+        return EXIT_SUCCESS;
+    m->secrets_found = found;
+    for (int i = 0; i < n; i++) {
+        if (fscanf(f, "pwall %d %d %d\n", &flag, &tx, &ty) != 3)
+            return EXIT_FAIL;
+        if (flag)
+            apply_pwall(m, &m->pwalls[i], tx, ty);
+    }
+    return EXIT_SUCCESS;
+}
+
+static int read_seen(FILE *f, map_t *m)
+{
+    int h = 0;
+    int w = 0;
+    char row[128] = {0};
+
+    if (fscanf(f, "seen %d %d\n", &h, &w) != 2
+        || h != m->size_y || w != m->size_x || !m->seen || w > 127)
+        return EXIT_SUCCESS;
+    for (int y = 0; y < h; y++) {
+        if (fscanf(f, "%127s", row) != 1 || (int)strlen(row) != w)
+            return EXIT_FAIL;
+        for (int x = 0; x < w; x++)
+            m->seen[y * w + x] = (row[x] == '1');
+    }
+    return EXIT_SUCCESS;
+}
+
 static void strip_key(player_t *p, map_t *m)
 {
     if (!p->has_key)
@@ -140,7 +192,9 @@ int apply_save(player_t *p, map_t *m)
         && read_player(f, p) == EXIT_SUCCESS
         && read_enemies(f, m) == EXIT_SUCCESS
         && read_world(f, m) == EXIT_SUCCESS
-        && read_props(f, m) == EXIT_SUCCESS;
+        && read_props(f, m) == EXIT_SUCCESS
+        && read_pwalls(f, m) == EXIT_SUCCESS
+        && read_seen(f, m) == EXIT_SUCCESS;
     fclose(f);
     if (!ok)
         return EXIT_FAIL;

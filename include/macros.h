@@ -193,6 +193,12 @@
     #define HEALTH_FRAMES 6
 
     #define MAX_DOORS 24
+    #define MAX_PWALLS 8
+    #define PW_STEP_T 0.30f
+    #define PW_RANGE 90.0f
+    #define PW_SCORE 250
+    #define PW_SND_PITCH 0.5f
+    #define FOG_RADIUS 5
     #define DOOR_OPEN_DIST (TILE_SIZE * 1.35f)
     #define DOOR_HINT_SZ 26
     #define DOOR_HINT_Y 0.60f
@@ -350,8 +356,10 @@
     #define COL_POP_HP sfColor_fromRGB(90, 230, 120)
     #define POP_DMG 2
     #define POP_HEAD 3
+    #define POP_SECRET 4
     #define COL_POP_DMG sfColor_fromRGB(240, 240, 240)
     #define COL_POP_HEAD sfColor_fromRGB(255, 80, 40)
+    #define COL_POP_SECRET sfColor_fromRGB(255, 215, 80)
     #define PACK_WORLD_SIZE 22.0f
     #define PACK_KINDS 2
     #define PACK_MEDKIT 0

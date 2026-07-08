@@ -49,6 +49,32 @@ static void write_world(FILE *f, map_t *m)
         fprintf(f, "prop %d\n", m->props[i].dead ? 0 : 1);
 }
 
+static void write_pwalls(FILE *f, map_t *m)
+{
+    pwall_t *pw = NULL;
+
+    fprintf(f, "pwalls %d %d\n", m->pwall_count, m->secrets_found);
+    for (int i = 0; i < m->pwall_count; i++) {
+        pw = &m->pwalls[i];
+        fprintf(f, "pwall %d %d %d\n",
+            (pw->done || pw->moving) ? 1 : 0, pw->tx, pw->ty);
+    }
+}
+
+static void write_seen(FILE *f, map_t *m)
+{
+    if (!m->seen) {
+        fprintf(f, "seen 0 0\n");
+        return;
+    }
+    fprintf(f, "seen %d %d\n", m->size_y, m->size_x);
+    for (int y = 0; y < m->size_y; y++) {
+        for (int x = 0; x < m->size_x; x++)
+            fputc(m->seen[y * m->size_x + x] ? '1' : '0', f);
+        fputc('\n', f);
+    }
+}
+
 void save_game(map_t *m, player_t *p)
 {
     FILE *f = fopen(SAVE_PATH, "w");
@@ -61,5 +87,7 @@ void save_game(map_t *m, player_t *p)
     write_player(f, p);
     write_enemies(f, m);
     write_world(f, m);
+    write_pwalls(f, m);
+    write_seen(f, m);
     fclose(f);
 }

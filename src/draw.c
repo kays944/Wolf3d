@@ -11,7 +11,7 @@
 
 int wall_kind(char c)
 {
-    if (c == 'x')
+    if (c == 'x' || c == 's')
         return WALL_STONE;
     if (c == 'm')
         return WALL_BRICK;

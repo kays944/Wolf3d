@@ -178,6 +178,8 @@ int game_loop(game_t *g)
         return EXIT_FAIL;
     }
     init_doors(&g->map);
+    init_pushwalls(&g->map);
+    init_fog(&g->map);
     init_keyexit(&g->map);
     init_night(&g->map);
     if (g->pending_load) {

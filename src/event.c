@@ -34,7 +34,8 @@ static void check_open(player_t *player, sfEvent *e, map_t *m, sound_t *s)
         return;
     if (e->key.code != sfKeyE)
         return;
-    try_open_door(player, m, s);
+    if (!try_open_door(player, m, s))
+        try_push_wall(player, m, s);
 }
 
 static void check_pickup(player_t *player, sfEvent *e)
@@ -76,7 +77,8 @@ static void check_pad_buttons(player_t *player, sfEvent *e, sound_t *s,
     btn = e->joystickButton.button;
     if (btn == PAD_BTN_FIRE)
         do_fire(player, s);
-    if (btn == PAD_BTN_RELOAD && !try_open_door(player, m, s))
+    if (btn == PAD_BTN_RELOAD && !try_open_door(player, m, s)
+        && !try_push_wall(player, m, s))
         start_reload(player, s);
     if (btn == PAD_BTN_FLASH)
         toggle_flashlight(player);
@@ -117,6 +119,8 @@ static void run_updates(sfRenderWindow *window, player_t *player,
     update_booms(player, m, s);
     update_pickups(player, m);
     update_popups(player);
+    update_pushwalls(player, m, s);
+    update_fog(player, m);
     update_keyexit(player, m);
     update_night(player, m);
     update_ambience(player, m, s);

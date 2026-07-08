@@ -162,6 +162,13 @@ void update_keyexit(player_t *p, map_t *m);
 void draw_key_hint(sfRenderWindow *win, player_t *p);
 void draw_markers(sfRenderWindow *win, player_t *p, map_t *m);
 
+void init_pushwalls(map_t *m);
+int try_push_wall(player_t *p, map_t *m, sound_t *s);
+void update_pushwalls(player_t *p, map_t *m, sound_t *s);
+int init_fog(map_t *m);
+int fog_seen(map_t *m, int x, int y);
+void update_fog(player_t *p, map_t *m);
+
 float diff_hp_mult(int d);
 float diff_dmg_mult(int d);
 float diff_night_mult(int d);

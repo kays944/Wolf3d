@@ -65,8 +65,9 @@ static void draw_mini_walls(sfRenderWindow *win, map_t *m, mini_t *g)
     sfRectangleShape_setFillColor(cell, COL_MINI_WALL);
     for (int y = 0; y < m->size_y; y++)
         for (int x = 0; m->map[y][x]; x++)
-            if (m->map[y][x] == 'x' || m->map[y][x] == 'm'
-                || m->map[y][x] == 'n') {
+            if ((m->map[y][x] == 'x' || m->map[y][x] == 'm'
+                || m->map[y][x] == 'n' || m->map[y][x] == 's')
+                && fog_seen(m, x, y)) {
                 sfRectangleShape_setPosition(cell, (sfVector2f){
                         g->ox + x * g->cell, g->oy + y * g->cell});
                 sfRenderWindow_drawRectangleShape(win, cell, NULL);
@@ -92,7 +93,8 @@ static void draw_mini_enemies(sfRenderWindow *win, map_t *m, mini_t *g)
 
     for (int i = 0; i < m->enemy_count; i++) {
         e = &m->enemies[i];
-        if (!e->alive || e->dying)
+        if (!e->alive || e->dying
+            || !fog_seen(m, (int)(e->x / TILE_SIZE), (int)(e->y / TILE_SIZE)))
             continue;
         c.x = g->ox + (e->x / TILE_SIZE) * g->cell;
         c.y = g->oy + (e->y / TILE_SIZE) * g->cell;
@@ -107,6 +109,8 @@ static void draw_mini_markers(sfRenderWindow *win, map_t *m, mini_t *g)
 
     for (int y = 0; y < m->size_y; y++)
         for (int x = 0; m->map[y][x]; x++) {
+            if (!fog_seen(m, x, y))
+                continue;
             c.x = g->ox + (x + 0.5f) * g->cell;
             c.y = g->oy + (y + 0.5f) * g->cell;
             if (m->map[y][x] == 'K')

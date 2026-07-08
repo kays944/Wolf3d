@@ -243,6 +243,16 @@ typedef struct door_s {
     sfBool open;
 } door_t;
 
+typedef struct pwall_s {
+    int tx;
+    int ty;
+    int dx;
+    int dy;
+    float timer;
+    sfBool moving;
+    sfBool done;
+} pwall_t;
+
 typedef struct proj_s {
     float x;
     float y;
@@ -268,6 +278,10 @@ typedef struct map_s {
     boom_t booms[MAX_BOOMS];
     door_t doors[MAX_DOORS];
     int door_count;
+    pwall_t pwalls[MAX_PWALLS];
+    int pwall_count;
+    int secrets_found;
+    unsigned char *seen;
     sfBool has_exit;
     sfBool night;
     float night_cd;

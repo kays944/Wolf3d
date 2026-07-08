@@ -47,8 +47,11 @@ void free_map(map_t *m)
         free_array(m->map);
     if (m->path)
         free(m->path);
+    if (m->seen)
+        free(m->seen);
     m->map = NULL;
     m->path = NULL;
+    m->seen = NULL;
 }
 
 static int validate_and_set(map_t *m, char *path)

@@ -41,6 +41,8 @@ SRC			= 	src/main.c 							\
 				src/shade.c 						\
 				src/popup.c 						\
 				src/difficulty.c 					\
+				src/pushwall.c 						\
+				src/fog.c 							\
 				src/explosion.c 					\
 				src/explosion_draw.c 				\
 				src/raycast.c 						\
