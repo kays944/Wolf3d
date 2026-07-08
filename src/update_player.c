@@ -47,12 +47,13 @@ static void move_input(player_t *p, map_t *m)
 static void look_input(player_t *p)
 {
     float max_pitch = p->wh / (float)PITCH_MAX_DIV;
+    float aim = p->aiming ? AIM_SENS_MULT : 1.0f;
 
     if (!p->use_pad) {
         if (sfKeyboard_isKeyPressed(sfKeyLeft))
-            p->angle -= ROTATION_SPEED * p->sens * p->dt;
+            p->angle -= ROTATION_SPEED * p->sens * aim * p->dt;
         if (sfKeyboard_isKeyPressed(sfKeyRight))
-            p->angle += ROTATION_SPEED * p->sens * p->dt;
+            p->angle += ROTATION_SPEED * p->sens * aim * p->dt;
         if (sfKeyboard_isKeyPressed(sfKeyUp))
             p->pitch += PITCH_SPEED * p->dt;
         if (sfKeyboard_isKeyPressed(sfKeyDown))

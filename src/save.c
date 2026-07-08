@@ -15,6 +15,30 @@ int save_exists(void)
     return access(SAVE_PATH, F_OK) == 0;
 }
 
+void stash_carry(game_t *g, player_t *p)
+{
+    g->carry = sfTrue;
+    g->c_hp = p->hp;
+    g->c_ammo = p->ammo;
+    g->c_reserve = p->reserve;
+    g->c_score = p->score;
+    g->c_kills = p->kills;
+}
+
+void apply_carry(game_t *g, player_t *p)
+{
+    if (!g->carry)
+        return;
+    p->hp = g->c_hp;
+    p->ammo = g->c_ammo;
+    p->reserve = g->c_reserve;
+    p->score = g->c_score;
+    p->kills = g->c_kills;
+    set_health_frame(p);
+    refresh_ammo_text(p);
+    refresh_score_text(p);
+}
+
 static void write_player(FILE *f, player_t *p)
 {
     fprintf(f, "player %.2f %.2f %.4f %d %d %d %d %d %d\n",

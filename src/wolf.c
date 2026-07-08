@@ -111,6 +111,7 @@ static int run_cycle(game_t *g)
     cleanup_menu(&m);
     if (action != MENU_PLAY && action != MENU_CONTINUE)
         return EXIT_SUCCESS;
+    g->carry = sfFalse;
     return play_maps(g);
 }
 

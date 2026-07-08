@@ -182,6 +182,7 @@ int game_loop(game_t *g)
     init_fog(&g->map);
     init_keyexit(&g->map);
     init_night(&g->map);
+    apply_carry(g, &player);
     if (g->pending_load) {
         g->pending_load = sfFalse;
         apply_save(&player, &g->map);
@@ -189,6 +190,8 @@ int game_loop(game_t *g)
     player.secrets = g->map.secrets_found;
     player.secrets_total = g->map.pwall_count;
     ret = run_game(g->window, &player, g);
+    if (ret == END_NEXT)
+        stash_carry(g, &player);
     destroy_player_tools(&player);
     return ret;
 }

@@ -346,6 +346,12 @@ typedef struct game_s {
     sfFont *font_med;
     sfBool running;
     sfBool pending_load;
+    sfBool carry;
+    int c_hp;
+    int c_ammo;
+    int c_reserve;
+    int c_score;
+    int c_kills;
     game_state_t state;
     settings_t settings;
     sound_t sound;

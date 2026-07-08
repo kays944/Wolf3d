@@ -91,7 +91,11 @@ static void check_triggers(player_t *player, sound_t *s)
     float l2 = 0;
     float r2 = 0;
 
-    if (!player->use_pad || !sfJoystick_isConnected(PAD_ID))
+    if (!player->use_pad) {
+        player->aiming = sfMouse_isButtonPressed(sfMouseRight);
+        return;
+    }
+    if (!sfJoystick_isConnected(PAD_ID))
         return;
     l2 = sfJoystick_getAxisPosition(PAD_ID, PAD_AIM_AXIS);
     r2 = sfJoystick_getAxisPosition(PAD_ID, PAD_FIRE_AXIS);

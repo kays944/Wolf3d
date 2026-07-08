@@ -78,6 +78,8 @@ void render_pause(pause_t *p);
 void draw_overlay(sfRenderWindow *win, float ww, float wh);
 void save_game(map_t *m, player_t *p);
 int save_exists(void);
+void stash_carry(game_t *g, player_t *p);
+void apply_carry(game_t *g, player_t *p);
 int load_saved_map(game_t *g);
 int apply_save(player_t *p, map_t *m);
 void free_map(map_t *m);
