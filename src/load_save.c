@@ -55,6 +55,7 @@ static int read_one_enemy(FILE *f, map_t *m, int i)
     m->enemies[i].hp = tmp.hp;
     m->enemies[i].dying = dying ? sfTrue : sfFalse;
     m->enemies[i].death_t = tmp.death_t;
+    sync_boss_state(&m->enemies[i]);
     return EXIT_SUCCESS;
 }
 

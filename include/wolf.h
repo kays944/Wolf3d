@@ -214,6 +214,9 @@ typedef struct enemy_s {
     sfBool boss;
     sfBool aware;
     float growl_cd;
+    float charge_t;
+    sfBool enraged;
+    int summons;
 } enemy_t;
 
 typedef struct pickup_s {

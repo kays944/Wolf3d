@@ -17,21 +17,23 @@ static proj_t *free_slot(map_t *m)
     return NULL;
 }
 
-void spawn_proj(map_t *m, enemy_t *e, player_t *p)
+void spawn_proj_angle(map_t *m, enemy_t *e, float ang)
 {
     proj_t *pr = free_slot(m);
-    float dx = p->x - e->x;
-    float dy = p->y - e->y;
-    float d = sqrtf(dx * dx + dy * dy);
 
-    if (!pr || d < 1.0f)
+    if (!pr)
         return;
     pr->x = e->x;
     pr->y = e->y;
-    pr->dx = dx / d * PROJ_SPEED;
-    pr->dy = dy / d * PROJ_SPEED;
+    pr->dx = cosf(ang) * PROJ_SPEED;
+    pr->dy = sinf(ang) * PROJ_SPEED;
     pr->boss = e->boss;
     pr->active = sfTrue;
+}
+
+void spawn_proj(map_t *m, enemy_t *e, player_t *p)
+{
+    spawn_proj_angle(m, e, atan2f(p->y - e->y, p->x - e->x));
 }
 
 static void move_proj(proj_t *pr, player_t *p, map_t *m)

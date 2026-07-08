@@ -9,7 +9,7 @@
 #include "macros.h"
 #include "proto.h"
 
-static void spawn_boom(map_t *m, float x, float y)
+void spawn_boom(map_t *m, float x, float y)
 {
     for (int i = 0; i < MAX_BOOMS; i++) {
         if (m->booms[i].active)

@@ -53,7 +53,7 @@ static void step_to(enemy_t *e, map_t *m, float nx, float ny)
         e->y = ny;
 }
 
-static void chase(enemy_t *e, player_t *p, map_t *m)
+void chase(enemy_t *e, player_t *p, map_t *m)
 {
     float dist = dist_to_player(e, p);
     float step = enemy_speed(e) * p->dt;
@@ -109,6 +109,10 @@ static void tick_enemy(enemy_t *e, player_t *p, map_t *m, sound_t *s)
         return;
     }
     update_growl(e, p, m, s);
+    if (e->boss) {
+        tick_boss(e, p, m, s);
+        return;
+    }
     chase(e, p, m);
     if (e->type == ENEMY_TYPE_RUNNER)
         try_bite(e, p, s);

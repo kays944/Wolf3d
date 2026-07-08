@@ -67,6 +67,11 @@ void init_night(map_t *m);
 void update_night(player_t *p, map_t *m);
 void draw_night_hud(sfRenderWindow *win, player_t *p, map_t *m);
 void spawn_enemy(map_t *m, float x, float y, int type);
+void chase(enemy_t *e, player_t *p, map_t *m);
+void tick_boss(enemy_t *e, player_t *p, map_t *m, sound_t *s);
+void sync_boss_state(enemy_t *e);
+void spawn_proj_angle(map_t *m, enemy_t *e, float ang);
+void spawn_boom(map_t *m, float x, float y);
 
 int run_pause(game_t *g, map_t *map, player_t *player);
 void render_pause(pause_t *p);

@@ -11,6 +11,8 @@
 
 static sfColor enemy_tint(enemy_t *e)
 {
+    if (e->boss && e->enraged)
+        return sfColor_fromRGB(255, 80, 80);
     if (e->type == ENEMY_TYPE_BRUTE)
         return sfColor_fromRGB(255, 140, 140);
     return sfWhite;

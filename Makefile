@@ -50,6 +50,7 @@ SRC			= 	src/main.c 							\
 				src/enemies/enemy_utils.c 			\
 				src/enemies/enemy_melee.c 			\
 				src/enemies/enemy_ai.c 				\
+				src/enemies/boss.c 					\
 				src/enemies/enemy_draw.c 			\
 				src/enemies/enemy_shoot.c 			\
 				src/enemies/projectile.c 			\

@@ -268,7 +268,20 @@
     #define MAX_ENEMIES 32
     #define ENEMY_HP 100
     #define ENEMY_HP_PER_LEVEL 25
-    #define BOSS_HP (ENEMY_HP * 2)
+    #define BOSS_HP (ENEMY_HP * 3)
+    #define BOSS_SPREAD 0.30f
+    #define BOSS_SHOOT_CD 2.2f
+    #define BOSS_CHARGE_MIN 150.0f
+    #define BOSS_CHARGE_MAX 340.0f
+    #define BOSS_CHARGE_SPEED 320.0f
+    #define BOSS_CHARGE_LEN 1.2f
+    #define BOSS_CHARGE_CD 3.5f
+    #define BOSS_SLAM_RANGE 110.0f
+    #define BOSS_SLAM_RADIUS 140.0f
+    #define BOSS_SLAM_DMG 30
+    #define BOSS_SLAM_CD 2.6f
+    #define BOSS_ENRAGE_CD_MULT 0.5f
+    #define BOSS_SUMMON_N 2
     #define ENEMY_TYPE_GRUNT 0
     #define ENEMY_TYPE_BRUTE 1
     #define ENEMY_TYPE_RUNNER 2
