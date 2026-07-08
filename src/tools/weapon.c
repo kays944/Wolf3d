@@ -8,9 +8,29 @@
 #include "macros.h"
 #include "proto.h"
 
+sfTexture *weapon_idle_tex(player_t *p)
+{
+    return p->weapon == WEAPON_PISTOL ? p->pistol_idle : p->weapon_idle;
+}
+
+sfTexture *weapon_fire_tex(player_t *p)
+{
+    return p->weapon == WEAPON_PISTOL ? p->pistol_fire : p->weapon_fire;
+}
+
+void switch_weapon(player_t *p)
+{
+    if (p->firing || p->reloading)
+        return;
+    p->weapon = (p->weapon == WEAPON_PISTOL) ? WEAPON_RIFLE : WEAPON_PISTOL;
+    sfSprite_setTexture(p->weapon_spr, weapon_idle_tex(p), sfTrue);
+    place_weapon_sprite(p);
+    refresh_ammo_text(p);
+}
+
 void place_weapon_sprite(player_t *p)
 {
-    sfVector2u sz = sfTexture_getSize(p->weapon_idle);
+    sfVector2u sz = sfTexture_getSize(weapon_idle_tex(p));
     sfVector2f sc = {0};
     sfVector2f pos = {0};
 
@@ -26,8 +46,12 @@ int init_weapon(player_t *p)
 {
     p->weapon_idle = sfTexture_createFromFile("./assets/weapon_idle.png", NULL);
     p->weapon_fire = sfTexture_createFromFile("./assets/weapon_fire.png", NULL);
-    if (!p->weapon_idle || !p->weapon_fire)
+    p->pistol_idle = sfTexture_createFromFile(PISTOL_IDLE_PATH, NULL);
+    p->pistol_fire = sfTexture_createFromFile(PISTOL_FIRE_PATH, NULL);
+    if (!p->weapon_idle || !p->weapon_fire
+        || !p->pistol_idle || !p->pistol_fire)
         return EXIT_FAIL;
+    p->weapon = WEAPON_RIFLE;
     p->weapon_spr = sfSprite_create();
     p->weapon_clock = sfClock_create();
     if (!p->weapon_spr || !p->weapon_clock)
@@ -48,4 +72,8 @@ void destroy_weapon(player_t *p)
         sfTexture_destroy(p->weapon_idle);
     if (p->weapon_fire)
         sfTexture_destroy(p->weapon_fire);
+    if (p->pistol_idle)
+        sfTexture_destroy(p->pistol_idle);
+    if (p->pistol_fire)
+        sfTexture_destroy(p->pistol_fire);
 }

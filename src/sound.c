@@ -29,6 +29,13 @@ static int init_shoot_sounds(sound_t *s, settings_t *set)
     sfSound_setBuffer(s->shoot_snd, s->shoot_buf);
     sfSound_setRelativeToListener(s->shoot_snd, sfTrue);
     sfSound_setVolume(s->shoot_snd, set->sfx_vol);
+    s->pistol_buf = sfSoundBuffer_createFromFile(SND_PISTOL);
+    s->pistol_snd = sfSound_create();
+    if (!s->pistol_buf || !s->pistol_snd)
+        return EXIT_FAIL;
+    sfSound_setBuffer(s->pistol_snd, s->pistol_buf);
+    sfSound_setRelativeToListener(s->pistol_snd, sfTrue);
+    sfSound_setVolume(s->pistol_snd, set->sfx_vol);
     return init_reload_sound(s, set);
 }
 
@@ -68,6 +75,10 @@ void destroy_sound(sound_t *s)
         sfSound_destroy(s->reload_snd);
     if (s->reload_buf)
         sfSoundBuffer_destroy(s->reload_buf);
+    if (s->pistol_snd)
+        sfSound_destroy(s->pistol_snd);
+    if (s->pistol_buf)
+        sfSoundBuffer_destroy(s->pistol_buf);
     if (s->shoot_snd)
         sfSound_destroy(s->shoot_snd);
     if (s->shoot_buf)
@@ -87,6 +98,7 @@ void update_sound_vol(sound_t *s, settings_t *set)
     sfMusic_setVolume(s->menu_music, set->music_vol);
     sfSound_setVolume(s->shoot_snd, set->sfx_vol);
     sfSound_setVolume(s->reload_snd, set->sfx_vol);
+    sfSound_setVolume(s->pistol_snd, set->sfx_vol);
 }
 
 void play_shoot(sound_t *s)
@@ -97,4 +109,9 @@ void play_shoot(sound_t *s)
 void play_reload(sound_t *s)
 {
     sfSound_play(s->reload_snd);
+}
+
+void play_pistol(sound_t *s)
+{
+    sfSound_play(s->pistol_snd);
 }

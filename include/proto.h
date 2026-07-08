@@ -57,6 +57,10 @@ void cleanup_game(game_t *g);
 int init_weapon(player_t *p);
 void destroy_weapon(player_t *p);
 void place_weapon_sprite(player_t *p);
+sfTexture *weapon_idle_tex(player_t *p);
+sfTexture *weapon_fire_tex(player_t *p);
+void switch_weapon(player_t *p);
+void play_pistol(sound_t *s);
 
 int init_flashlight(player_t *p);
 void destroy_flashlight(player_t *p);

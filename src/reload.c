@@ -26,7 +26,7 @@ void destroy_reload(player_t *p)
 
 void start_reload(player_t *p, sound_t *s)
 {
-    if (p->reloading || p->firing)
+    if (p->reloading || p->firing || p->weapon == WEAPON_PISTOL)
         return;
     if (p->ammo >= AMMO_DEFAULT || p->reserve <= 0)
         return;

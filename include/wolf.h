@@ -79,6 +79,9 @@ typedef struct player_s {
     sfBool show_fps;
     sfTexture *weapon_idle;
     sfTexture *weapon_fire;
+    sfTexture *pistol_idle;
+    sfTexture *pistol_fire;
+    int weapon;
     sfSprite *weapon_spr;
     sfClock *weapon_clock;
     sfBool firing;
@@ -169,6 +172,8 @@ typedef struct sound_s {
     sfSound *shoot_snd;
     sfSoundBuffer *reload_buf;
     sfSound *reload_snd;
+    sfSoundBuffer *pistol_buf;
+    sfSound *pistol_snd;
     sfSoundBuffer *fx_bufs[FX_KINDS];
     float fx_vol[FX_KINDS];
     float fx_pitch[FX_KINDS];

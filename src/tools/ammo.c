@@ -25,7 +25,10 @@ void refresh_ammo_text(player_t *p)
 
     if (!p->ammo_txt)
         return;
-    snprintf(buf, sizeof(buf), "MUN  %d / %d", p->ammo, p->reserve);
+    if (p->weapon == WEAPON_PISTOL)
+        snprintf(buf, sizeof(buf), "PISTOLET  oo");
+    else
+        snprintf(buf, sizeof(buf), "MUN  %d / %d", p->ammo, p->reserve);
     sfText_setString(p->ammo_txt, buf);
     set_ammo_pos(p);
 }

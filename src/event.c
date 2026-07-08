@@ -14,6 +14,8 @@ static void check_switch(player_t *player, sfEvent *e)
         player->show_fps = !player->show_fps;
     if (player->use_pad || e->type != sfEvtKeyPressed)
         return;
+    if (e->key.code == sfKeyT)
+        switch_weapon(player);
     if (e->key.code != sfKeyP)
         return;
     toggle_flashlight(player);
@@ -48,14 +50,20 @@ static void check_pickup(player_t *player, sfEvent *e)
 
 static void do_fire(player_t *player, sound_t *s)
 {
-    if (player->firing || player->reloading || player->ammo <= 0)
+    if (player->firing || player->reloading)
+        return;
+    if (player->weapon == WEAPON_RIFLE && player->ammo <= 0)
         return;
     player->firing = sfTrue;
     player->shot_event = sfTrue;
-    sfSprite_setTexture(player->weapon_spr, player->weapon_fire, sfTrue);
+    sfSprite_setTexture(player->weapon_spr, weapon_fire_tex(player), sfTrue);
     sfClock_restart(player->weapon_clock);
-    decrement_ammo(player);
-    play_shoot(s);
+    if (player->weapon == WEAPON_RIFLE) {
+        decrement_ammo(player);
+        play_shoot(s);
+        return;
+    }
+    play_pistol(s);
 }
 
 static void check_fire(player_t *player, sfEvent *e, sound_t *s)
@@ -84,6 +92,8 @@ static void check_pad_buttons(player_t *player, sfEvent *e, sound_t *s,
         toggle_flashlight(player);
     if (btn == PAD_BTN_PICKUP)
         player->pickup_event = sfTrue;
+    if (btn == PAD_BTN_SWAP)
+        switch_weapon(player);
 }
 
 static void check_triggers(player_t *player, sound_t *s)
@@ -142,6 +152,8 @@ int event(sfRenderWindow *window, player_t *player, map_t *m, sound_t *s)
         if (ev.type == sfEvtJoystickButtonPressed
             && ev.joystickButton.button == PAD_BTN_PAUSE)
             return EVENT_PAUSE;
+        if (ev.type == sfEvtMouseWheelScrolled && !player->use_pad)
+            switch_weapon(player);
         check_fire(player, &ev, s);
         check_pad_buttons(player, &ev, s, m);
         check_switch(player, &ev);

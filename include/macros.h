@@ -342,6 +342,7 @@
     #define PAD_BTN_FIRE 7
     #define PAD_BTN_PAUSE 9
     #define PAD_BTN_PICKUP 1
+    #define PAD_BTN_SWAP 4
     #define PAD_AIM_AXIS sfJoystickZ
     #define PAD_FIRE_AXIS sfJoystickR
     #define TRIG_ON 40.0f
@@ -406,6 +407,13 @@
     #define SHOT_RANGE 700.0f
     #define SHOT_DMG 30
     #define HEADSHOT_DMG 65
+    #define WEAPON_RIFLE 0
+    #define WEAPON_PISTOL 1
+    #define PISTOL_DMG 18
+    #define PISTOL_HEAD_DMG 40
+    #define PISTOL_IDLE_PATH "./assets/pistol_idle.png"
+    #define PISTOL_FIRE_PATH "./assets/pistol_fire.png"
+    #define SND_PISTOL "assets/sounds/pistol-fire.wav"
     #define HPBAR_W_RATIO 0.7f
     #define HPBAR_H_RATIO 0.045f
     #define HPBAR_MIN_H 3.0f

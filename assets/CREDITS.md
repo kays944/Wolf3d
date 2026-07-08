@@ -27,6 +27,13 @@
 - `sounds/gun-fire.wav` is an AK-47 shot from "The Free Firearm
   Sound Library": https://opengameart.org/content/the-free-firearm-sound-library
   — CC0 (first shot of take C_28P, cut to 1s, mono 44.1kHz).
+- `pistol_idle.png` / `pistol_fire.png` come from "FPS Weapon
+  Sprites" (photo-based hands): 
+  https://opengameart.org/content/fps-weapon-sprites — CC0
+  (frames 5 and 3, cropped).
+- `sounds/pistol-fire.wav` is shot_02 from rubberduck's
+  "25 CC0 bang SFX": https://opengameart.org/content/25-cc0-bang-firework-sfx
+  — CC0 (mono 44.1kHz).
 - `sounds/gun-reload.wav` is "assaultriflereload1" from "Gun reload
   sounds" by springyspringo:
   https://opengameart.org/content/gun-reload-sounds — CC0
