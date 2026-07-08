@@ -141,6 +141,7 @@ void draw(sfRenderWindow *window, player_t *player, map_t *m)
         sfRenderWindow_drawSprite(window, player->weapon_spr, NULL);
     draw_crosshair(window, player);
     draw_door_hint(window, player, m);
+    draw_pushwall_hint(window, player, m);
     draw_hurt_flash(window, player);
     if (player->health_spr)
         sfRenderWindow_drawSprite(window, player->health_spr, NULL);

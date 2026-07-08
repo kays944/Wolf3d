@@ -110,6 +110,28 @@ static void reward_secret(player_t *p, map_t *m, pwall_t *pw)
     spawn_popup(p, p->ww / 2.0f, p->wh / 2.0f + p->pitch - 60.0f, data);
 }
 
+void draw_pushwall_hint(sfRenderWindow *win, player_t *p, map_t *m)
+{
+    pwall_t *pw = pwall_near(p, m);
+    sfText *t = NULL;
+    sfFloatRect lb = {0};
+
+    if (!pw)
+        return;
+    t = sfText_create();
+    if (!t)
+        return;
+    sfText_setFont(t, p->hud_font);
+    sfText_setCharacterSize(t, DOOR_HINT_SZ);
+    sfText_setString(t, p->use_pad ? "CARRE : POUSSER" : "E : POUSSER");
+    sfText_setFillColor(t, COL_POP_SECRET);
+    lb = sfText_getLocalBounds(t);
+    sfText_setPosition(t, (sfVector2f){(p->ww - lb.width) / 2.0f - lb.left,
+        p->wh * DOOR_HINT_Y + 34.0f});
+    sfRenderWindow_drawText(win, t, NULL);
+    sfText_destroy(t);
+}
+
 int try_push_wall(player_t *p, map_t *m, sound_t *s)
 {
     pwall_t *pw = pwall_near(p, m);
