@@ -59,9 +59,12 @@ int check_game_end(sfRenderWindow *win, player_t *p, map_t *m)
     char path[MAP_NAME_LEN + 32] = {0};
     int mode = END_MODE_WIN_LAST;
 
-    if (p->hp <= 0)
+    if (p->hp <= 0) {
+        update_best_score(p, m);
         return run_end_menu(win, p, END_MSG_LOSE, END_MODE_LOSE);
+    }
     if (level_won(p, m)) {
+        update_best_score(p, m);
         if (next_level_path(m, path, sizeof(path)) == EXIT_SUCCESS
             && access(path, F_OK) == 0)
             mode = END_MODE_WIN_NEXT;

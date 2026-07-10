@@ -198,6 +198,28 @@ static void draw_map_label(menu_t *m, int i, float y)
     sfText_destroy(txt);
 }
 
+static void draw_map_best(menu_t *m, int i, float y)
+{
+    sfText *txt = NULL;
+    int best = load_best_score(m->map_names[i]);
+    char buf[32] = {0};
+
+    if (best <= 0)
+        return;
+    txt = sfText_create();
+    if (!txt)
+        return;
+    snprintf(buf, sizeof(buf), "RECORD %d", best);
+    sfText_setFont(txt, m->font_med);
+    sfText_setString(txt, buf);
+    sfText_setCharacterSize(txt, FONT_SMALL_SZ);
+    sfText_setFillColor(txt, COL_POP_SECRET);
+    sfText_setPosition(txt, (sfVector2f){(m->ww + 600.0f) / 2.0f - 160.0f,
+            y + 4.0f});
+    sfRenderWindow_drawText(m->window, txt, NULL);
+    sfText_destroy(txt);
+}
+
 void render_map_select(menu_t *m)
 {
     int i = 0;
@@ -213,6 +235,7 @@ void render_map_select(menu_t *m)
             row_y = 200.0f + i * 50.0f;
             draw_map_bg(m, i, row_y);
             draw_map_label(m, i, row_y);
+            draw_map_best(m, i, row_y);
         }
     }
     render_buttons(m->window, m->map_btns, MAP_BTN_COUNT, -1);

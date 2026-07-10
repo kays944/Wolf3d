@@ -88,10 +88,34 @@ static void draw_stats(sfRenderWindow *win, player_t *p)
     sfText_destroy(t);
 }
 
+static void draw_best(sfRenderWindow *win, player_t *p)
+{
+    sfText *t = sfText_create();
+    char buf[32] = {0};
+    sfFloatRect b = {0};
+
+    if (!t)
+        return;
+    if (p->new_best)
+        snprintf(buf, sizeof(buf), "NOUVEAU RECORD !");
+    else
+        snprintf(buf, sizeof(buf), "MEILLEUR SCORE %d", p->best_score);
+    sfText_setFont(t, p->hud_font);
+    sfText_setString(t, buf);
+    sfText_setCharacterSize(t, 22);
+    sfText_setFillColor(t, p->new_best ? COL_POP_SECRET : COL_LABEL);
+    b = sfText_getLocalBounds(t);
+    sfText_setPosition(t, (sfVector2f){(p->ww - b.width) / 2.0f - b.left,
+            p->wh * 0.42f});
+    sfRenderWindow_drawText(win, t, NULL);
+    sfText_destroy(t);
+}
+
 void draw_end_scene(sfRenderWindow *win, player_t *p, sfText *t, float el)
 {
     draw_bar(win, p, el);
     if (t)
         draw_end_word(win, t, el);
     draw_stats(win, p);
+    draw_best(win, p);
 }

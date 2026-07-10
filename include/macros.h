@@ -31,6 +31,7 @@
     #define TILE_SIZE 64
 
     #define SAVE_PATH "./savegame.sav"
+    #define BEST_SCORE_PATH "./bestscore.cfg"
 
     #define M_PI 3.14159265358979323846
 

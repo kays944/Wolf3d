@@ -32,6 +32,7 @@ SRC			= 	src/main.c 							\
 				src/end_menu.c 						\
 				src/end_render.c 					\
 				src/score.c 						\
+				src/bestscore.c 					\
 				src/fps.c 							\
 				src/minimap.c 						\
 				src/door.c 						\

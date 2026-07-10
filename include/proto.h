@@ -162,6 +162,10 @@ void refresh_score_text(player_t *p);
 void draw_score(sfRenderWindow *win, player_t *p);
 void draw_minimap(sfRenderWindow *win, player_t *p, map_t *m);
 
+int load_best_score(const char *level_path);
+void save_best_score(const char *level_path, int score);
+void update_best_score(player_t *p, map_t *m);
+
 void init_doors(map_t *m);
 int try_open_door(player_t *p, map_t *m, sound_t *s);
 int foe_overlap(map_t *m, enemy_t *self, float nx, float ny);

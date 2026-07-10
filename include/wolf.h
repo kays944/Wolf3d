@@ -73,6 +73,8 @@ typedef struct player_s {
     sfText *score_txt;
     int secrets;
     int secrets_total;
+    int best_score;
+    sfBool new_best;
     sfText *fps_txt;
     float fps_acc;
     int fps_frames;
