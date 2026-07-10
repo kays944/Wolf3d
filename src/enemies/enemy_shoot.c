@@ -42,13 +42,12 @@ static void spawn_dmg_popup(player_t *p, enemy_t *e, int dmg, int head)
 static void damage_enemy(enemy_t *e, player_t *p)
 {
     float scale = e->boss ? BOSS_SCALE : 1.0f;
-    int pistol = p->weapon == WEAPON_PISTOL;
-    int dmg = pistol ? PISTOL_DMG : SHOT_DMG;
+    int dmg = SHOT_DMG;
     int head = aim_hit(e, p, HEAD_RADIUS * scale
         * (p->aiming ? AIM_HEAD_MULT : 1.0f));
 
     if (head)
-        dmg = pistol ? PISTOL_HEAD_DMG : HEADSHOT_DMG;
+        dmg = HEADSHOT_DMG;
     e->hp -= dmg;
     spawn_dmg_popup(p, e, dmg, head);
     if (e->hp <= 0) {

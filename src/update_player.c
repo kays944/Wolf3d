@@ -100,7 +100,7 @@ static void update_weapon(player_t *player)
     if (ms < 150.0f)
         return;
     player->firing = sfFalse;
-    sfSprite_setTexture(player->weapon_spr, weapon_idle_tex(player), sfTrue);
+    sfSprite_setTexture(player->weapon_spr, player->weapon_idle, sfTrue);
 }
 
 void update_player(sfRenderWindow *window, player_t *player, map_t *m)

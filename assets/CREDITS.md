@@ -27,20 +27,6 @@
 - `sounds/gun-fire.wav` is an AK-47 shot from "The Free Firearm
   Sound Library": https://opengameart.org/content/the-free-firearm-sound-library
   — CC0 (first shot of take C_28P, cut to 1s, mono 44.1kHz).
-- `pistol_idle.png` / `pistol_fire.png` are built from "Public Domain
-  First Person Pistols" by Technopeasant (derived from US military
-  M9 Beretta qualification photos, Wikimedia Commons):
-  https://opengameart.org/content/public-domain-first-person-pistols
-  — CC0 / PD-US-FWS-DoD (2026-07-10: replaced the original low-res
-  "FPS Weapon Sprites" crop, which was 320x180 native and looked
-  blurry/mismatched next to the rifle). Recolored from the source's
-  gold/FDE finish to gunmetal black to match `weapon_idle.png`
-  (hand-masked hue remap, script in scratchpad), 2x Lanczos upscale,
-  feathered cutout edge, muzzle flash for the fire frame is a
-  generated radial glow (same technique as the fireball/explosion FX).
-- `sounds/pistol-fire.wav` is shot_02 from rubberduck's
-  "25 CC0 bang SFX": https://opengameart.org/content/25-cc0-bang-firework-sfx
-  — CC0 (mono 44.1kHz).
 - `sounds/gun-reload.wav` is "assaultriflereload1" from "Gun reload
   sounds" by springyspringo:
   https://opengameart.org/content/gun-reload-sounds — CC0
