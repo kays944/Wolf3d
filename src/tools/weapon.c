@@ -51,6 +51,10 @@ int init_weapon(player_t *p)
     if (!p->weapon_idle || !p->weapon_fire
         || !p->pistol_idle || !p->pistol_fire)
         return EXIT_FAIL;
+    sfTexture_setSmooth(p->weapon_idle, sfTrue);
+    sfTexture_setSmooth(p->weapon_fire, sfTrue);
+    sfTexture_setSmooth(p->pistol_idle, sfTrue);
+    sfTexture_setSmooth(p->pistol_fire, sfTrue);
     p->weapon = WEAPON_RIFLE;
     p->weapon_spr = sfSprite_create();
     p->weapon_clock = sfClock_create();
