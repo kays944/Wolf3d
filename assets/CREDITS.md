@@ -122,6 +122,9 @@
   a power-of-two 256x256 (LANCZOS), same license as the base texture.
 - `fireball.png` and `medkit.png` are generated for this project
   (scripts), no license needed.
+- `texture_sky.png` (base daytime sky texture) and
+  `sounds/song_game-menu.wav` (main menu music) were generated with an
+  AI tool for this project — no third-party license applies.
 
 ## Fonts
 
@@ -140,6 +143,4 @@ before relying on this repo publicly.
 - `explosion.png` (barrel explosion frames, added 2026-07-07).
 - `weapon_idle.png` / `weapon_fire.png` (first-person rifle render).
 - `flashlight.png` (HUD flashlight icon).
-- `texture_sky.png` (base daytime sky texture).
 - `fonts/wolf3d.ttf` (HUD font).
-- `sounds/song_game-menu.wav` (main menu music).
