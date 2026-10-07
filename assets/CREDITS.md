@@ -34,8 +34,6 @@
 - `sounds/explosion.wav` is "Chunky Explosion" by Joth:
   https://opengameart.org/content/chunky-explosion — CC0
   (trimmed to 2.5s, normalized, converted to mono 44.1kHz WAV).
-- `explosion.png` (barrel explosion frames): TODO document source
-  and license (added 2026-07-07).
 - `sounds/footstep.wav`, `footstep2.wav`, `footstep3.wav`,
   `door-open.wav`, `pickup.wav` come from Kenney's "RPG Audio" pack:
   https://kenney.nl/assets/rpg-audio — CC0.
@@ -120,3 +118,28 @@
   and `texture_door_locked.png` are generated for this project (scripts),
   no license needed. The previous health bar was a watermarked stock
   preview and was replaced.
+- `texture_floor.png` is `texture_wall_wolf.png` (stone) downscaled to
+  a power-of-two 256x256 (LANCZOS), same license as the base texture.
+- `fireball.png` and `medkit.png` are generated for this project
+  (scripts), no license needed.
+
+## Fonts
+
+- `fonts/MetalMania.ttf` ("Metal Mania" by Caroline Hadilaksono) is
+  distributed under the SIL Open Font License 1.1, free for
+  commercial use: https://fonts.google.com/specimen/Metal+Mania
+
+## Unresolved provenance (TODO)
+
+These assets predate this credits file and their original source
+was never recorded. They're real/in-game, not generated — if the
+source is ever remembered, replace this entry with a proper credit;
+otherwise consider swapping them for a documented CC0 replacement
+before relying on this repo publicly.
+
+- `explosion.png` (barrel explosion frames, added 2026-07-07).
+- `weapon_idle.png` / `weapon_fire.png` (first-person rifle render).
+- `flashlight.png` (HUD flashlight icon).
+- `texture_sky.png` (base daytime sky texture).
+- `fonts/wolf3d.ttf` (HUD font).
+- `sounds/song_game-menu.wav` (main menu music).
