@@ -16,9 +16,9 @@ static void setup_btns(pause_t *p)
     int i = 0;
 
     labels[PBTN_OPT] = "OPTIONS";
-    labels[PBTN_SAVE] = "SAUVEGARDER";
-    labels[PBTN_BACK] = "REVENIR AU MENU";
-    labels[PBTN_QUIT_ID] = "QUITTER";
+    labels[PBTN_SAVE] = "SAVE";
+    labels[PBTN_BACK] = "BACK TO MENU";
+    labels[PBTN_QUIT_ID] = "QUIT";
     for (i = 0; i < PAUSE_BTN_COUNT; i++) {
         pos.x = x;
         pos.y = p->wh * 0.38f + i * (BTN_H + BTN_GAP);
@@ -47,7 +47,7 @@ static int init_pause(pause_t *p, game_t *g, map_t *map, player_t *player)
     setup_btns(p);
     bpos.x = (p->ww - BTN_W) / 2.0f;
     bpos.y = p->wh * 0.75f;
-    init_button(&p->opt_back, &bpos, "< RETOUR", p->font);
+    init_button(&p->opt_back, &bpos, "< BACK", p->font);
     return EXIT_SUCCESS;
 }
 

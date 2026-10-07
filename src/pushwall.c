@@ -123,7 +123,7 @@ void draw_pushwall_hint(sfRenderWindow *win, player_t *p, map_t *m)
         return;
     sfText_setFont(t, p->hud_font);
     sfText_setCharacterSize(t, DOOR_HINT_SZ);
-    sfText_setString(t, p->use_pad ? "CARRE : POUSSER" : "E : POUSSER");
+    sfText_setString(t, p->use_pad ? "SQUARE: PUSH" : "E: PUSH");
     sfText_setFillColor(t, COL_POP_SECRET);
     lb = sfText_getLocalBounds(t);
     sfText_setPosition(t, (sfVector2f){(p->ww - lb.width) / 2.0f - lb.left,

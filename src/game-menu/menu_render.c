@@ -144,7 +144,7 @@ static void render_main_screen(menu_t *m)
     col = sfColor_fromRGBA(5, 2, 1, 130);
     draw_filled_rect(m->window, &r, &col);
     render_buttons(m->window, m->main_btns, MAIN_BTN_COUNT, m->selected);
-    draw_hint(m, "Fleches / Entree / Souris", m->wh * 0.9f);
+    draw_hint(m, "Arrows / Enter / Mouse", m->wh * 0.9f);
 }
 
 void render_menu(menu_t *m)

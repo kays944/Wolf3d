@@ -115,5 +115,8 @@ int game_init(game_t *g)
         return EXIT_FAIL;
     }
     g->font_med = g->font_big;
+    g->font_title = sfFont_createFromFile(TITLE_FONT);
+    if (!g->font_title)
+        g->font_title = g->font_big;
     return EXIT_SUCCESS;
 }

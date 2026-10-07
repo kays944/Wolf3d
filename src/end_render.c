@@ -17,6 +17,49 @@ sfVertexArray *make_end_bg(player_t *p, int mode)
     return create_gradient_bg(&top, &bot, (float)p->ww, (float)p->wh);
 }
 
+void init_end_bg_tex(end_ctx_t *c, int mode)
+{
+    const char *path = (mode == END_MODE_LOSE) ?
+        END_BG_LOSE_PATH : END_BG_WIN_PATH;
+
+    c->bg_tex = sfTexture_createFromFile(path, NULL);
+    if (!c->bg_tex)
+        return;
+    c->bg_spr = sfSprite_create();
+    if (!c->bg_spr) {
+        sfTexture_destroy(c->bg_tex);
+        c->bg_tex = NULL;
+        return;
+    }
+    sfSprite_setTexture(c->bg_spr, c->bg_tex, sfTrue);
+}
+
+void draw_end_bg(sfRenderWindow *win, end_ctx_t *c, float ww, float wh)
+{
+    sfVector2u tsz = {0};
+    sfFloatRect img = {0};
+    sfView *view = NULL;
+
+    if (!c->bg_tex || !c->bg_spr) {
+        if (c->bg)
+            sfRenderWindow_drawVertexArray(win, c->bg, NULL);
+        return;
+    }
+    tsz = sfTexture_getSize(c->bg_tex);
+    img = (sfFloatRect){0, 0, (float)tsz.x, (float)tsz.y};
+    view = sfView_createFromRect(img);
+    if (!view)
+        return;
+    sfRenderWindow_setView(win, view);
+    sfRenderWindow_drawSprite(win, c->bg_spr, NULL);
+    sfView_destroy(view);
+    view = sfView_createFromRect((sfFloatRect){0, 0, ww, wh});
+    if (view) {
+        sfRenderWindow_setView(win, view);
+        sfView_destroy(view);
+    }
+}
+
 static const float GLOW_OFF[4][2] = {{-4, 0}, {4, 0}, {0, -4}, {0, 4}};
 
 static void draw_glow(sfRenderWindow *win, sfText *t, float base)
@@ -97,9 +140,9 @@ static void draw_best(sfRenderWindow *win, player_t *p)
     if (!t)
         return;
     if (p->new_best)
-        snprintf(buf, sizeof(buf), "NOUVEAU RECORD !");
+        snprintf(buf, sizeof(buf), "NEW BEST!");
     else
-        snprintf(buf, sizeof(buf), "MEILLEUR SCORE %d", p->best_score);
+        snprintf(buf, sizeof(buf), "BEST SCORE %d", p->best_score);
     sfText_setFont(t, p->hud_font);
     sfText_setString(t, buf);
     sfText_setCharacterSize(t, 22);

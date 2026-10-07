@@ -193,7 +193,7 @@ void draw_pickup_hint(sfRenderWindow *win, player_t *p, map_t *m)
     if (!t)
         return;
     sfText_setFont(t, p->hud_font);
-    sfText_setString(t, p->use_pad ? "ROND : ramasser" : "F : ramasser");
+    sfText_setString(t, p->use_pad ? "CIRCLE: pick up" : "F: pick up");
     sfText_setCharacterSize(t, 26);
     sfText_setFillColor(t, sfColor_fromRGB(235, 235, 210));
     b = sfText_getLocalBounds(t);

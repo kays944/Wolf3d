@@ -96,9 +96,9 @@ void draw_door_hint(sfRenderWindow *win, player_t *p, map_t *m)
     sfText_setFont(t, p->hud_font);
     sfText_setCharacterSize(t, DOOR_HINT_SZ);
     if (no_key)
-        sfText_setString(t, "IL FAUT UNE CLE");
+        sfText_setString(t, "NEED A KEY");
     else
-        sfText_setString(t, p->use_pad ? "CARRE : OUVRIR" : "E : OUVRIR");
+        sfText_setString(t, p->use_pad ? "SQUARE: OPEN" : "E: OPEN");
     sfText_setFillColor(t, no_key ? sfColor_fromRGB(235, 70, 45) : COL_KEY);
     center_hint(p, t);
     sfRenderWindow_drawText(win, t, NULL);

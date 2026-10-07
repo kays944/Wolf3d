@@ -72,8 +72,8 @@ static void render_opt_row(pause_t *p, const char *lbl, float vol, float y)
 
 static void render_pause_opt(pause_t *p)
 {
-    const char *lbl0 = p->opt_sel == 0 ? "> Musique :" : "  Musique :";
-    const char *lbl1 = p->opt_sel == 1 ? "> Sons :" : "  Sons :";
+    const char *lbl0 = p->opt_sel == 0 ? "> Music:" : "  Music:";
+    const char *lbl1 = p->opt_sel == 1 ? "> Sound:" : "  Sound:";
 
     draw_overlay(p->window, p->ww, p->wh);
     draw_pause_title(p, "OPTIONS");

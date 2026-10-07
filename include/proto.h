@@ -142,6 +142,8 @@ int run_end_menu(sfRenderWindow *win, player_t *p,
 int next_level_path(map_t *m, char *buf, int size);
 sfVertexArray *make_end_bg(player_t *p, int mode);
 void draw_end_scene(sfRenderWindow *win, player_t *p, sfText *t, float el);
+void init_end_bg_tex(end_ctx_t *c, int mode);
+void draw_end_bg(sfRenderWindow *win, end_ctx_t *c, float ww, float wh);
 
 int init_ammo(player_t *p);
 void destroy_ammo(player_t *p);

@@ -107,11 +107,11 @@ static void draw_day_hud(sfRenderWindow *win, player_t *p, map_t *m)
     char buf[48] = {0};
 
     if (m->nights > 0 && DAY_LEN - m->night_cd < NIGHT_MSG_TIME) {
-        draw_center_text(win, p, "LE JOUR SE LEVE", COL_DAWN);
+        draw_center_text(win, p, "DAWN IS BREAKING", COL_DAWN);
         return;
     }
     if (m->night_cd <= NIGHT_WARN_TIME) {
-        snprintf(buf, sizeof(buf), "LA NUIT TOMBE DANS %d",
+        snprintf(buf, sizeof(buf), "NIGHT FALLS IN %d",
             (int)ceilf(m->night_cd));
         draw_center_text(win, p, buf, COL_NIGHT);
     }
@@ -124,5 +124,5 @@ void draw_night_hud(sfRenderWindow *win, player_t *p, map_t *m)
         return;
     }
     if (NIGHT_LEN - m->night_cd < NIGHT_MSG_TIME)
-        draw_center_text(win, p, "LA NUIT EST TOMBEE !", COL_NIGHTFALL);
+        draw_center_text(win, p, "NIGHT HAS FALLEN!", COL_NIGHTFALL);
 }

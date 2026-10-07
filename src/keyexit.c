@@ -50,7 +50,7 @@ void draw_key_hint(sfRenderWindow *win, player_t *p)
     if (!t)
         return;
     sfText_setFont(t, p->hud_font);
-    sfText_setString(t, "CLE");
+    sfText_setString(t, "KEY");
     sfText_setCharacterSize(t, 26);
     sfText_setFillColor(t, COL_KEY);
     sfText_setPosition(t, (sfVector2f){20.0f, 48.0f});

@@ -54,6 +54,61 @@
   https://commons.wikimedia.org/wiki/File:Wolf_howls.ogg
 - All converted to mono 44.1 kHz WAV and peak-normalized.
 
+## Menu UI
+
+- `button_bg.png` / `button_bg_hover.png` (main/pause/settings/map-select
+  button background) are composited from two real photographed CC0
+  textures: "Black Metal" (scratched black metal diffuse) and
+  "Lava 001" (color + emission maps, real crack/glow pattern), both
+  from cc0-textures.com — https://cc0-textures.com/t/st-black-metal and
+  https://cc0-textures.com/t/cc0t-lava-001 — CC0, no attribution
+  required. The bevel/rounded-corner shape comes from Kenney's "UI Pack"
+  (`button_square_depth_gradient`, CC0, https://kenney.nl/assets/ui-pack).
+  Ties into the game's existing fire/hell palette (title, background
+  gradient, boss fireballs) instead of an unrelated theme; hover/selected
+  state brightens the ember cracks and adds an orange rim matching
+  COL_TITLE. COL_BTN*/COL_BTN_BORDER* in macros.h retuned to match.
+- `fond_game-menu.jpg` (main menu background) replaces a Battlefield 4
+  promotional image that had no license for this project and didn't
+  match the game's theme (modern soldiers vs. demons/hell); the unused
+  second copy `fond_game-menu2.jpg` (same source, same problem) was
+  deleted. Went through several failed attempts: a top-down mosaic of
+  level5.wolf ("Roblox bricks" — small repeated tiles have no
+  perspective), a flat metal+lava material (no longer looked like the
+  game once the map idea was on the table), then a per-column DDA
+  raycast render (same math as src/raycast.c) that turned out to look
+  like plain vertical stripes instead of stone — at close range each
+  screen column only samples a near-single texture pixel wide, so the
+  real brick/moss detail in `texture_wall_wolf.png` never showed up.
+  Dropped the per-column raycasting for a PIL perspective-warp of the
+  real wall texture (crisp, correct brick/moss detail) — technically
+  fixed but the full-body corridor shot still read as flat/static, not
+  worth clicking on. Went movie-poster (bust crop of the boss upscaled
+  ~6.7x) but came out blurry: `sfTexture_setSmooth` is applied to the
+  whole menu background in src/game-menu/menu.c, so bilinear filtering
+  softens any composited element, and the boss sprite is only 180x192
+  per frame — stretched that far it turns to mush regardless of resize
+  filter. Capped the boss upscale at 4x (crisp again) but the user's
+  verdict on all of the above was the same: none of it looked like
+  something you'd want to click on, however technically correct.
+  Final version drops compositing from game assets entirely and uses a
+  real photo instead: "Man in black and brown camouflage uniform
+  holding red smoke" by Jakob Owens — https://unsplash.com/photos/Sa04XETPPx0
+  — Unsplash License, color-graded toward the game's orange palette.
+  Swapped again on request for a second real photo: "Man in black and
+  green camouflage suit holding rifle" by Alexander Jawfox —
+  https://unsplash.com/photos/R_6kw7NUTLY — Unsplash License, near-black
+  studio portrait (helmet lit, face in shadow, rifle in hand) that
+  needed no real color grading since it's already dark/neutral; cropped
+  from the 2400x3000 portrait original to a proportional 1920x1080
+  slice (no stretching).
+- `end_bg_win.jpg` / `end_bg_lose.jpg` (victory/defeat screen background)
+  are composited the same way from the same two cc0-textures.com sources
+  (black scratched metal + real lava crack/emission), embers pushed to
+  the screen edges via a vignette so the center stays dark/readable for
+  the title, stats and buttons. Win uses an orange ember tint, lose a
+  blood-red tint. Replaces the previous flat two-color gradient.
+
 ## Generated art
 
 - `texture_sky_night.png` (starry night sky with moon) is generated

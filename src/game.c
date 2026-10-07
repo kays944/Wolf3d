@@ -162,6 +162,7 @@ int game_loop(game_t *g)
     player.ww = (int)sz.x;
     player.wh = (int)sz.y;
     player.hud_font = g->font_med;
+    player.font_title = g->font_title;
     player.use_pad = g->settings.gamepad ? sfTrue : sfFalse;
     player.sens = g->settings.sensitivity;
     player.difficulty = g->settings.difficulty;

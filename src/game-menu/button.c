@@ -99,22 +99,37 @@ sfBool button_is_clicked(button_t *btn, const sfVector2f *mouse)
     return sfFloatRect_contains(&b, mouse->x, mouse->y);
 }
 
+static sfTexture *get_btn_tex(sfBool hover)
+{
+    static sfTexture *normal;
+    static sfTexture *hov;
+
+    if (!normal)
+        normal = sfTexture_createFromFile(BTN_TEX_PATH, NULL);
+    if (!hov)
+        hov = sfTexture_createFromFile(BTN_TEX_HOV_PATH, NULL);
+    return hover ? hov : normal;
+}
+
 static void render_button(sfRenderWindow *win, button_t *btn, sfBool sel)
 {
     sfBool active = sfFalse;
+    sfTexture *tex = NULL;
 
     if (!btn->bg || !btn->label)
         return;
     active = btn->hovered || sel;
-    if (active) {
-        sfRectangleShape_setFillColor(btn->bg, COL_BTN_HOV);
-        sfRectangleShape_setOutlineColor(btn->bg, COL_BTN_BORDER_HOV);
-        sfText_setFillColor(btn->label, COL_SEL);
+    tex = get_btn_tex(active);
+    if (tex) {
+        sfRectangleShape_setTexture(btn->bg, tex, sfTrue);
+        sfRectangleShape_setFillColor(btn->bg, sfWhite);
+        sfRectangleShape_setOutlineThickness(btn->bg, 0.0f);
     } else {
-        sfRectangleShape_setFillColor(btn->bg, COL_BTN);
-        sfRectangleShape_setOutlineColor(btn->bg, COL_BTN_BORDER);
-        sfText_setFillColor(btn->label, sfWhite);
+        sfRectangleShape_setFillColor(btn->bg, active ? COL_BTN_HOV : COL_BTN);
+        sfRectangleShape_setOutlineColor(btn->bg,
+            active ? COL_BTN_BORDER_HOV : COL_BTN_BORDER);
     }
+    sfText_setFillColor(btn->label, active ? COL_SEL : sfWhite);
     sfRenderWindow_drawRectangleShape(win, btn->bg, NULL);
     sfRenderWindow_drawText(win, btn->label, NULL);
 }

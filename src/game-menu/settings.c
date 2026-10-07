@@ -14,7 +14,7 @@ int init_settings_menu(menu_t *m)
     m->settings_sel = 0;
     p.x = (m->ww - BTN_W) / 2.0f;
     p.y = m->wh - 120.0f;
-    init_button(&m->set_btns[BTN_SET_BACK], &p, "RETOUR", m->font_med);
+    init_button(&m->set_btns[BTN_SET_BACK], &p, "BACK", m->font_med);
     m->set_btns[BTN_SET_BACK].id = BTN_SET_BACK;
     return EXIT_SUCCESS;
 }

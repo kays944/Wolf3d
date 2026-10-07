@@ -25,7 +25,7 @@ void refresh_ammo_text(player_t *p)
 
     if (!p->ammo_txt)
         return;
-    snprintf(buf, sizeof(buf), "MUN  %d / %d", p->ammo, p->reserve);
+    snprintf(buf, sizeof(buf), "AMMO  %d / %d", p->ammo, p->reserve);
     sfText_setString(p->ammo_txt, buf);
     set_ammo_pos(p);
 }

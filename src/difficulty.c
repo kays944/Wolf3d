@@ -38,8 +38,8 @@ float diff_night_mult(int d)
 const char *diff_label(int d)
 {
     if (d == DIFF_EASY)
-        return "< FACILE >";
+        return "< EASY >";
     if (d == DIFF_HARD)
-        return "< CAUCHEMAR >";
+        return "< NIGHTMARE >";
     return "< NORMAL >";
 }

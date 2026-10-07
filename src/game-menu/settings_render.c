@@ -101,21 +101,21 @@ static void render_settings_inner(menu_t *m)
     int h = 0;
     const char *fs = "OFF";
 
-    render_volume_bar(m, "Musique :", m->settings->music_vol, 190.0f);
-    render_volume_bar(m, "Sons :", m->settings->sfx_vol, 250.0f);
+    render_volume_bar(m, "Music:", m->settings->music_vol, 190.0f);
+    render_volume_bar(m, "Sound:", m->settings->sfx_vol, 250.0f);
     get_resolution(m->settings->res_index, &w, &h);
     snprintf(buf, sizeof(buf), "< %d x %d >", w, h);
-    draw_option(m, "Resolution :", buf, SET_RES);
+    draw_option(m, "Resolution:", buf, SET_RES);
     if (m->settings->fullscreen == sfTrue)
         fs = "ON";
-    draw_option(m, "Plein ecran :", fs, SET_FULLSCR);
+    draw_option(m, "Fullscreen:", fs, SET_FULLSCR);
     if (m->settings->gamepad)
-        draw_option(m, "Controles :", "< MANETTE >", SET_INPUT);
+        draw_option(m, "Controls:", "< GAMEPAD >", SET_INPUT);
     else
-        draw_option(m, "Controles :", "< CLAVIER >", SET_INPUT);
+        draw_option(m, "Controls:", "< KEYBOARD >", SET_INPUT);
     snprintf(buf, sizeof(buf), "< %.1f >", m->settings->sensitivity);
-    draw_option(m, "Sensibilite :", buf, SET_SENS);
-    draw_option(m, "Difficulte :",
+    draw_option(m, "Sensitivity:", buf, SET_SENS);
+    draw_option(m, "Difficulty:",
         diff_label(m->settings->difficulty), SET_DIFF);
 }
 
@@ -124,8 +124,8 @@ void render_settings(menu_t *m)
     int back_sel = -1;
 
     render_menu_background(m);
-    draw_title(m, "PARAMETRES", 60.0f);
-    draw_hint(m, "Fleches haut/bas, gauche/droite", 130.0f);
+    draw_title(m, "SETTINGS", 60.0f);
+    draw_hint(m, "Up/down, left/right arrows", 130.0f);
     render_settings_inner(m);
     if (m->settings_sel == SET_BACK)
         back_sel = 0;

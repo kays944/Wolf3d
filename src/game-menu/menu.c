@@ -109,10 +109,10 @@ static void create_buttons(menu_t *m)
     sfVector2f p = {0};
     float x = 0;
 
-    labels[BTN_PLAY] = "JOUER";
-    labels[BTN_CONTINUE] = "CONTINUER";
-    labels[BTN_SETTINGS] = "PARAMETRES";
-    labels[BTN_QUIT] = "QUITTER";
+    labels[BTN_PLAY] = "PLAY";
+    labels[BTN_CONTINUE] = "CONTINUE";
+    labels[BTN_SETTINGS] = "SETTINGS";
+    labels[BTN_QUIT] = "QUIT";
     x = (m->ww - BTN_W) / 2.0f;
     for (int i = 0; i < MAIN_BTN_COUNT; i++) {
         p.x = x;

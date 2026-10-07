@@ -11,9 +11,9 @@
 #include "proto.h"
 
 static const char *END_LABELS[3][3] = {
-    {"RECOMMENCER", "MENU", NULL},
-    {"NIVEAU SUIVANT", "RECOMMENCER", "MENU"},
-    {"RECOMMENCER", "MENU", NULL},
+    {"RESTART", "MENU", NULL},
+    {"NEXT LEVEL", "RESTART", "MENU"},
+    {"RESTART", "MENU", NULL},
 };
 
 static const int END_CODES[3][3] = {
@@ -58,7 +58,7 @@ static sfText *make_end_title(player_t *p, const char *msg)
 
     if (!t)
         return NULL;
-    sfText_setFont(t, p->hud_font);
+    sfText_setFont(t, p->font_title);
     sfText_setString(t, msg);
     sfText_setCharacterSize(t, END_FONT_SZ);
     sfText_setFillColor(t, COL_TITLE);
@@ -144,8 +144,7 @@ static void end_frame(sfRenderWindow *win, player_t *p, end_ctx_t *c)
         : 0.0f;
 
     sfRenderWindow_clear(win, sfBlack);
-    if (c->bg)
-        sfRenderWindow_drawVertexArray(win, c->bg, NULL);
+    draw_end_bg(win, c, p->ww, p->wh);
     draw_end_scene(win, p, c->title, el);
     render_buttons(win, c->btns, c->n, c->sel);
     sfRenderWindow_display(win);
@@ -157,6 +156,10 @@ static void end_cleanup(end_ctx_t *c)
         sfText_destroy(c->title);
     if (c->bg)
         sfVertexArray_destroy(c->bg);
+    if (c->bg_spr)
+        sfSprite_destroy(c->bg_spr);
+    if (c->bg_tex)
+        sfTexture_destroy(c->bg_tex);
     if (c->clock)
         sfClock_destroy(c->clock);
     for (int i = 0; i < c->n; i++)
@@ -171,6 +174,7 @@ int run_end_menu(sfRenderWindow *win, player_t *p,
         sfClock_create(), end_btn_count(mode), 0};
     int done = 0;
 
+    init_end_bg_tex(&c, mode);
     init_end_buttons(btns, p, mode);
     while (sfRenderWindow_isOpen(win) && !done) {
         done = end_poll(win, btns, c.n, &c.sel);

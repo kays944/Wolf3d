@@ -64,10 +64,12 @@
     #define COL_SEL sfColor_fromRGB(255, 175, 35)
     #define COL_BG_TOP sfColor_fromRGB(10, 8, 8)
     #define COL_BG_BOT sfColor_fromRGB(70, 15, 10)
-    #define COL_BTN sfColor_fromRGBA(8, 4, 2, 195)
-    #define COL_BTN_HOV sfColor_fromRGBA(28, 12, 4, 225)
-    #define COL_BTN_BORDER sfColor_fromRGBA(180, 70, 15, 85)
-    #define COL_BTN_BORDER_HOV sfColor_fromRGBA(255, 125, 25, 210)
+    #define COL_BTN sfColor_fromRGBA(28, 24, 22, 220)
+    #define COL_BTN_HOV sfColor_fromRGBA(48, 36, 30, 240)
+    #define COL_BTN_BORDER sfColor_fromRGBA(90, 40, 20, 160)
+    #define COL_BTN_BORDER_HOV sfColor_fromRGBA(255, 140, 30, 220)
+    #define BTN_TEX_PATH "./assets/button_bg.png"
+    #define BTN_TEX_HOV_PATH "./assets/button_bg_hover.png"
     #define TITLE_FONT "assets/fonts/MetalMania.ttf"
     #define TITLE_BIG_SZ 80
 
@@ -419,8 +421,8 @@
     #define CROSS_SIZE_AIM 9.0f
     #define CROSS_THICK 3.0f
 
-    #define END_MSG_WIN "VICTOIRE !"
-    #define END_MSG_LOSE "T'ES MORT"
+    #define END_MSG_WIN "VICTORY!"
+    #define END_MSG_LOSE "YOU DIED"
     #define END_FONT_SZ 80
     #define END_NEXT 10
     #define END_RESTART 11
@@ -430,6 +432,8 @@
     #define END_BG_TOP sfColor_fromRGB(8, 6, 6)
     #define END_BG_WIN sfColor_fromRGB(95, 58, 14)
     #define END_BG_LOSE sfColor_fromRGB(88, 12, 10)
+    #define END_BG_WIN_PATH "./assets/end_bg_win.jpg"
+    #define END_BG_LOSE_PATH "./assets/end_bg_lose.jpg"
     #define END_BAR_W 340.0f
     #define END_BAR_H 4.0f
     #define END_TITLE_Y 0.22f

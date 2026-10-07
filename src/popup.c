@@ -63,7 +63,7 @@ static void fmt_popup(popup_t *pu, char *buf)
         snprintf(buf, 24, "%d", pu->amount);
         return;
     }
-    snprintf(buf, 24, pu->kind == PACK_MEDKIT ? "+%d PV" : "+%d",
+    snprintf(buf, 24, pu->kind == PACK_MEDKIT ? "+%d HP" : "+%d",
         pu->amount);
 }
 

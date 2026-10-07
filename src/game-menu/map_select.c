@@ -65,10 +65,10 @@ int init_map_select(menu_t *m)
     cx = (m->ww / 2.0f) - BTN_W - BTN_GAP / 2.0f;
     p.x = cx;
     p.y = m->wh - 120.0f;
-    init_button(&m->map_btns[BTN_MAP_PLAY], &p, "JOUER", m->font_med);
+    init_button(&m->map_btns[BTN_MAP_PLAY], &p, "PLAY", m->font_med);
     p.x = cx + BTN_W + BTN_GAP;
     p.y = m->wh - 120.0f;
-    init_button(&m->map_btns[BTN_MAP_BACK], &p, "RETOUR", m->font_med);
+    init_button(&m->map_btns[BTN_MAP_BACK], &p, "BACK", m->font_med);
     return EXIT_SUCCESS;
 }
 
@@ -209,7 +209,7 @@ static void draw_map_best(menu_t *m, int i, float y)
     txt = sfText_create();
     if (!txt)
         return;
-    snprintf(buf, sizeof(buf), "RECORD %d", best);
+    snprintf(buf, sizeof(buf), "BEST %d", best);
     sfText_setFont(txt, m->font_med);
     sfText_setString(txt, buf);
     sfText_setCharacterSize(txt, FONT_SMALL_SZ);
@@ -226,10 +226,10 @@ void render_map_select(menu_t *m)
     float row_y = 0;
 
     render_menu_background(m);
-    draw_title(m, "CHOISIR UNE MAP", 60.0f);
-    draw_hint(m, "Fleches pour naviguer, Entree pour selectionner", 130.0f);
+    draw_title(m, "SELECT A LEVEL", 60.0f);
+    draw_hint(m, "Arrows to navigate, Enter to select", 130.0f);
     if (m->map_count == 0) {
-        draw_hint(m, "Aucune map disponible", 350.0f);
+        draw_hint(m, "No levels available", 350.0f);
     } else {
         for (i = 0; i < m->map_count; i++) {
             row_y = 200.0f + i * 50.0f;

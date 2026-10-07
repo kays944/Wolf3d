@@ -93,6 +93,7 @@ typedef struct player_s {
     sfSprite *health_spr;
     sfText *ammo_txt;
     sfFont *hud_font;
+    sfFont *font_title;
     sfBool reloading;
     sfClock *reload_clock;
     sfTexture *wall_texs[WALL_KINDS];
@@ -321,6 +322,8 @@ typedef struct end_ctx_s {
     sfClock *clock;
     int n;
     int sel;
+    sfTexture *bg_tex;
+    sfSprite *bg_spr;
 } end_ctx_t;
 
 typedef struct pause_s {
@@ -346,6 +349,7 @@ typedef struct game_s {
     sfRenderWindow *window;
     sfFont *font_big;
     sfFont *font_med;
+    sfFont *font_title;
     sfBool running;
     sfBool pending_load;
     sfBool carry;
